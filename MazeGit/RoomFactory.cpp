@@ -7,11 +7,14 @@ Room RoomFactory::make(RoomType type)
 
 	switch (type)
 	{
-		case RoomType::WALL:
+		//case RoomType::WALL:
 		case RoomType::KEY:
 		case RoomType::DOOR:
 		case RoomType::EMPTY:
 			instance = Room(type);
+			break;
+		case RoomType::WALL_CONVERTED:
+			instance = Room(RoomType::WALL);
 			break;
 		case RoomType::SPIKES:
 			instance = HazardRoom(type,1);

@@ -269,7 +269,12 @@ void SaveLevel(Level* level)
         levelFile << /*"width=" <<*/ level->width << endl;
         levelFile << /*"height=" <<*/ level->height << endl;
         //levelFile << "level=";
-        levelFile.write(level->map, level->width * level->height); //width * height : streamsize
+        for (int i = 0; i < level->width * level->height; i++)
+        {
+            levelFile << (level->map[i] == (char)RoomType::WALL ? (char)RoomType::WALL_CONVERTED : level->map[i]);
+        }
+        levelFile << endl;
+        //levelFile.write(level->map, level->width * level->height); //width * height : streamsize
         if (!levelFile)
         {
             cout << "Write failed!" << endl;

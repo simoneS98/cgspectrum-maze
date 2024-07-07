@@ -1,23 +1,16 @@
 #include "Room.h"
-#include "Constants.h"
 #include <iostream>
 #include <windows.h>  
 
-Room::Room()
-{
-	Room(RoomType::EMPTY, RoomColor::DEFAULT);
-}
+Room::Room() : Room(RoomType::EMPTY, RoomColor::DEFAULT){}
 
-Room::Room(RoomType type)
-{
-	Room(type, RoomColor::DEFAULT);
-}
+Room::Room(RoomType type) : Room(type, RoomColor::DEFAULT){}
 
 Room::Room(RoomType type, RoomColor color)
 {
 	this->type = type;
 	this->color = color;
-	isAccessible = false;
+	isAccessible = true;
 }
 
 void Room::Display()
@@ -60,14 +53,12 @@ bool HazardRoom::Enter(Player* p)
 	return Room::Enter(p);
 }
 
-HazardRoom::HazardRoom(RoomType type, int damage)
+HazardRoom::HazardRoom(RoomType type, int damage): Room(type)
 {
-	Room::Room(type);
 	this->damage = damage;
 }
 
-HazardRoom::HazardRoom(RoomType type, RoomColor color, int damage)
+HazardRoom::HazardRoom(RoomType type, RoomColor color, int damage) : Room(type,color)
 {
-	Room::Room(type, color);
 	this->damage = damage;
 }

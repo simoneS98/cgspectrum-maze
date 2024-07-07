@@ -1,13 +1,17 @@
 #pragma once
 enum class RoomType
 {
+	PLAYER = 64,
+
 	WALL = 219,
-	KEY = 245,
+	KEY = 43,
 	DOOR = 68,
 	EMPTY = 32,
 
+	WALL_CONVERTED = 124,
+
 	//hazards
-	SPIKES = 197
+	SPIKES = 88
 };
 
 enum class RoomColor

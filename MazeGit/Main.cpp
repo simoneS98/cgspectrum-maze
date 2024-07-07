@@ -7,7 +7,6 @@
 #include <Windows.h>
 #include <fstream>
 #include <string>
-#include <Constants.h>
 #include "Player.h"
 #include "Enums.h"
 #include "Level.h"
@@ -222,7 +221,7 @@ void DisplayLevel(Level* pLevel, Player* player)
     int width = pLevel->GetWidth();
     int height = pLevel->GetHeight();
 
-    DisplayTopBorder(width);
+    DisplayHorizontalBorder(width);
 
     for (int x = 0; x < height; x++)
     {
@@ -231,7 +230,7 @@ void DisplayLevel(Level* pLevel, Player* player)
         {
             if (player->GetXPos() == x && player->GetYPos() == y)
             {
-                cout << cPlayer;
+                cout << (char)RoomType::PLAYER;
             }
             else
             {
@@ -243,7 +242,7 @@ void DisplayLevel(Level* pLevel, Player* player)
         DisplayRightBorder();
     }
 
-    DisplayBottomBorder(width);
+    DisplayHorizontalBorder(width);
 }
 
 void DisplayTopBorder(int width)
@@ -292,4 +291,6 @@ void DisplayHorizontalBorder(int width)
     {
         cout << (char)RoomType::WALL;
     }
+
+    cout << endl;
 }
