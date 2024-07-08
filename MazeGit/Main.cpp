@@ -11,6 +11,7 @@
 #include "Enums.h"
 #include "Level.h"
 #include "FileUtils.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -43,6 +44,22 @@ void DisplayRoom(char* pLevel, int index);
 
 int main()
 {
+    Game game;
+
+    if (game.Load())
+    {
+        while (!game.IsGameOver())
+        {
+            game.Run();
+        }
+
+        cout << "YOU WON!!!" << endl;
+
+    }
+    else
+    {
+        cout << "Game did not load. Terminating now!" << endl;
+    }
     bool endGame = false;
     Player* player = new Player();
 
