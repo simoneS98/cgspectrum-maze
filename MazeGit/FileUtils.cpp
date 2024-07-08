@@ -45,7 +45,7 @@ Level* FileUtils::FileToLevel(std::string filename)
 
             for (int i = 0; i < size; i++)
             {
-                    map[i] = RoomFactory::make(RoomType(mapAsCharArray[i]));
+                    map[i] = RoomFactory::make(RoomContent(mapAsCharArray[i]));
             }
 
             delete[] mapAsCharArray;

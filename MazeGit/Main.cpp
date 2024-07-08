@@ -136,7 +136,7 @@ bool MoveTowards(Level* pLevel, Player* player, int nextX, int nextY)
 
     Room* nextRoom = pLevel->GetRoom(nextX, nextY);
 
-    bool playerCanEnter = nextRoom->IsAccessible();
+    bool playerCanEnter = nextRoom->IsAccessibleBy(player);
 
     if (playerCanEnter)
     {
@@ -251,7 +251,7 @@ void DisplayLevel(Level* pLevel, Player* player)
         {
             if (player->GetXPos() == x && player->GetYPos() == y)
             {
-                cout << (char)RoomType::PLAYER;
+                cout << (char)RoomContent::PLAYER;
             }
             else
             {
@@ -302,7 +302,7 @@ void DisplayRightBorder()
 
 void DisplayVerticalBorder()
 {
-    cout << (char)RoomType::WALL;
+    cout << (char)RoomContent::WALL;
 }
 
 void DisplayHorizontalBorder(int width)
@@ -310,7 +310,7 @@ void DisplayHorizontalBorder(int width)
     // -1 and +1 to take care of left and right corners
     for (int i = -1 ; i < width + 1 ; i++)
     {
-        cout << (char)RoomType::WALL;
+        cout << (char)RoomContent::WALL;
     }
 
     cout << endl;

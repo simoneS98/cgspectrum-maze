@@ -1,5 +1,5 @@
 #pragma once
-enum class RoomType
+enum class RoomContent
 {
 	CURSOR = 95,
 

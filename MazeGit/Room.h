@@ -8,20 +8,20 @@ class Room
 	public:
 		Room();
 
-		Room(RoomType type);
+		Room(RoomContent content);
 
-		Room(RoomType type, RoomColor color);
+		Room(RoomContent content, RoomColor color);
 
 		void Display();
 
-		bool IsAccessible() const;
+		bool IsAccessibleBy(Player *p) const;
 
 		// used to change room at runtime
-		void AlterRoom(RoomType type, RoomColor color);
+		void AlterRoom(RoomContent content, RoomColor color);
 		virtual void OnEnter(Player* p);
 		
 	private:
-		RoomType type;
+		RoomContent content;
 		RoomColor color;
 		bool isAccessible;
 
@@ -32,8 +32,8 @@ class Room
 class HazardRoom : public Room
 {
 	public:
-		HazardRoom(RoomType type, int damage);
-		HazardRoom(RoomType type, RoomColor color,int damage);
+		HazardRoom(RoomContent content, int damage);
+		HazardRoom(RoomContent content, RoomColor color,int damage);
 
 		void OnEnter(Player* p);
 

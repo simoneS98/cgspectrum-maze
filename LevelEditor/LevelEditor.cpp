@@ -39,7 +39,7 @@ int main()
 
     for (int i = 0; i < levelSize; i++)
     {
-        level->map[i] = (char)RoomType::EMPTY;
+        level->map[i] = (char)RoomContent::EMPTY;
     }
 
     bool doneEditing = false;
@@ -86,7 +86,7 @@ void DisplayLevel(Level level, int cursorX, int cursorY)
         {
             if (cursorX == x && cursorY == y)
             {
-                cout << (char)RoomType::CURSOR;
+                cout << (char)RoomContent::CURSOR;
             }
             else
             {
@@ -107,20 +107,20 @@ int GetIndexFromXY(int x, int y, int width)
 
 void DisplayTopBorder(int width)
 {
-    cout << (char)RoomType::WALL;
+    cout << (char)RoomContent::WALL;
 
     DisplayHorizontalBorder(width);
 
-    cout << (char)RoomType::WALL << endl;
+    cout << (char)RoomContent::WALL << endl;
 }
 
 void DisplayBottomBorder(int width)
 {
-    cout << (char)RoomType::WALL;
+    cout << (char)RoomContent::WALL;
 
     DisplayHorizontalBorder(width);
 
-    cout << (char)RoomType::WALL << endl;
+    cout << (char)RoomContent::WALL << endl;
 }
 
 void DisplayLeftBorder()
@@ -136,14 +136,14 @@ void DisplayRightBorder()
 
 void DisplayVerticalBorder()
 {
-    cout << (char)RoomType::WALL;
+    cout << (char)RoomContent::WALL;
 }
 
 void DisplayHorizontalBorder(int width)
 {
     for (int i = 0; i < width; i++)
     {
-        cout << (char)RoomType::WALL;
+        cout << (char)RoomContent::WALL;
     } 
 }
 
@@ -227,20 +227,20 @@ int GetRoomChoice(Input input)
     switch (input)
     {
         case Input::WALL:
-            roomChoice = (int)RoomType::WALL;
+            roomChoice = (int)RoomContent::WALL;
             break;
         case Input::SPIKES:
-            roomChoice = (int)RoomType::SPIKES;
+            roomChoice = (int)RoomContent::SPIKES;
             break;
         case Input::KEY:
-            roomChoice = (int)RoomType::KEY;
+            roomChoice = (int)RoomContent::KEY;
             break;
         case Input::DOOR:
-            roomChoice = (int)RoomType::DOOR;
+            roomChoice = (int)RoomContent::DOOR;
             break;
             break;
         default:
-            roomChoice = (char)RoomType::EMPTY;
+            roomChoice = (char)RoomContent::EMPTY;
             break;
     }
 
@@ -271,7 +271,7 @@ void SaveLevel(Level* level)
         //levelFile << "level=";
         for (int i = 0; i < level->width * level->height; i++)
         {
-            levelFile << (level->map[i] == (char)RoomType::WALL ? (char)RoomType::WALL_CONVERTED : level->map[i]);
+            levelFile << (level->map[i] == (char)RoomContent::WALL ? (char)RoomContent::WALL_CONVERTED : level->map[i]);
         }
         levelFile << endl;
         //levelFile.write(level->map, level->width * level->height); //width * height : streamsize

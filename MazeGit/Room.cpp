@@ -2,13 +2,13 @@
 #include <iostream>
 #include <windows.h>  
 
-Room::Room() : Room(RoomType::EMPTY, RoomColor::DEFAULT){}
+Room::Room() : Room(RoomContent::EMPTY, RoomColor::DEFAULT){}
 
-Room::Room(RoomType type) : Room(type, RoomColor::DEFAULT){}
+Room::Room(RoomContent content) : Room(content, RoomColor::DEFAULT){}
 
-Room::Room(RoomType type, RoomColor color)
+Room::Room(RoomContent content, RoomColor color)
 {
-	this->type = type;
+	this->content = content;
 	this->color = color;
 	isAccessible = true;
 }
@@ -18,24 +18,32 @@ void Room::Display()
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, (int)color);
 
-	std::cout << (char)type;
+	std::cout << (char)content;
 }
 
-void Room::AlterRoom(RoomType type, RoomColor color)
+void Room::AlterRoom(RoomContent type, RoomColor color)
 {
 	this->color = color;
-	this->type = type;
+	this->content = type;
 }
 
-bool Room::IsAccessible() const
+bool Room::IsAccessibleBy(Player* p) const
 {
-	if(type == RoomType::WALL)
-		return false;
-	return true;
+	bool isObstacle = (content == RoomContent::WALL);
+	bool isLocked = (content == RoomContent::DOOR && p->GetNumKeys() == 0);
+
+	return !(isObstacle || isLocked);
 }
 
 void Room::OnEnter(Player* p)
 {
+	// no need in using a function which only works on specific rooms...
+	// TODO: switch content to Object
+	if (content == RoomContent::KEY)
+	{
+		p->PickupKey();
+		content = RoomContent::EMPTY;
+	}
 	//playsoundtrack
 }
 
@@ -59,12 +67,12 @@ void HazardRoom::OnEnter(Player* p)
 	return Room::OnEnter(p);
 }
 
-HazardRoom::HazardRoom(RoomType type, int damage): Room(type)
+HazardRoom::HazardRoom(RoomContent type, int damage): Room(type)
 {
 	this->damage = damage;
 }
 
-HazardRoom::HazardRoom(RoomType type, RoomColor color, int damage) : Room(type,color)
+HazardRoom::HazardRoom(RoomContent type, RoomColor color, int damage) : Room(type,color)
 {
 	this->damage = damage;
 }
