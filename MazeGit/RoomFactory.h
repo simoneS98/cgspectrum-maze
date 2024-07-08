@@ -5,5 +5,5 @@
 class RoomFactory
 {
 	public:
-		static Room make(RoomType type);
+		static Room* make(RoomType type);
 };

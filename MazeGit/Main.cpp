@@ -117,12 +117,16 @@ bool MoveTowards(Level* pLevel, Player* player, int nextX, int nextY)
 {
     bool exitReached = false;
 
-    Room nextRoom = pLevel->GetRoom(nextX, nextY);
+    Room* nextRoom = pLevel->GetRoom(nextX, nextY);
 
-    bool playerHasEntered = nextRoom.Enter(player);
+    bool playerCanEnter = nextRoom->IsAccessible();
 
-    if (playerHasEntered)
+    if (playerCanEnter)
+    {
         player->SetPos(nextX, nextY);
+        nextRoom->OnEnter(player);
+    }
+        
     
     /*
     if (IsObstacle(nextTile))
@@ -234,7 +238,7 @@ void DisplayLevel(Level* pLevel, Player* player)
             }
             else
             {
-                Room room = pLevel->GetRoom(x, y);
+                Room room = *(pLevel->GetRoom(x, y));
 
                 room.Display();
             }

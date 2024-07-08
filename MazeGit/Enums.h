@@ -18,5 +18,6 @@ enum class RoomColor
 {
 	DOOR_OPEN = 10,
 	DOOR_CLOSED = 12,
-	DEFAULT = 7
+	DEFAULT = 7,
+	HAZARD = 31
 };

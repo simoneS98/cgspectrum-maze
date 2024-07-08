@@ -27,10 +27,16 @@ void Room::AlterRoom(RoomType type, RoomColor color)
 	this->type = type;
 }
 
-bool Room::Enter(Player* p)
+bool Room::IsAccessible() const
 {
-	//do nothing
-	return isAccessible;
+	if(type == RoomType::WALL)
+		return false;
+	return true;
+}
+
+void Room::OnEnter(Player* p)
+{
+	//playsoundtrack
 }
 
 void Room::PlaySoundtrack()
@@ -47,10 +53,10 @@ void Room::PlaySoundtrack()
 }
 
 
-bool HazardRoom::Enter(Player* p)
+void HazardRoom::OnEnter(Player* p)
 {
 	p->TakeDamage(damage);
-	return Room::Enter(p);
+	return Room::OnEnter(p);
 }
 
 HazardRoom::HazardRoom(RoomType type, int damage): Room(type)

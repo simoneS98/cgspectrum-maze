@@ -1,4 +1,6 @@
 #include "Player.h"
+#include <stdlib.h>
+#include <iostream>
 
 Player::Player()
 {
@@ -77,5 +79,8 @@ bool Player::UseKey()
 
 void Player::Die()
 {
-
+	//find a way to invoke event
+	system("cls");
+	std::cout << "Your HP reached 0! Game over." << std::endl;
+	exit(1);
 }

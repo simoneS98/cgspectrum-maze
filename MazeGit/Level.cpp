@@ -12,7 +12,7 @@ void Level::SetHeight(int height)
 }
 */
 
-Level::Level(Room* map, int width, int height)
+Level::Level(Room** map, int width, int height)
 {
 	this->map = map;
 	this->width = width;
@@ -34,13 +34,13 @@ int Level::GetSize()
 	return width * height;
 }
 
-Room Level::GetRoom(int x, int y)
+Room* Level::GetRoom(int x, int y)
 {
 	int index = GetIndexFromXY(x, y);
 	return map[index];
 }
 
-Room* Level::GetMap()
+Room** Level::GetMap()
 {
 	return map;
 }

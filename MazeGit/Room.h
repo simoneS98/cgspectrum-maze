@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "Enums.h"
+#include "string"
 
 class Room
 {
@@ -13,15 +14,19 @@ class Room
 
 		void Display();
 
+		bool IsAccessible() const;
+
 		// used to change room at runtime
 		void AlterRoom(RoomType type, RoomColor color);
-		bool Enter(Player* p); 
+		virtual void OnEnter(Player* p);
+		
 	private:
 		RoomType type;
 		RoomColor color;
 		bool isAccessible;
 
 		void PlaySoundtrack();
+		
 };
 
 class HazardRoom : public Room
@@ -29,8 +34,9 @@ class HazardRoom : public Room
 	public:
 		HazardRoom(RoomType type, int damage);
 		HazardRoom(RoomType type, RoomColor color,int damage);
-		int Damage();
-		bool Enter(Player* p);
+
+		void OnEnter(Player* p);
+
 	private:
 		int damage;
 };

@@ -4,7 +4,7 @@ Level* FileUtils::FileToLevel(std::string filename)
 {
     int width = 0;
     int height = 0;
-    Room* map = nullptr;
+    Room** map = nullptr;
 
     std::ifstream levelFile;
 
@@ -37,17 +37,15 @@ Level* FileUtils::FileToLevel(std::string filename)
 
             // declaring character array (+1 for null terminator) 
             char* mapAsCharArray = new char[size];
-            map = new Room[size];
-
+            map = new Room*[size];
+           
             // copying the contents of the 
             // string to char array
             strcpy_s(mapAsCharArray, size, line.c_str());
 
             for (int i = 0; i < size; i++)
             {
-
-               
-                map[i] = RoomFactory::make(RoomType(mapAsCharArray[i]));
+                    map[i] = RoomFactory::make(RoomType(mapAsCharArray[i]));
             }
 
             delete[] mapAsCharArray;
@@ -58,6 +56,9 @@ Level* FileUtils::FileToLevel(std::string filename)
 
         levelFile.close();
     }
+
+    if (map == nullptr)
+        exit(1);
 
     Level* level = new Level(map, width, height);
 
