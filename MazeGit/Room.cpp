@@ -39,10 +39,16 @@ void Room::OnEnter(Player* p)
 {
 	// no need in using a function which only works on specific rooms...
 	// TODO: switch content to Object
-	if (content == RoomContent::KEY)
+	switch (content)
 	{
+	case(RoomContent::KEY):
 		p->PickupKey();
 		content = RoomContent::EMPTY;
+		break;
+	case(RoomContent::DOOR):
+		if(p->UseKey())
+			content = RoomContent::EMPTY;
+		break;
 	}
 	//playsoundtrack
 }
@@ -64,7 +70,8 @@ void Room::PlaySoundtrack()
 void HazardRoom::OnEnter(Player* p)
 {
 	p->TakeDamage(damage);
-	return Room::OnEnter(p);
+	__super::OnEnter(p);
+
 }
 
 HazardRoom::HazardRoom(RoomContent type, int damage): Room(type)

@@ -2,12 +2,16 @@
 #include <string>
 #include "Room.h"
 
+// TODO: everything which is printed is related to the CURRENT room
 class Level
 {
     public:
         // Constructors
         Level();
         Level(Room** map, int width, int height);
+
+        // Destructors
+        ~Level();
 
         // Getters
         int GetWidth();

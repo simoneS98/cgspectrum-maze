@@ -32,7 +32,6 @@ void PlayKeyPickupSound();
 void PlayWinSound();
 
 void DisplayPlayerInfo(Player* player);
-void DisplayLevel(Level* pLevel, Player* player);
 int GetIndexFromXY(int x, int y, int width);
 void DisplayTopBorder(int width);
 void DisplayBottomBorder(int width);
@@ -44,7 +43,7 @@ void DisplayVerticalBorder();
 int main()
 {
     Game game;
-
+    
     if (game.Load())
     {
         while (!game.IsGameOver())
@@ -59,10 +58,15 @@ int main()
     {
         cout << "Game did not load. Terminating now!" << endl;
     }
-    bool endGame = false;
+    
+    
+    /*bool endGame = false;
+
     Player* player = new Player();
 
-    Level* pLevel = FileUtils::FileToLevel("map.txt");//LoadLevel("map.txt");
+    Level* pLevel = new Level();
+
+    pLevel->Load("map.txt");
 
     while (!endGame)
     {
@@ -72,7 +76,7 @@ int main()
         endGame = UpdatePlayerPosition(pLevel, player);
     }
 
-    cout << "You made it! Congrats!" << endl;
+    cout << "You made it! Congrats!" << endl;*/
 }
 
 int GetIndexFromCoordinates(int x, int y, int width)
@@ -80,6 +84,7 @@ int GetIndexFromCoordinates(int x, int y, int width)
     return y * width + x;
 }
 
+/*
 bool UpdatePlayerPosition(Level* level, Player* player)
 {
     char input = _getch();
@@ -127,8 +132,11 @@ bool UpdatePlayerPosition(Level* level, Player* player)
     return MoveTowards(level, player, nextX, nextY);
 
 }
+*/
+
 
 //TODO: use player struct
+/*
 bool MoveTowards(Level* pLevel, Player* player, int nextX, int nextY)
 {
     bool exitReached = false;
@@ -143,47 +151,9 @@ bool MoveTowards(Level* pLevel, Player* player, int nextX, int nextY)
         nextRoom->OnEnter(player);
     }
         
-    
-    /*
-    if (IsObstacle(nextTile))
-    return false;
-    */
-
-    // object magic! no more ifs!
-
-    /*
-    if (nextTile == RoomType::DOOR)
-    {
-        if (player->UseKey()) {
-            level.map[nextIndex] = ' ';
-        }
-        else
-        {
-            PlayDoorClosedSound();
-            return false;
-        } 
-    }
-    else if (nextTile == RoomType::KEY)
-    {
-        player->PickupKey();
-        level.map[nextIndex] = ' ';
-    }
-    else if (nextTile == RoomType::SPIKES)
-    {
-        player->TakeDamage(1);
-    }
-    */
-    
-    /*else if (nextTile == kExit)
-    {
-        int playerIndex = GetIndexFromCoordinates(playerX, playerY, width);
-        map[playerIndex] = ' ';
-        exitReached = true;
-    }*/
-
-    
     return exitReached;
 }
+*/
 
 bool IsObstacle(char c)
 {
@@ -236,6 +206,7 @@ void DisplayPlayerInfo(Player* player)
 }
 
 //TODO: move display functions to level class
+/*
 void DisplayLevel(Level* pLevel, Player* player)
 {
     int width = pLevel->GetWidth();
@@ -264,6 +235,8 @@ void DisplayLevel(Level* pLevel, Player* player)
 
     DisplayHorizontalBorder(width);
 }
+*/
+
 
 void DisplayTopBorder(int width)
 {

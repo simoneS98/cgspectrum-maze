@@ -3,6 +3,7 @@
 #include "Enums.h"
 #include "string"
 
+// TODO: room of varying sizes
 class Room
 {
 	public:
@@ -35,7 +36,7 @@ class HazardRoom : public Room
 		HazardRoom(RoomContent content, int damage);
 		HazardRoom(RoomContent content, RoomColor color,int damage);
 
-		void OnEnter(Player* p);
+		void OnEnter(Player* p) override;
 
 	private:
 		int damage;

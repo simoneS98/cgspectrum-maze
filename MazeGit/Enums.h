@@ -7,6 +7,7 @@ enum class RoomContent
 	KEY = 43,
 	DOOR = 68,
 	EMPTY = 32,
+	EXIT = 79,
 
 	WALL_CONVERTED = 124,
 
