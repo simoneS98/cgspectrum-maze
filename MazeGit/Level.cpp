@@ -2,20 +2,6 @@
 #include <iostream>
 #include "FileUtils.h"
 
-/*
-void Level::SetWidth(int width)
-{
-	this->width = width;
-}
-
-void Level::SetHeight(int height)
-{
-	this->height = height;
-}
-Level::Level()
-{
-}
-*/
 Level::Level()
 	: map(nullptr)
 	, height(0)

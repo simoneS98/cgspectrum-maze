@@ -19,6 +19,8 @@ void Room::Display()
 	SetConsoleTextAttribute(hConsole, (int)color);
 
 	std::cout << (char)content;
+
+	SetConsoleTextAttribute(hConsole, (int)RoomColor::DEFAULT);
 }
 
 void Room::AlterRoom(RoomContent type, RoomColor color)
@@ -33,6 +35,11 @@ bool Room::IsAccessibleBy(Player* p) const
 	bool isLocked = (content == RoomContent::DOOR && p->GetNumKeys() == 0);
 
 	return !(isObstacle || isLocked);
+}
+
+bool Room::IsExit() const
+{
+	return content == RoomContent::EXIT;
 }
 
 void Room::OnEnter(Player* p)

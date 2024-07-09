@@ -23,8 +23,10 @@ void Game::Run()
 
 	isGameOver = Update();
 
-	if (isGameOver)
+	/*
+    if (isGameOver)
 		Draw();
+    */
 }
 
 bool Game::IsGameOver()
@@ -76,8 +78,6 @@ bool Game::Update()
     else if (nextY == width)
         nextY = width - 1;
 
-    bool exitReached = false;
-
     Room* nextRoom = level.GetRoom(nextX, nextY);
 
     bool playerCanEnter = nextRoom->IsAccessibleBy(&player);
@@ -88,28 +88,11 @@ bool Game::Update()
         nextRoom->OnEnter(&player);
     }
 
-    return exitReached;
-    //return MoveTowards(level, player, nextX, nextY);
-}
-/*
-bool MoveTowards(Level pLevel, Player player, int nextX, int nextY)
-{
-    bool exitReached = false;
-
-    Room* nextRoom = pLevel.GetRoom(nextX, nextY);
-
-    bool playerCanEnter = nextRoom->IsAccessibleBy(player);
-
-    if (playerCanEnter)
-    {
-        player->SetPos(nextX, nextY);
-        nextRoom->OnEnter(player);
-    }
+    // horrible solution to make it work...for now
+    bool exitReached = nextRoom->IsExit();
 
     return exitReached;
 }
-*/
-
 
 void Game::Draw()
 {
@@ -145,3 +128,36 @@ void Game::Draw()
     level.DisplayHorizontalBorder();
     
 }
+
+
+/*
+
+void PlayDoorClosedSound()
+{
+    Beep(500, 75);
+    Beep(500, 75);
+}
+
+void PlayDoorOpenSound()
+{
+    Beep(1397, 200);
+}
+
+void PlayKeyPickupSound()
+{
+    Beep(1568, 200);
+}
+
+void PlayWinSound()
+{
+    Beep(1568, 200);
+    Beep(1568, 200);
+    Beep(1568, 200);
+    Beep(1245, 1000);
+    Beep(1397, 200);
+    Beep(1397, 200);
+    Beep(1397, 200);
+    Beep(1397, 200);
+    Beep(1157, 1000);
+}
+*/

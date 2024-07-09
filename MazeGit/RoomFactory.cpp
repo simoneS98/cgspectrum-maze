@@ -11,6 +11,7 @@ Room* RoomFactory::make(RoomContent type)
 		case RoomContent::KEY:
 		case RoomContent::DOOR:
 		case RoomContent::EMPTY:
+		case RoomContent::EXIT:
 			instance = new Room(type);
 			break;
 		case RoomContent::WALL_CONVERTED:

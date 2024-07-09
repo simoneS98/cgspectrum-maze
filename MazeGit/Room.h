@@ -7,6 +7,7 @@
 class Room
 {
 	public:
+		// Constructors
 		Room();
 
 		Room(RoomContent content);
@@ -16,6 +17,7 @@ class Room
 		void Display();
 
 		bool IsAccessibleBy(Player *p) const;
+		bool IsExit() const;
 
 		// used to change room at runtime
 		void AlterRoom(RoomContent content, RoomColor color);
