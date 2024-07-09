@@ -8,5 +8,5 @@
 class FileUtils
 {
 public:
-    static Level* FileToLevel(std::string filename);
+    static Level FileToLevel(std::string filename);
 };

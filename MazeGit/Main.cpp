@@ -40,7 +40,6 @@ void DisplayLeftBorder();
 void DisplayRightBorder();
 void DisplayHorizontalBorder(int width);
 void DisplayVerticalBorder();
-void DisplayRoom(char* pLevel, int index);
 
 int main()
 {

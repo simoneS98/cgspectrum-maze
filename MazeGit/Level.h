@@ -6,6 +6,7 @@ class Level
 {
     public:
         // Constructors
+        Level();
         Level(Room** map, int width, int height);
 
         // Getters
@@ -14,6 +15,12 @@ class Level
         int GetSize();
         Room* GetRoom(int x, int y);
         Room** GetMap();
+
+        bool Load(std::string filename);
+        void DisplayLeftBorder();
+        void DisplayRightBorder();
+        void DisplayHorizontalBorder();
+        void DisplayVerticalBorder();
 
         // Setters
         //void SetWidth(int width);

@@ -1,6 +1,6 @@
 #include "FileUtils.h"
 
-Level* FileUtils::FileToLevel(std::string filename)
+Level FileUtils::FileToLevel(std::string filename)
 {
     int width = 0;
     int height = 0;
@@ -60,7 +60,7 @@ Level* FileUtils::FileToLevel(std::string filename)
     if (map == nullptr)
         exit(1);
 
-    Level* level = new Level(map, width, height);
+    Level level = Level(map, width, height);
 
     return level;
 }
