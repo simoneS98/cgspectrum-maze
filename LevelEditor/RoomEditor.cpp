@@ -350,3 +350,18 @@ void RoomEditor::Display(char* editableArea, Cursor* cursor)
     DisplayHorizontalBorder(cMaxWidth);
 
 }
+
+void RoomEditor::DisplayLegend()
+{
+    cout << "Arrows to move cursor" << endl;
+    cout << "ESC to finish editing" << endl;
+    cout << "+ | - for walls" << endl;
+    cout << "@ for player start" << endl;
+    cout << "r g b for key" << endl;
+    cout << "R G B for door" << endl;
+    cout << "$ for money" << endl;
+    cout << "v for vertical moving enemy" << endl;
+    cout << "h for horizontal moving enemy" << endl;
+    cout << "e for non-moving enemy" << endl;
+    cout << "X for end" << endl;
+}

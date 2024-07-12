@@ -27,6 +27,7 @@ public:
 	void SaveRoom();
 	bool EditRoom(char* editableArea, Cursor* cursor, int editableAreaWidth, int editableAreaHeight);
 	void Display(char* editableArea, Cursor* cursor);
+	void DisplayLegend();
 private:
 	void PlaceAt(RoomContent content, int x, int y);
 	bool SaveRoom(std::string name);
