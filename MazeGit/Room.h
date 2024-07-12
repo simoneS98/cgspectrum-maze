@@ -6,6 +6,10 @@
 // TODO: room of varying sizes
 class Room
 {
+	RoomContent content;
+	RoomColor color;
+	bool isAccessible;
+
 	public:
 		// Constructors
 		Room();
@@ -24,10 +28,6 @@ class Room
 		virtual void OnEnter(Player* p);
 		
 	private:
-		RoomContent content;
-		RoomColor color;
-		bool isAccessible;
-
 		void PlaySoundtrack();
 		
 };

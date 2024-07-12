@@ -1,9 +1,10 @@
 #pragma once
+#include "Character.h"
 
-class Player {
+class Player : Character{
 
 public:
-
+    int numKeys;
     // Constructors
     Player();
 
@@ -29,11 +30,6 @@ public:
 private:
 
     //Member variables
-    int x;
-    int y;
-    int numKeys;
-    int hp;
-    int maxHp;
 
     void Die();
 };

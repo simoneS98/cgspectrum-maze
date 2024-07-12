@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LevelEditor.cpp">
+    <ClCompile Include="RoomEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enums.h">
+    <ClInclude Include="RoomEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

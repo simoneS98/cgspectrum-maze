@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\sbard\source\repos\cgspectrum-maze\Utils;%(AdditionalIncludeDirectories);C:\CG_SPECTRUM\source\varie\MazeGit\Utils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\sbard\source\repos\cgspectrum-maze\MazeGit;C:\Users\sbard\source\repos\cgspectrum-maze\Utils;%(AdditionalIncludeDirectories);C:\CG_SPECTRUM\source\varie\MazeGit\Utils</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,10 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LevelEditor.cpp" />
+    <ClCompile Include="RoomEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enums.h" />
+    <ClInclude Include="RoomEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
