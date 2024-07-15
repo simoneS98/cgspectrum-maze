@@ -1,35 +1,44 @@
 #pragma once
 #include "Character.h"
+#include "Key.h"
 
-class Player : Character{
+// forward class declaration, avoids recompile in case of changes
+// can only be used with pointer types
+// actually it's not working
+//class Key;
+
+constexpr char playerSprite = (char)Sprite::PLAYER;
+
+class Player : public Character
+{
 
 public:
-    int numKeys;
     // Constructors
     Player();
+    ~Player();
 
-    // Getters
-    int GetXPos();
-    int GetYPos();
-    //bool HasKey { numKeys > 0 };
-    int GetNumKeys();
-    int GetMaxHp();
-    int GetCurrentHp();
+    bool HasKey();
+    bool HasKey(Color color);
+    void PickupKey(Key* key);
 
-    // Setters
-    void SetPos(int x, int y);
-    void SetXPos(int x);
-    void SetYPos(int y);
-    
+    void UseKey();
+    void DropKey();
+
+    void AddMoney(int money) { this->money += money; }
+    int GetMoney() { return money; }
+    int GetLives() { return lives; }
+    void DecrementLives() { lives--; }
     // Generic
-    void TakeDamage(int amount);
+    
     //TODO: pickup <T>
-    void PickupKey();
-    bool UseKey();
+
+    virtual void Draw() override;
+
+    virtual void Die() override;
 
 private:
+    Key* pCurrentKey;
+    int money;
+    int lives;
 
-    //Member variables
-
-    void Die();
 };

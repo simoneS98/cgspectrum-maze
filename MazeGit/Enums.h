@@ -1,10 +1,30 @@
 #pragma once
-enum class RoomContent
+enum class Editor : char
+{
+	EMPTY = ' ',
+	CORNER = '+',
+	WALL_H = '-',
+	WALL_V = '|',
+	ENEMY = 'e',
+	ENEMY_H = 'h',
+	ENEMY_V = 'v',
+	KEY_RED = 'r',
+	KEY_GREEN = 'g',
+	KEY_BLUE = 'b',
+	DOOR_RED = 'R',
+	DOOR_GREEN = 'G',
+	DOOR_BLUE = 'B',
+	PLAYER = '@',
+	MONEY = '$',
+	EXIT = 'X'
+};
+enum class Sprite
 {
 	PLAYER = 64,
 
 	WALL = 219,
 	KEY = 43,
+	MONEY = 36,
 	DOOR = 68,
 	EMPTY = 32,
 	EXIT = 79,
@@ -13,17 +33,24 @@ enum class RoomContent
 	CURSOR = 95,
 	PERIMETER = 176,
 
-	//hazards
-	SPIKES = 88
+	// hazards
+	SPIKES = 88,
+
+	// enemies
+	ENEMY = 153
 };
 
-enum class RoomColor
+enum class Color
 {
 	DOOR_OPEN = 10,
 	DOOR_CLOSED = 12,
 	DEFAULT = 7,
 	HAZARD = 13,
-	PERIMETER = 8
+	PERIMETER = 8,
+	GREEN_MONEY = 2,
+	RED = 12,
+	GREEN = 10,
+	BLUE = 9
 };
 
 enum class Input
@@ -37,6 +64,7 @@ enum class Input
 	ARROW_DOWN = 80,
 
 	ESC = 27,
+	BACK = 8,
 
 	WALL = 49,
 	SPIKES = 50,

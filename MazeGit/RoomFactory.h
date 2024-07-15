@@ -5,5 +5,5 @@
 class RoomFactory
 {
 	public:
-		static Room* make(RoomContent type);
+		static Room* make(Sprite type);
 };

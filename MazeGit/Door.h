@@ -3,19 +3,22 @@
 #include "GameEntity.h"
 #include "Enums.h"
 
-constexpr char sprite = (char)RoomContent::DOOR;
+constexpr char cDoorSprite = (char)Sprite::DOOR;
 
-class Door : GameEntity
+class Door : public GameEntity
 {
+public:
+
+	Door(int x, int y, Color closedColor, Color openColor = Color::DEFAULT);
+	bool IsLocked() { return isLocked; }
+	void Unlock() { isLocked = false; }
+	void Draw() override;
+
+private:
 	Room* nextRoom;
 	// used to load file called <nextRoomFileName>.txt
 	std::string nextRoomFileName;
 	bool isLocked;
-
-public:
-
-	Door(int x, int y, std::string fileName);
-	void Unlock();
-	void Draw() override;
+	int closedColor;
 };
 

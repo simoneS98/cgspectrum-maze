@@ -1,30 +1,32 @@
 #include "RoomFactory.h"
 #include <stdexcept>
 
-Room* RoomFactory::make(RoomContent type)
+Room* RoomFactory::make(Sprite type)
 {
-	Room* instance;
+	Room* instance = nullptr;
 
+	/*
 	switch (type)
 	{
 		//case RoomType::WALL:
-		case RoomContent::KEY:
-		case RoomContent::DOOR:
-		case RoomContent::EMPTY:
-		case RoomContent::EXIT:
+		case Sprite::KEY:
+		case Sprite::DOOR:
+		case Sprite::EMPTY:
+		case Sprite::EXIT:
 			instance = new Room(type);
 			break;
-		case RoomContent::WALL_CONVERTED:
-			instance = new Room(RoomContent::WALL);
+		case Sprite::WALL_CONVERTED:
+			instance = new Room(Sprite::WALL);
 			break;
-		case RoomContent::SPIKES:
-			instance = new HazardRoom(type,RoomColor::HAZARD, 1);
+		case Sprite::SPIKES:
+			instance = new HazardRoom(type,Color::HAZARD, 1);
 			break;
 		default:
-			instance = new Room(RoomContent::EMPTY);
+			instance = new Room(Sprite::EMPTY);
 			//throw std::invalid_argument("RoomType not defined");
 			break;
 	}
+	*/
 
 	return instance;
 }

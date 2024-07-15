@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <windows.h>  
 #include <Door.h>
+#include <Constants.h>
 
 using namespace std;
 
@@ -12,22 +13,26 @@ int main()
     //init level
     RoomEditor r = RoomEditor();
     Cursor* cursor = new Cursor();
-    char* editableArea = new char[cMaxWidth * cMaxHeight];
+    char* editableArea = new char[cMaxRoomWidth * cMaxRoomHeight];
 
-    for (int i = 0; i < cMaxWidth * cMaxHeight; i++)
+    for (int i = 0; i < cMaxRoomWidth * cMaxRoomHeight; i++)
     {
-        editableArea[i] = (char)RoomContent::EMPTY;
+        editableArea[i] = (char)Sprite::EMPTY;
     }
 
     bool doneEditing = false;
 
     while (!doneEditing)
     {
-        r.DisplayRoomChoices();
         r.Display(editableArea, cursor);
-        doneEditing = r.EditRoom(editableArea, cursor, cMaxWidth, cMaxHeight);
+        r.DisplayLegend();
+        doneEditing = r.EditRoom(editableArea, cursor, cMaxRoomWidth, cMaxRoomHeight);
     }
     
+    r.Save(editableArea);
+
+
+
     /*
     Level* level = r.GetLevelDimensions();
     Cursor* cursor = new Cursor;
@@ -101,24 +106,24 @@ void RoomEditor::DisplayRightBorder()
 void RoomEditor::DisplayVerticalBorder()
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, (int)RoomColor::PERIMETER);
-    cout << (char)RoomContent::PERIMETER;
-    SetConsoleTextAttribute(hConsole, (int)RoomColor::DEFAULT);
+    SetConsoleTextAttribute(hConsole, (int)Color::PERIMETER);
+    cout << (char)Sprite::PERIMETER;
+    SetConsoleTextAttribute(hConsole, (int)Color::DEFAULT);
 }
 
 void RoomEditor::DisplayHorizontalBorder(int width)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, (int)RoomColor::PERIMETER);
+    SetConsoleTextAttribute(hConsole, (int)Color::PERIMETER);
 
     for (int i = -1; i < width + 1; i++)
     {
-        cout << (char)RoomContent::PERIMETER;
+        cout << (char)Sprite::PERIMETER;
     }
 
     cout << endl;
 
-    SetConsoleTextAttribute(hConsole, (int)RoomColor::DEFAULT);
+    SetConsoleTextAttribute(hConsole, (int)Color::DEFAULT);
 }
 
 void RoomEditor::DisplayRoom(char* pLevel, int index)
@@ -170,57 +175,44 @@ bool RoomEditor::FillRoom(Level* level, Cursor* cursor)
     }
     else
     {
-        if (intInput == (int)Input::ESC)
+        if (intInput == cInputEsc)
         {
             return true;
+        }
+        else if (intInput == cInputBackSpace)
+        {
+            // ignore
         }
         else
         {
             int index = GetIndexFromXY(newCursorX, newCursorY, level->width);
 
-            level->map[index] = GetRoomChoice(Input(intInput));
+            //level->map[index] = GetRoomChoice(Input(intInput));
         }
     }
 
     return false;
 }
 
-void RoomEditor::DisplayRoomChoices()
+bool RoomEditor::IsTileValid(char input)
 {
-    //TODO: add n blocks left
-    cout << "\t" << (int)Input::WALL - 48 << ": Block" << endl;
-    cout << "\t" << (int)Input::SPIKES - 48 << ": Spikes" << endl;
-    cout << "\t" << (int)Input::KEY - 48 << ": Key" << endl;
-    cout << "\t" << (int)Input::DOOR - 48 << ": Door" << endl;
-}
-
-int RoomEditor::GetRoomChoice(Input input)
-{
-    int roomChoice;
-
-    switch (input)
-    {
-    case Input::WALL:
-        roomChoice = (int)RoomContent::WALL;
-        break;
-    case Input::SPIKES:
-        roomChoice = (int)RoomContent::SPIKES;
-        break;
-    case Input::KEY:
-        roomChoice = (int)RoomContent::KEY;
-        break;
-    case Input::DOOR:
-        // TODO: where does this door lead to?
-        roomChoice = (int)RoomContent::DOOR;
-        break;
-        break;
-    default:
-        roomChoice = (char)RoomContent::EMPTY;
-        break;
-    }
-
-    return roomChoice;
-
+    return input == (char)Editor::CORNER
+        || input == (char)Editor::WALL_V
+        || input == (char)Editor::WALL_H
+        || input == (char)Editor::KEY_GREEN
+        || input == (char)Editor::KEY_RED
+        || input == (char)Editor::KEY_BLUE
+        || input == (char)Editor::DOOR_RED
+        || input == (char)Editor::DOOR_GREEN
+        || input == (char)Editor::DOOR_BLUE
+        || input == (char)Editor::MONEY
+        || input == (char)Editor::EXIT
+        || input == (char)Editor::PLAYER
+        || input == (char)Editor::ENEMY
+        || input == (char)Editor::ENEMY_H
+        || input == (char)Editor::ENEMY_V
+        || input == (char)Editor::EMPTY
+        || ( input >= '0' && input <= '9' );
 }
 
 void RoomEditor::SaveLevel(Level* level)
@@ -241,12 +233,65 @@ void RoomEditor::SaveLevel(Level* level)
     }
     else
     {
-        levelFile << /*"width=" <<*/ level->width << endl;
-        levelFile << /*"height=" <<*/ level->height << endl;
+        levelFile << /*"width=" <<*/ cMaxRoomWidth << endl;
+        levelFile << /*"height=" <<*/ cMaxRoomHeight << endl;
         //levelFile << "level=";
-        for (int i = 0; i < level->width * level->height; i++)
+        for (int i = 0; i < cMaxRoomWidth * cMaxRoomHeight; i++)
         {
-            levelFile << (level->map[i] == (char)RoomContent::WALL ? (char)RoomContent::WALL_CONVERTED : level->map[i]);
+            levelFile << (level->map[i] == (char)Sprite::WALL ? (char)Sprite::WALL_CONVERTED : level->map[i]);
+        }
+        levelFile << endl;
+        //levelFile.write(level->map, level->width * level->height); //width * height : streamsize
+        if (!levelFile)
+        {
+            cout << "Write failed!" << endl;
+        }
+        levelFile.close();
+    }
+}
+
+void RoomEditor::Save(char* editableArea)
+{
+    cout << "To which level does this room belong to? (insert directory name): ";
+    string levelName;
+    cin >> levelName;
+
+    levelName.insert(0, "../levels/");
+
+    string cmd = "mkdir";
+
+    cmd.append(" \"").append(levelName).append("\"");
+
+    cout << "cmd" << cmd << endl;
+
+    system(cmd.c_str());
+
+    cout << "Pick a name for your room file (only integers from 0 to 9 are allowed: eg. 1 or 5): ";
+    string roomName;
+    cin >> roomName;
+    
+    string fileName = levelName.append("/").append(roomName).append(".room");
+
+
+    //prepends parent dir to filename
+    //fileName.insert(0, "../");
+
+    cout << fileName;
+
+    ofstream levelFile;
+    levelFile.open(fileName);
+
+    if (!levelFile)
+    {
+        cout << "Opening file failed!" << endl;
+    }
+    else
+    {
+        levelFile <<  cMaxRoomWidth << endl;
+        levelFile <<  cMaxRoomHeight << endl;
+        for (int i = 0; i < cMaxRoomWidth * cMaxRoomHeight; i++)
+        {
+            levelFile << (editableArea[i] == (char)Sprite::WALL ? (char)Sprite::WALL_CONVERTED : editableArea[i]);
         }
         levelFile << endl;
         //levelFile.write(level->map, level->width * level->height); //width * height : streamsize
@@ -310,19 +355,13 @@ bool RoomEditor::EditRoom(char* editableArea, Cursor* cursor, int editableAreaWi
         {
             int index = GetIndexFromXY(newCursorX, newCursorY, editableAreaWidth);
 
-            Input in = Input(intInput);
-            string filename;
+            //Input in = Input(intInput);
+            //string filename;
 
-            editableArea[index] = GetRoomChoice(Input(intInput));
-
-            if (in == Input::DOOR)
-            {
-                cout << "What room does this door lead to? (insert room filename)";
-
-                cin >> filename;
-
-                Door* d = new Door(1, 2);
-            }
+            if(IsTileValid((char)intInput))
+                editableArea[index] = (char)intInput;
+            else
+                editableArea[index] = (char)Editor::EMPTY;
         }
     }
 
@@ -331,23 +370,23 @@ bool RoomEditor::EditRoom(char* editableArea, Cursor* cursor, int editableAreaWi
 
 void RoomEditor::Display(char* editableArea, Cursor* cursor)
 {
-    DisplayHorizontalBorder(cMaxWidth);
+    DisplayHorizontalBorder(cMaxRoomWidth);
 
-    for (int x = 0; x < cMaxHeight; x++)
+    for (int x = 0; x < cMaxRoomHeight; x++)
     {
         DisplayLeftBorder();
-        for (int y = 0; y < cMaxWidth; y++)
+        for (int y = 0; y < cMaxRoomWidth; y++)
         {
             if (x == cursor->x && y == cursor->y)
                 cout << "P";
             else
-                cout << editableArea[GetIndexFromXY(x,y,cMaxWidth)];
+                cout << editableArea[GetIndexFromXY(x,y, cMaxRoomWidth)];
         }
         
         DisplayRightBorder();
     }
 
-    DisplayHorizontalBorder(cMaxWidth);
+    DisplayHorizontalBorder(cMaxRoomWidth);
 
 }
 

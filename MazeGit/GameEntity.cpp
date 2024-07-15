@@ -1,12 +1,47 @@
 #include "GameEntity.h"
 
-GameEntity::GameEntity(int x, int y)
+GameEntity::GameEntity(int x, int y, Color color)
+	: pPosition(new Point(x,y))
+	, isActive(true)
+	, color((int)color)
 {
-	this->x = x;
-	this->y = y;
 }
 
-void GameEntity::Draw()
+GameEntity::~GameEntity()
 {
-	//throw exception "Draw not implemented"
+	delete pPosition;
+	pPosition = nullptr;
+}
+
+int GameEntity::GetXPosition()
+{
+	return pPosition->x;
+}
+
+int GameEntity::GetYPosition()
+{
+	return pPosition->y;
+}
+
+int* GameEntity::GetXPositionPtr()
+{
+	return &(pPosition->x);
+}
+
+int* GameEntity::GetYPositionPtr()
+{
+	return &(pPosition->y);
+}
+
+void GameEntity::SetPosition(int x, int y)
+{
+	pPosition->x = x;
+	pPosition->y = y;
+}
+
+void GameEntity::Place(int x, int y)
+{
+	pPosition->x = x;
+	pPosition->y = y;
+	isActive = true;
 }

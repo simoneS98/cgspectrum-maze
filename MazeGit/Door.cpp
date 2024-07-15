@@ -1,20 +1,32 @@
 #include "Door.h"
 #include <iostream>
+#include <Windows.h>
 
-Door::Door(int x, int y, std::string fileName) : GameEntity::GameEntity(x,y)
+Door::Door(int x, int y, Color closedColor, Color openColor) :
+	GameEntity::GameEntity(x,y,openColor)
+	, isLocked(true)
+	, closedColor((int)closedColor)
 {
-	this->nextRoomFileName = fileName;
-	this->isLocked = true;
-	this->nextRoom = nullptr;
 }
 
+/*
 void Door::Unlock()
 {
 	if (isLocked)
 		isLocked = false;
 }
+*/
+
 
 void Door::Draw()
 {
-	std::cout << sprite;
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	if(isLocked)
+		SetConsoleTextAttribute(console, closedColor);
+	else
+		SetConsoleTextAttribute(console, color);
+
+	std::cout << cDoorSprite;
+	SetConsoleTextAttribute(console, cDefaultColor);
 }

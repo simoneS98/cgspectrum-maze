@@ -47,6 +47,11 @@ Room* Level::GetRoom(int x, int y)
 	return map[index];
 }
 
+Room* Level::GetCurrentRoom()
+{
+    return currentRoom;
+}
+
 Room** Level::GetMap()
 {
 	return map;
@@ -57,17 +62,24 @@ int Level::GetIndexFromXY(int x, int y)
 	return x * width + y;
 }
 
-bool Level::Load(std::string filename)
+bool Level::Load(std::string levelName, std::string roomName)
 {
     std::ifstream levelFile;
 
-    filename.insert(0, "../");
+    std::string fileName = levelName.append("/").append(roomName).append(".room");
 
-    levelFile.open(filename);
+    char* mapAsCharArray = nullptr;
+
+    // this is working directory for the current level
+    fileName.insert(0, "../levels/");
+
+    std::cout << "Trying to open file " << fileName << std::endl;
+
+    levelFile.open(fileName);
 
     if (!levelFile)
     {
-        std::cout << "Opening file failed!" << std::endl;
+        std::cout << "Opening level file failed!" << std::endl;
         return false;
     }
     else
@@ -90,20 +102,17 @@ bool Level::Load(std::string filename)
             int size = width * height + 1;
 
             // declaring character array (+1 for null terminator) 
-            char* mapAsCharArray = new char[size];
+            mapAsCharArray = new char[size];
             map = new Room * [size];
 
             // copying the contents of the 
             // string to char array
             strcpy_s(mapAsCharArray, size, line.c_str());
 
-            for (int i = 0; i < size; i++)
-            {
-                map[i] = RoomFactory::make(RoomContent(mapAsCharArray[i]));
-            }
+            
 
-            delete[] mapAsCharArray;
-            mapAsCharArray = nullptr;
+            //delete[] mapAsCharArray;
+            //mapAsCharArray = nullptr;
 
             levelFile.close();
         }
@@ -111,8 +120,10 @@ bool Level::Load(std::string filename)
         levelFile.close();
     }
 
-    if (map == nullptr)
+    if (mapAsCharArray == nullptr)
         return false;
+
+    currentRoom = new Room(width, height, mapAsCharArray);
 
     return true;
 }
@@ -130,7 +141,7 @@ void Level::DisplayRightBorder()
 
 void Level::DisplayVerticalBorder()
 {
-	std::cout << (char)RoomContent::WALL;
+	std::cout << (char)Sprite::WALL;
 }
 
 void Level::DisplayHorizontalBorder()
@@ -138,7 +149,7 @@ void Level::DisplayHorizontalBorder()
 	// -1 and +1 to take care of left and right corners
 	for (int i = -1; i < width + 1; i++)
 	{
-		std::cout << (char)RoomContent::WALL;
+		std::cout << (char)Sprite::WALL;
 	}
 
 	std::cout << std::endl;

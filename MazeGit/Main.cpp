@@ -13,19 +13,31 @@
 #include "FileUtils.h"
 #include "Game.h"
 
+using namespace std;
+
 int main()
 {
     Game game;
+
+    cout << "Which level do you want to play? (TODO: print list of levels)";
+
+    string levelName;
+
+    cin >> levelName;
     
-    if (game.Load())
+    if (game.Load(levelName))
     {
         while (!game.IsGameOver())
         {
             game.Run();
         }
 
-        std::cout << "YOU WON!!!" << std::endl;
-
+        if (game.DidUserQuit())
+            cout << "Thanks for playing!" << endl;
+        else if (game.GetPlayerLives() < 0)
+            cout << "YOU LOSE!!!!" << endl;
+        else
+            cout << "YOU WIN!!!" << endl;
     }
     else
     {

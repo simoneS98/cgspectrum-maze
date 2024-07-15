@@ -4,84 +4,69 @@
 #include "Room.h"
 
 Player::Player()
+	: Character(0,0,3)
+	, pCurrentKey(nullptr)
+	, money(0)
+	, lives(2)
 {
-	x = 0;
-	y = 0;
-	maxHp = 5;
-	hp = maxHp;
-	numKeys = 0;
+	
 }
 
-int Player::GetXPos()
+Player::~Player()
 {
-	return x;
+	delete pCurrentKey;
+	pCurrentKey = nullptr;
 }
 
-int Player::GetYPos()
+bool Player::HasKey()
 {
-	return y;
+	return pCurrentKey != nullptr;
 }
 
+bool Player::HasKey(Color color)
+{
+	return HasKey() && pCurrentKey->GetColor() == color;
+}
+
+/*
 int Player::GetNumKeys()
 {
 	return numKeys;
 }
+*/
 
-int Player::GetMaxHp()
+
+
+void Player::Draw()
 {
-	return maxHp;
+	std::cout << playerSprite;
 }
 
-int Player::GetCurrentHp()
+void Player::PickupKey(Key *key)
 {
-	return hp;
+	pCurrentKey = key;
 }
 
-// Setters
-
-void Player::SetPos(int x, int y)
+void Player::UseKey()
 {
-	this->x = x;
-	this->y = y;
+	pCurrentKey->Remove();
+	pCurrentKey = nullptr;
 }
 
-void Player::SetXPos(int x)
+void Player::DropKey()
 {
-	this->x = x;
-}
-
-void Player::SetYPos(int y)
-{
-	this->y = y;
-}
-
-
-void Player::TakeDamage(int amount)
-{
-	hp -= amount;
-	if (hp <= 0)
-		Die();
-}
-
-void Player::PickupKey()
-{
-	numKeys++;
-}
-
-bool Player::UseKey()
-{
-	if (numKeys <= 0)
-		return false;
-
-	numKeys--;
-
-	return true;
+	if (pCurrentKey)
+	{
+		pCurrentKey->Place(pPosition->x, pPosition->y);
+		pCurrentKey = nullptr;
+	}
 }
 
 void Player::Die()
 {
+	lives--;
 	//find a way to invoke event
-	system("cls");
-	std::cout << "Your HP reached 0! Game over." << std::endl;
-	exit(1);
+	//system("cls");
+	//std::cout << "Your HP reached 0! Game over." << std::endl;
+	//exit(1);
 }
