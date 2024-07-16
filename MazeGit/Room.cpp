@@ -14,8 +14,7 @@ Room::Room(int width, int height, char* pRoomData)
 	, height(height)
 	, pRoomData(pRoomData)
 {
-	//this->pRoomData = pRoomData;
-	Convert(0, 0);
+
 }
 
 Room::~Room()
@@ -37,6 +36,7 @@ Room::~Room()
 
 void Room::Draw()
 {
+	//TODO: what about the  player???
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, cDefaultColor);
 
@@ -70,6 +70,8 @@ void Room::Draw()
 			(*entity)->Draw();
 		}
 	}
+
+	SetConsoleCursorPosition(console, COORD{ 0,cMaxRoomHeight });
 }
 
 bool Room::IsSpace(int x, int y)
@@ -82,9 +84,11 @@ bool Room::IsWall(int x, int y)
 	return pRoomData[GetIndexFromXY(x, y)] == cSpriteWall;
 }
 
-bool Room::Convert(int* playerX, int* playerY)
+bool Room::Convert(int* playerX, int* playerY, char* pRoomNameBefore)
 {
 	bool anyWarnings = false;
+
+
 
 	for (int y = 0; y < height; y++)
 	{
@@ -119,21 +123,19 @@ bool Room::Convert(int* playerX, int* playerY)
 				break;
 			case (char)Editor::DOOR_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pEntities.push_back(new Key(x, y, Color::GREEN));
+				pEntities.push_back(new Door(x, y, Color::GREEN));
 				break;
 			case (char)Editor::DOOR_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pEntities.push_back(new Key(x, y, Color::BLUE));
+				pEntities.push_back(new Door(x, y, Color::BLUE));
 				break;
 			case (char)Editor::MONEY:
 				pRoomData[index] = cSpriteEmpty;
 				pEntities.push_back(new Money(x, y, 1 + rand() % 5));
 				break;
-			/*case (char)Editor::EXIT:
-				pRoomData[index] = cSpriteEmpty;
-				pEntities.push_back(new Exit(x, y,nullptr));
+			case (char)Editor::EXIT:
+				pEntities.push_back(new Exit(x,y,(char)Editor::EXIT));
 				break;
-			*/
 			case '0':
 			case '1':
 			case '2':
@@ -144,11 +146,22 @@ bool Room::Convert(int* playerX, int* playerY)
 			case '7':
 			case '8':
 			case '9':
-				pEntities.push_back(new Exit( x, y, std::string(1,tile) ));
+				// if player is coming from another floor, change his coordinates to the relative door
+				// won't work if there is more than one door with same char in a floor
+				if (pRoomNameBefore != nullptr)
+				{
+					if (*pRoomNameBefore == tile)
+					{
+						*playerX = x;
+						*playerY = y;
+					}
+
+				}
+				pEntities.push_back(new Exit( x, y, tile));
 				break;
 			case (char)Editor::PLAYER:
 				pRoomData[index] = cSpriteEmpty;
-				if (playerX != nullptr && playerY != nullptr)
+				if (playerX != nullptr && playerY != nullptr && pRoomNameBefore == nullptr)
 				{
 					*playerX = x;
 					*playerY = y;
@@ -206,23 +219,3 @@ int Room::GetIndexFromXY(int x, int y)
 {
 	return y * width + x;
 }
-
-/*
-void HazardRoom::OnEnter(Player* p)
-{
-	p->TakeDamage(damage);
-	__super::OnEnter(p);
-
-}
-
-HazardRoom::HazardRoom(Sprite type, int damage): Room(type)
-{
-	this->damage = damage;
-}
-
-HazardRoom::HazardRoom(Sprite type, Color color, int damage) : Room(type,color)
-{
-	this->damage = damage;
-}
-
-*/

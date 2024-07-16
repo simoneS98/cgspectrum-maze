@@ -19,7 +19,7 @@ public:
 
     bool HasKey();
     bool HasKey(Color color);
-    void PickupKey(Key* key);
+    bool TryPickupKey(Key* key);
 
     void UseKey();
     void DropKey();
@@ -28,9 +28,14 @@ public:
     int GetMoney() { return money; }
     int GetLives() { return lives; }
     void DecrementLives() { lives--; }
+
+    void BlockKeyDrop() { canDropKey = false; }
+    void RestoreKeyDrop() { canDropKey = true; }
     // Generic
     
     //TODO: pickup <T>
+
+    void DisplayInfo();
 
     virtual void Draw() override;
 
@@ -40,5 +45,6 @@ private:
     Key* pCurrentKey;
     int money;
     int lives;
+    bool canDropKey;
 
 };

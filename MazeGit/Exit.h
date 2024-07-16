@@ -9,12 +9,12 @@ class Exit : public GameEntity
 {
 public:
 
-	Exit(int x, int y, std::string fileName);
+	Exit(int x, int y, char nextRoomFileName);
 	void Draw() override;
-	Room* GetNextRoom() { return nextRoom; }
+	std::string GetNextRoomAsString();
 private:
-	Room* nextRoom;
+	//Room* nextRoom;
 	// used to load file called <nextRoomFileName>.txt
-	std::string nextRoomFileName;
+	char nextRoomFileName;
 };
 

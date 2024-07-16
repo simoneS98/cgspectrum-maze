@@ -16,7 +16,7 @@ void Door::Unlock()
 		isLocked = false;
 }
 */
-
+Color Door::GetColor() { return Color(closedColor); }
 
 void Door::Draw()
 {

@@ -25,7 +25,7 @@ enum class Sprite
 	WALL = 219,
 	KEY = 43,
 	MONEY = 36,
-	DOOR = 68,
+	DOOR = 88, // X
 	EMPTY = 32,
 	EXIT = 79,
 

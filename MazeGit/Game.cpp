@@ -8,20 +8,32 @@
 #include "Exit.h"
 #include <Windows.h>
 
-Game::Game()
+Game::Game(std::string levelName)
     : isGameOver(false)
     , player(Player())
+    , levelName(levelName)
+    , roomName("0")
 {
-	//level.Load()
+
 }
 
 Game::~Game()
 {
 }
 
-bool Game::Load(std::string levelName)
+bool Game::Load(std::string roomName, char *pRoomBefore)
 {
-	return level.Load(levelName);
+    if (!level.Load(levelName, roomName))
+        return false;
+
+    bool anyWarnings = level.GetCurrentRoom()->Convert(player.GetXPositionPtr(), player.GetYPositionPtr(), pRoomBefore);
+
+    if (anyWarnings)
+        return false;
+
+    this->roomName = roomName;
+
+    return true;
 }
 
 void Game::Run()
@@ -49,6 +61,8 @@ bool Game::Update()
     int newPlayerY = player.GetYPosition();
     int moveX = 0;
     int moveY = 0;
+
+
 
     if (input == cArrowInput)
     {
@@ -101,15 +115,19 @@ void Game::Draw()
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     system("cls");
     
-    level.GetCurrentRoom()->Draw();
+    level.Draw();
 
     // Set cursor position for player
     COORD actorCursorPosition = { player.GetXPosition(), player.GetYPosition() };
     SetConsoleCursorPosition(console, actorCursorPosition);
+    
+    player.Draw();
 
     // Set the cursor to the end of the level
-    COORD currentCursorPosition = { 0, level.GetHeight() };
+    COORD currentCursorPosition = { 0, level.GetHeight() + 1 };
     SetConsoleCursorPosition(console, currentCursorPosition);
+
+    player.DisplayInfo();
 
 }
 
@@ -119,11 +137,14 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
     GameEntity* collidedEntity = currentRoom->UpdateEntities(newPlayerX,newPlayerY);
     if (collidedEntity != nullptr && collidedEntity->IsActive())
     {
+        // if player already has key and is on a tile with something in it, prevent 'zZ' key from firing
+        // bad way of dealing with it
+        player.BlockKeyDrop();
         // if returned pointer is invalid, colldedEntity is not Enemy and thus collidedEnemy is nullptr
         Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedEntity);
         if (collidedEnemy)
         {
-            collidedEnemy->Remove();
+            collidedEnemy->Remove(); // TODO: why? let's implement combat (with multithreading)
 
             player.SetPosition(newPlayerX, newPlayerY);
 
@@ -147,10 +168,12 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
         Key* collidedKey = dynamic_cast<Key*>(collidedEntity);
         if (collidedKey)
         {
-            player.PickupKey(collidedKey);
-            collidedKey->Remove();
-            player.SetPosition(newPlayerX, newPlayerY);
+            // just to avoid checking if something is in (x,y) so to not to drop key on non-empty tile
+            // if player successfully picks up key, remove it from game
+            if (player.TryPickupKey(collidedKey))
+                collidedKey->Remove();
 
+            player.SetPosition(newPlayerX, newPlayerY);
         }
 
         Door* collidedDoor = dynamic_cast<Door*>(collidedEntity);
@@ -177,32 +200,39 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
             collidedExit->Remove();
             player.SetPosition(newPlayerX, newPlayerY);
 
-            Room* nextRoom = collidedExit->GetNextRoom();
+            std::string nextRoom = collidedExit->GetNextRoomAsString();
 
-            if (nextRoom == nullptr)
+            if (nextRoom.empty())
                 return true;
             else
-                LoadRoom(nextRoom);
+            {
+                Load(nextRoom, roomName.empty() ? nullptr : &roomName[0]);
+            }
+                
         }
     }
     else if (currentRoom->IsSpace(newPlayerX, newPlayerY)) // no collision
     {
+        player.RestoreKeyDrop();
         player.SetPosition(newPlayerX, newPlayerY);
     }
     else if (currentRoom->IsWall(newPlayerX, newPlayerY))
     {
         // wall collision, do nothing
+        player.RestoreKeyDrop();
     }
 
     return false;
 }
 
-void Game::LoadRoom(Room* room)
+/*void Game::LoadRoom(char roomName)
 {
     // save status of current Room
 
-    // load room
-}
+    Load()
+    
+    // load new room
+}*/
 
 
 /*

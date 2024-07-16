@@ -13,6 +13,7 @@ public:
 	bool IsLocked() { return isLocked; }
 	void Unlock() { isLocked = false; }
 	void Draw() override;
+	Color GetColor() override;
 
 private:
 	Room* nextRoom;

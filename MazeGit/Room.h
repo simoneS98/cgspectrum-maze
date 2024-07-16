@@ -23,6 +23,7 @@ class Room
 		GameEntity* UpdateEntities(int x, int y);
 		bool IsSpace(int x, int y);
 		bool IsWall(int x, int y);
+		bool Convert(int* playerX, int* playerY, char* pRoomBefore = nullptr);
 
 	private:
 		int width;
@@ -31,6 +32,6 @@ class Room
 		std::vector<GameEntity*> pEntities;
 
 		int GetIndexFromXY(int x, int y);
-		bool Convert(int* playerX, int* playerY);
+		
 		
 };

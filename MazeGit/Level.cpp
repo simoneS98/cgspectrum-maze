@@ -52,6 +52,11 @@ Room* Level::GetCurrentRoom()
     return currentRoom;
 }
 
+char* Level::GetCurrentRoomChar()
+{
+    return pCurrentRoomChar;
+}
+
 Room** Level::GetMap()
 {
 	return map;
@@ -64,6 +69,12 @@ int Level::GetIndexFromXY(int x, int y)
 
 bool Level::Load(std::string levelName, std::string roomName)
 {
+    if (currentRoom != nullptr)
+    {
+        delete currentRoom;
+        currentRoom = nullptr;
+    }
+
     std::ifstream levelFile;
 
     std::string fileName = levelName.append("/").append(roomName).append(".room");
@@ -149,8 +160,15 @@ void Level::DisplayHorizontalBorder()
 	// -1 and +1 to take care of left and right corners
 	for (int i = -1; i < width + 1; i++)
 	{
-		std::cout << (char)Sprite::WALL;
+		std::cout << (char)Sprite::PERIMETER;
 	}
 
 	std::cout << std::endl;
+}
+
+void Level::Draw()
+{
+    //DisplayHorizontalBorder();
+    currentRoom->Draw();
+    //DisplayHorizontalBorder();
 }

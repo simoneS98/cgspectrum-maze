@@ -8,6 +8,7 @@ Player::Player()
 	, pCurrentKey(nullptr)
 	, money(0)
 	, lives(2)
+	, canDropKey(true)
 {
 	
 }
@@ -37,14 +38,34 @@ int Player::GetNumKeys()
 
 
 
+void Player::DisplayInfo()
+{
+	std::cout << "PLAYER INFO" << std::endl;
+
+	std::cout << "Current key: ";
+
+	if (pCurrentKey == nullptr)
+		std::cout << "none";
+	else
+		pCurrentKey->Draw();
+
+	std::cout << "\t" << "Money: " << GetMoney();
+
+	std::cout << std::endl;
+}
+
 void Player::Draw()
 {
 	std::cout << playerSprite;
 }
 
-void Player::PickupKey(Key *key)
+bool Player::TryPickupKey(Key *key)
 {
+	if (pCurrentKey != nullptr)
+		return false;
+		
 	pCurrentKey = key;
+	return true;
 }
 
 void Player::UseKey()
@@ -55,7 +76,7 @@ void Player::UseKey()
 
 void Player::DropKey()
 {
-	if (pCurrentKey)
+	if (pCurrentKey && canDropKey)
 	{
 		pCurrentKey->Place(pPosition->x, pPosition->y);
 		pCurrentKey = nullptr;

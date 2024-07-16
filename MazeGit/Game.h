@@ -15,12 +15,14 @@ class Game
 	Level level;
 	bool isGameOver;
 	bool userQuit;
+	std::string levelName;
+	std::string roomName;
 
 public:
-	Game();
+	Game(std::string levelName);
 	~Game();
 
-	bool Load(std::string levelName);
+	bool Load(std::string roomName = "0", char *pRoomBefore = nullptr);
 	void Run();
 
 	bool IsGameOver();
@@ -34,5 +36,7 @@ private:
 
 	bool HandleCollision(int newPlayerX, int newPlayerY);
 	void LoadRoom(Room* room);
+
+	void SetLevelName(std::string levelName) { this->levelName = levelName; }
 };
 

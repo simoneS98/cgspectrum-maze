@@ -17,16 +17,17 @@ using namespace std;
 
 int main()
 {
-    Game game;
-
     cout << "Which level do you want to play? (TODO: print list of levels)";
 
     string levelName;
 
     cin >> levelName;
+
+    Game game = Game(levelName);
     
-    if (game.Load(levelName))
+    if (game.Load())
     {
+
         while (!game.IsGameOver())
         {
             game.Run();

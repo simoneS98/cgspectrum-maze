@@ -27,7 +27,7 @@ public:
 	void Remove() { isActive = false; }
 	bool IsActive() { return isActive; }
 	void Place(int x, int y);
-	Color GetColor() { return Color(color); }
+	virtual Color GetColor() { return Color(color); }
 
 
 

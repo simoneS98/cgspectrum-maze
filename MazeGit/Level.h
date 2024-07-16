@@ -20,9 +20,12 @@ class Level
         int GetSize();
         Room* GetRoom(int x, int y);
         Room* GetCurrentRoom();
+        char* GetCurrentRoomChar();
         Room** GetMap();
 
-        bool Load(std::string levelName, std::string roomName = "0");
+        void Draw();
+
+        bool Load(std::string levelName, std::string roomName);
         void DisplayLeftBorder();
         void DisplayRightBorder();
         void DisplayHorizontalBorder();
@@ -38,6 +41,6 @@ class Level
         std::vector<GameEntity*> pEntities;
         Room** map = nullptr;
         Room* currentRoom = nullptr;
-
+        char* pCurrentRoomChar;
         int GetIndexFromXY(int x, int y);
 };
