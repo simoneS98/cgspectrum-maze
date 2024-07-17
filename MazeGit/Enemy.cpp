@@ -29,10 +29,20 @@ void Enemy::Update()
 {
 	if (movementInX != 0)
 		UpdateDirection(currentMovementX, directionX, movementInX);
-	if (movementInX != 0)
-		UpdateDirection(currentMovementX, directionX, movementInX);
+	if (movementInY != 0)
+		UpdateDirection(currentMovementY, directionY, movementInY);
 
 	this->SetPosition(pPosition->x + directionX, pPosition->y + directionY);
+}
+
+void Enemy::ChangeDirection()
+{
+	if (movementInX != 0)
+		int _directionX = directionX * -1;
+	if (movementInY != 0)
+		int _directionY = directionY * -1;
+
+	this->SetPosition(pPosition->x - directionX, pPosition->y - directionY);
 }
 
 void Enemy::UpdateDirection(int& current, int& direction, int& movement)

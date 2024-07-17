@@ -52,11 +52,6 @@ Room* Level::GetCurrentRoom()
     return currentRoom;
 }
 
-char* Level::GetCurrentRoomChar()
-{
-    return pCurrentRoomChar;
-}
-
 Room** Level::GetMap()
 {
 	return map;

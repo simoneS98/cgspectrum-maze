@@ -62,8 +62,6 @@ bool Game::Update()
     int moveX = 0;
     int moveY = 0;
 
-
-
     if (input == cArrowInput)
     {
         arrowInput = _getch();
@@ -140,7 +138,7 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
         // if player already has key and is on a tile with something in it, prevent 'zZ' key from firing
         // bad way of dealing with it
         player.BlockKeyDrop();
-        // if returned pointer is invalid, colldedEntity is not Enemy and thus collidedEnemy is nullptr
+        // if returned pointer is invalid, collidedEntity is not Enemy and thus collidedEnemy is nullptr
         Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedEntity);
         if (collidedEnemy)
         {

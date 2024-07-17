@@ -2,6 +2,7 @@
 #include "Character.h"
 
 constexpr char cEnemySprite = (char)Sprite::ENEMY;
+// TODO: random direction every time it touches a wall
 class Enemy :
     public Character
 {
@@ -10,6 +11,8 @@ public:
 
     virtual void Draw() override;
     virtual void Update() override;
+
+    void ChangeDirection();
 
     int GetDamage() { return damage; }
 private:

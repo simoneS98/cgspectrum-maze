@@ -204,6 +204,16 @@ GameEntity* Room::UpdateEntities(int x, int y)
 	for (auto entity = pEntities.begin(); entity != pEntities.end(); ++entity)
 	{
 		(*entity)->Update(); // Update all entities
+		Enemy* collidedEnemy = dynamic_cast<Enemy*>(*entity);
+		if (collidedEnemy)
+		{
+			int _x = collidedEnemy->GetXPosition();
+			int _y = collidedEnemy->GetYPosition();
+			if (pRoomData[GetIndexFromXY(_x, _y)] == cSpriteWall)
+			{
+				collidedEnemy->ChangeDirection();
+			}
+		}
 
 		if (x == (*entity)->GetXPosition() && y == (*entity)->GetYPosition())
 		{

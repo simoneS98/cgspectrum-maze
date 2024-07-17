@@ -25,6 +25,7 @@ class Level
 
         void Draw();
 
+        // TODO: save level state before loading a new one
         bool Load(std::string levelName, std::string roomName);
         void DisplayLeftBorder();
         void DisplayRightBorder();
@@ -41,6 +42,5 @@ class Level
         std::vector<GameEntity*> pEntities;
         Room** map = nullptr;
         Room* currentRoom = nullptr;
-        char* pCurrentRoomChar;
         int GetIndexFromXY(int x, int y);
 };
