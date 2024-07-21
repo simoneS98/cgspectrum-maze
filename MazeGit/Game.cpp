@@ -26,7 +26,7 @@ bool Game::Load(std::string roomName, char *pRoomBefore)
     if (!level.Load(levelName, roomName))
         return false;
 
-    bool anyWarnings = level.GetCurrentRoom()->Convert(player.GetXPositionPtr(), player.GetYPositionPtr(), pRoomBefore);
+    bool anyWarnings = level.GetCurrentRoom()->Convert(&player, pRoomBefore);
 
     if (anyWarnings)
         return false;
@@ -38,14 +38,19 @@ bool Game::Load(std::string roomName, char *pRoomBefore)
 
 void Game::Run()
 {
-	Draw();
+    // Process Inputs
 
-	isGameOver = Update();
+    //Point playerRequestedDirection = GetPlayerInput();
+        
+    //UpdatePlayerPosition(playerRequestedDirection);
 
-	/*
-    if (isGameOver)
-		Draw();
-    */
+    // Updates Game World
+    //isGameOver = UpdateGameWorld();
+
+    
+    UpdateGameWorld();
+	// Generate Outputs
+    Draw();
 }
 
 bool Game::IsGameOver()
@@ -53,66 +58,29 @@ bool Game::IsGameOver()
 	return isGameOver;
 }
 
-bool Game::Update()
+
+void Game::UpdatePlayerPosition(Point direction)
 {
-    char input = _getch();
-    int arrowInput = 0;
-    int newPlayerX = player.GetXPosition();
-    int newPlayerY = player.GetYPosition();
-    int moveX = 0;
-    int moveY = 0;
+    if (!PlayerCanMoveInDirection(direction))
+        return;
 
-    if (input == cArrowInput)
-    {
-        arrowInput = _getch();
-    }
+    (*player.GetXPositionPtr()) += direction.x;
+    (*player.GetYPositionPtr()) += direction.y;
 
-    if ((input == cArrowInput && arrowInput == cArrowLeft) ||
-        (char)input == 'A' || (char)input == 'a')
-    {
-        newPlayerX--;
-    }
-    else if ((input == cArrowInput && arrowInput == cArrowRight) ||
-        (char)input == 'D' || (char)input == 'd')
-    {
-        newPlayerX++;
-    }
-    else if((input == cArrowInput && arrowInput == cArrowDown) ||
-        (char)input == 'S' || (char)input == 's')
-    {
-        newPlayerY++;
-    }
-    else if ((input == cArrowInput && arrowInput == cArrowUp) ||
-        (char)input == 'W' || (char)input == 'w')
-    {
-        newPlayerY--;
-    }
-    else if(input == cEscape)
-    {
-        userQuit = true;
-        return true;
-    }
-    else if ((char)input == 'Z' || (char)input == 'z')
-    {
-        player.DropKey();
-    }
+    //level.GetCurrentRoom()->
+}
 
-    // If position never changed
-    if (newPlayerX == player.GetXPosition() && newPlayerY == player.GetYPosition())
-    {
-        return false;
-    }
-    else
-    {
-        return HandleCollision(newPlayerX, newPlayerY);
-    }
+bool Game::UpdateGameWorld()
+{
+    level.GetCurrentRoom()->UpdateEntities();
+    return false;
 }
 
 void Game::Draw()
 {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     system("cls");
-    
+
     level.Draw();
 
     // Set cursor position for player
@@ -129,16 +97,81 @@ void Game::Draw()
 
 }
 
+bool Game::PlayerCanMoveInDirection(Point direction)
+{
+    int x = player.GetXPosition() + direction.x;
+    int y = player.GetYPosition() + direction.y;
+
+    //Room* r = level.GetCurrentRoom();
+
+    // TODO: could be extended with an IsObstacle function
+    return !level.GetCurrentRoom()->IsWall(x, y);
+}
+
+Point Game::GetPlayerInput()
+{
+    char input = _getch();
+    int arrowInput = 0;
+    //int newPlayerX = player.GetXPosition();
+    //int newPlayerY = player.GetYPosition();
+    int inputMovementX = 0;
+    int inputMovementY = 0;
+
+    if (input == cArrowInput)
+    {
+        arrowInput = _getch();
+    }
+
+    // 1? could also use varying user speed
+    if ((input == cArrowInput && arrowInput == cArrowLeft) ||
+        (char)input == 'A' || (char)input == 'a')
+    {
+        inputMovementX--;
+    }
+    else if ((input == cArrowInput && arrowInput == cArrowRight) ||
+        (char)input == 'D' || (char)input == 'd')
+    {
+        inputMovementX = 1;
+    }
+    else if ((input == cArrowInput && arrowInput == cArrowDown) ||
+        (char)input == 'S' || (char)input == 's')
+    {
+        inputMovementY = 1;
+    }
+    else if ((input == cArrowInput && arrowInput == cArrowUp) ||
+        (char)input == 'W' || (char)input == 'w')
+    {
+        inputMovementY = -1;
+    }
+    else if (input == cEscape)
+    {
+        userQuit = true;
+    }
+    else if ((char)input == 'Z' || (char)input == 'z')
+    {
+        player.DropKey();
+    }
+    /*
+        //just check ALL COLLISIONS[
+        //return level.GetCurrentRoom()->UpdateEntities();
+        //return HandleCollision(newPlayerX, newPlayerY);
+    */
+    return Point(inputMovementX, inputMovementY);
+}
+
 bool Game::HandleCollision(int newPlayerX, int newPlayerY)
 {
     Room* currentRoom = level.GetCurrentRoom();
-    GameEntity* collidedEntity = currentRoom->UpdateEntities(newPlayerX,newPlayerY);
+    GameEntity* collidedEntity = currentRoom->UpdateEntities();
     if (collidedEntity != nullptr && collidedEntity->IsActive())
     {
         // if player already has key and is on a tile with something in it, prevent 'zZ' key from firing
         // bad way of dealing with it
         player.BlockKeyDrop();
         // if returned pointer is invalid, collidedEntity is not Enemy and thus collidedEnemy is nullptr
+        collidedEntity->HandleCollision(&player);
+        // no...in realtà qualsiasi tipo di collision
+        /*
         Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedEntity);
         if (collidedEnemy)
         {
@@ -208,11 +241,13 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
             }
                 
         }
+        */
+        
     }
     else if (currentRoom->IsSpace(newPlayerX, newPlayerY)) // no collision
     {
         player.RestoreKeyDrop();
-        player.SetPosition(newPlayerX, newPlayerY);
+        //player.SetPosition(newPlayerX, newPlayerY);
     }
     else if (currentRoom->IsWall(newPlayerX, newPlayerY))
     {

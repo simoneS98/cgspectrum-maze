@@ -7,14 +7,16 @@ class Enemy :
     public Character
 {
 public:
-    Enemy(int x, int y, int maxHp, int deltaX = 0, int deltaY = 0, int damage = 0);
+    Enemy(int x, int y, int maxHp, int damage = 0, int deltaX = 0, int deltaY = 0);
 
     virtual void Draw() override;
-    virtual void Update() override;
+    virtual Point Update() override;
+    virtual bool HandleCollision(GameEntity* collidedEntity) override;
 
     void ChangeDirection();
 
     int GetDamage() { return damage; }
+
 private:
     // how many tiles the Enemy moves before switching direction
     int movementInX;
@@ -33,5 +35,7 @@ private:
     int damage;
 
     void UpdateDirection(int& current, int& direction, int& movement);
+
+    Point GetDirection() { return Point(directionX, directionY); }
 };
 

@@ -42,11 +42,10 @@ enum class Sprite
 
 enum class Color
 {
-	DOOR_OPEN = 10,
-	DOOR_CLOSED = 12,
+	DOOR_OPEN = 8,
 	DEFAULT = 7,
 	HAZARD = 13,
-	PERIMETER = 8,
+	PERIMETER = 24,
 	GREEN_MONEY = 2,
 	RED = 12,
 	GREEN = 10,

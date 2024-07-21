@@ -20,15 +20,18 @@ class Room
 
 		// Calls Draw on everything which is inside it
 		void Draw();
-		GameEntity* UpdateEntities(int x, int y);
+		GameEntity* UpdateEntities();
 		bool IsSpace(int x, int y);
 		bool IsWall(int x, int y);
-		bool Convert(int* playerX, int* playerY, char* pRoomBefore = nullptr);
+		bool Convert(Player* player, char* pRoomBefore = nullptr);
 
 	private:
 		int width;
 		int height;
 		char* pRoomData;
+		// well of course Dictionaries will be better for this...
+		//GameEntity** pRoomEntities;
+		std::vector<GameEntity*> pRoomEntities;
 		std::vector<GameEntity*> pEntities;
 
 		int GetIndexFromXY(int x, int y);

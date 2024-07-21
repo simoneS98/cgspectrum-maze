@@ -45,3 +45,15 @@ void GameEntity::Place(int x, int y)
 	pPosition->y = y;
 	isActive = true;
 }
+
+/*
+bool GameEntity::TryPickupKey(int key)
+{
+	return false;
+}
+
+*/
+bool GameEntity::HandleCollision(GameEntity* collidedEntity)
+{
+	return true;
+}

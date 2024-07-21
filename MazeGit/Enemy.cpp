@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include <iostream>
 
-Enemy::Enemy(int x, int y, int maxHp, int deltaX, int deltaY, int damage)
+Enemy::Enemy(int x, int y, int maxHp, int damage, int deltaX, int deltaY)
 	: Character(x, y, maxHp)
 	, currentMovementX(0)
 	, currentMovementY(0)
@@ -25,15 +25,34 @@ void Enemy::Draw()
 	std::cout << cEnemySprite;
 }
 
-void Enemy::Update()
+Point Enemy::Update()
 {
 	if (movementInX != 0)
 		UpdateDirection(currentMovementX, directionX, movementInX);
 	if (movementInY != 0)
 		UpdateDirection(currentMovementY, directionY, movementInY);
-
-	this->SetPosition(pPosition->x + directionX, pPosition->y + directionY);
+	
+	//this->SetPosition(pPosition->x + directionX, pPosition->y + directionY);
+	return Point(directionX, directionY);
 }
+
+bool Enemy::HandleCollision(GameEntity* collidedEntity)
+{
+	//if(collidedEntity->
+	// TODO: if collidedEntitis->IsFoe() ... why not?
+	Character* foe = dynamic_cast<Character*>(collidedEntity);
+
+	// WHY IT DOESNT WORK
+
+	// can't be in a place occupied by something not considered foe
+	if (!foe)
+		foe->TakeDamage(damage);
+		//return false;
+
+	return false;
+		
+}
+
 
 void Enemy::ChangeDirection()
 {

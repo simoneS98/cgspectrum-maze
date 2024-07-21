@@ -2,10 +2,10 @@
 #include <iostream>
 #include <Windows.h>
 
-Door::Door(int x, int y, Color closedColor, Color openColor) :
+Door::Door(int x, int y,Color openColor) :
 	GameEntity::GameEntity(x,y,openColor)
 	, isLocked(true)
-	, closedColor((int)closedColor)
+	, openColor((int)Color::DOOR_OPEN)
 {
 }
 
@@ -16,16 +16,21 @@ void Door::Unlock()
 		isLocked = false;
 }
 */
-Color Door::GetColor() { return Color(closedColor); }
+Color Door::GetColor() { return Color(color); }
+
+bool Door::HandleCollision(GameEntity* collidedEntity)
+{
+	return collidedEntity->TryUseKeyOn(this);
+}
 
 void Door::Draw()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	if(isLocked)
-		SetConsoleTextAttribute(console, closedColor);
-	else
 		SetConsoleTextAttribute(console, color);
+	else
+		SetConsoleTextAttribute(console, openColor);
 
 	std::cout << cDoorSprite;
 	SetConsoleTextAttribute(console, cDefaultColor);

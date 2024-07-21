@@ -1,6 +1,7 @@
 #pragma once
 #include "Enums.h"
 #include "Point.h"
+//#include "Key.h"
 
 constexpr int cDefaultColor = (int)Color::DEFAULT;
 
@@ -21,6 +22,8 @@ public:
 	int GetYPosition();
 	int* GetXPositionPtr();
 	int* GetYPositionPtr();
+	
+	Point GetPosition() { return *pPosition; }
 	void SetPosition(int x, int y);
 
 	//int GetColor() { return color; };
@@ -33,9 +36,14 @@ public:
 
 	// HAS to be overridden
 	virtual void Draw() = 0;
-	virtual void Update()
+	virtual bool TryUseKeyOn(GameEntity* lockedEntity) { return false; }
+	virtual bool TryPickupKey(GameEntity* key) { return false; }
+
+	virtual Point Update()
 	{
-		// no implementation, base Entities have no business logic by themselves
+		return Point(0,0);
 	}
+
+	virtual bool HandleCollision(GameEntity* collidedEntity);
 };
 

@@ -31,8 +31,12 @@ public:
 	int GetPlayerLives() { return player.GetLives(); }
 
 private:
-	bool Update();
+	void UpdatePlayerPosition(Point direction);
+	bool UpdateGameWorld();
 	void Draw();
+	bool CheckIfGameEnded();
+	bool PlayerCanMoveInDirection(Point direction);
+	Point GetPlayerInput();
 
 	bool HandleCollision(int newPlayerX, int newPlayerY);
 	void LoadRoom(Room* room);

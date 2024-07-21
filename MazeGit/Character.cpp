@@ -1,9 +1,12 @@
 #include "Character.h"
+#include "Door.h"
 
 Character::Character(int x, int y, int maxHp)
 	: GameEntity(x,y)
 	, maxHp(maxHp)
+	, pCurrentKey(nullptr)
 {
+	hp = maxHp;
 }
 
 int Character::GetMaxHp()
@@ -21,6 +24,16 @@ void Character::TakeDamage(int amount)
 	hp -= amount;
 	if (hp <= 0)
 		Die();
+}
+
+
+bool Character::TryPickupKey(GameEntity* key)
+{
+	if (pCurrentKey != nullptr)
+		return false;
+
+	pCurrentKey = (Key*)key;
+	return true;
 }
 
 

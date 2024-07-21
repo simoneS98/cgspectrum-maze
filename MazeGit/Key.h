@@ -7,8 +7,10 @@ constexpr char keySprite = (char)Sprite::KEY;
 class Key : public GameEntity
 {
 public:
-	Key(int x, int y, Color color) : GameEntity(x,y,color) {}
+	Key(int x, int y, Color color);
 
 	virtual void Draw() override;
+
+	virtual bool HandleCollision(GameEntity* collidedEntity) override;
 };
 

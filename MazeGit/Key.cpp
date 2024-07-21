@@ -3,6 +3,11 @@
 
 #include "Key.h"
 
+Key::Key(int x, int y, Color color)
+	: GameEntity(x, y, color)
+{
+}
+
 void Key::Draw()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -11,4 +16,10 @@ void Key::Draw()
 	std::cout << keySprite;
 
 	SetConsoleTextAttribute(console, cDefaultColor);
+}
+
+
+bool Key::HandleCollision(GameEntity* collidedEntity)
+{
+	return collidedEntity->TryPickupKey(this);
 }

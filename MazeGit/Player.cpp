@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Room.h"
+#include <Windows.h>
+#include <conio.h>
+#include "Door.h"
+
 
 Player::Player()
 	: Character(0,0,3)
-	, pCurrentKey(nullptr)
 	, money(0)
 	, lives(2)
 	, canDropKey(true)
@@ -29,6 +32,7 @@ bool Player::HasKey(Color color)
 	return HasKey() && pCurrentKey->GetColor() == color;
 }
 
+
 /*
 int Player::GetNumKeys()
 {
@@ -51,6 +55,15 @@ void Player::DisplayInfo()
 
 	std::cout << "\t" << "Money: " << GetMoney();
 
+    std::cout << "\t" << "HP: " << hp << "/" << maxHp << std::endl;
+
+    std::cout << "Lives left: ";
+
+    for (int i = 0; i < lives; i++)
+    {
+        std::cout << "*";
+    }
+
 	std::cout << std::endl;
 }
 
@@ -59,14 +72,6 @@ void Player::Draw()
 	std::cout << playerSprite;
 }
 
-bool Player::TryPickupKey(Key *key)
-{
-	if (pCurrentKey != nullptr)
-		return false;
-		
-	pCurrentKey = key;
-	return true;
-}
 
 void Player::UseKey()
 {
@@ -90,4 +95,94 @@ void Player::Die()
 	//system("cls");
 	//std::cout << "Your HP reached 0! Game over." << std::endl;
 	//exit(1);
+}
+
+Point Player::Update()
+{
+    Point inputDirection = GetInput();
+
+    //inputDirection += GetPosition();
+
+    return inputDirection;
+}
+
+bool Player::HandleCollision(GameEntity* collidedEntity)
+{
+    return true;
+}
+
+// only implemented in Player class
+bool Player::TryUseKeyOn(GameEntity* lockedEntity)
+{
+    if (pCurrentKey == nullptr)
+        return false;
+
+    if (pCurrentKey->GetColor() == lockedEntity->GetColor())
+    {
+        //UseKey();
+        dynamic_cast<Door*>(lockedEntity)->Unlock();
+        UseKey();
+        return true;
+    }
+
+    return false;
+}
+
+Point Player::GetInput()
+{
+    char cArrowInput = (char)Input::ARROW_IN;
+    char cArrowLeft = (char)Input::ARROW_LEFT;
+    char cArrowRight = (char)Input::ARROW_RIGHT;
+    char cArrowDown = (char)Input::ARROW_DOWN;
+    char cArrowUp = (char)Input::ARROW_UP;
+    char cEscape = (char)Input::ESC;
+
+    char input = _getch();
+    int arrowInput = 0;
+    //int newPlayerX = player.GetXPosition();
+    //int newPlayerY = player.GetYPosition();
+    int inputMovementX = 0;
+    int inputMovementY = 0;
+
+    if (input == cArrowInput)
+    {
+        arrowInput = _getch();
+    }
+
+    // 1? could also use varying user speed
+    if ((input == cArrowInput && arrowInput == cArrowLeft) ||
+        (char)input == 'A' || (char)input == 'a')
+    {
+        inputMovementX--;
+    }
+    else if ((input == cArrowInput && arrowInput == cArrowRight) ||
+        (char)input == 'D' || (char)input == 'd')
+    {
+        inputMovementX = 1;
+    }
+    else if ((input == cArrowInput && arrowInput == cArrowDown) ||
+        (char)input == 'S' || (char)input == 's')
+    {
+        inputMovementY = 1;
+    }
+    else if ((input == cArrowInput && arrowInput == cArrowUp) ||
+        (char)input == 'W' || (char)input == 'w')
+    {
+        inputMovementY = -1;
+    }
+    else if (input == cEscape)
+    {
+        //userQuit = true;
+    }
+    else if ((char)input == 'Z' || (char)input == 'z')
+    {
+        DropKey();
+    }
+    /*
+        //just check ALL COLLISIONS[
+        //return level.GetCurrentRoom()->UpdateEntities();
+        //return HandleCollision(newPlayerX, newPlayerY);
+    */
+    return Point(inputMovementX, inputMovementY);
+    
 }

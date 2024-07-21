@@ -1,11 +1,13 @@
 #pragma once
 #include "GameEntity.h"
+#include "Key.h"
 
 class Character : public GameEntity
 {
 protected:
 	int hp;
 	int maxHp;
+	Key* pCurrentKey;
 
 	virtual void Die();
 public:
@@ -13,6 +15,7 @@ public:
 	//virtual void MoveTo(int x, int y);
 	int GetMaxHp();
 	int GetCurrentHp();
-	void TakeDamage(int amount);
+	virtual void TakeDamage(int amount);
+	virtual bool TryPickupKey(GameEntity* key) override;
 };
 

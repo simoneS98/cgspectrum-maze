@@ -19,9 +19,7 @@ public:
 
     bool HasKey();
     bool HasKey(Color color);
-    bool TryPickupKey(Key* key);
 
-    void UseKey();
     void DropKey();
 
     void AddMoney(int money) { this->money += money; }
@@ -41,10 +39,18 @@ public:
 
     virtual void Die() override;
 
+    virtual Point Update() override;
+
+    virtual bool HandleCollision(GameEntity* collidedEntity) override;
+
+    virtual bool TryUseKeyOn(GameEntity* lockedEntity) override;
+
 private:
-    Key* pCurrentKey;
     int money;
     int lives;
     bool canDropKey;
+    Point GetInput();
+
+    void UseKey();
 
 };

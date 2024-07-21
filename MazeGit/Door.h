@@ -9,17 +9,19 @@ class Door : public GameEntity
 {
 public:
 
-	Door(int x, int y, Color closedColor, Color openColor = Color::DEFAULT);
+	Door(int x, int y, Color closedColor);
 	bool IsLocked() { return isLocked; }
 	void Unlock() { isLocked = false; }
 	void Draw() override;
-	Color GetColor() override;
+	virtual Color GetColor() override;
+
+	virtual bool HandleCollision(GameEntity* collidedEntity) override;
 
 private:
 	Room* nextRoom;
 	// used to load file called <nextRoomFileName>.txt
 	std::string nextRoomFileName;
 	bool isLocked;
-	int closedColor;
+	int openColor;
 };
 
