@@ -7,11 +7,11 @@ class Enemy :
     public Character
 {
 public:
-    Enemy(int x, int y, int maxHp, int damage = 0, int deltaX = 0, int deltaY = 0);
+    Enemy(int x, int y, Room* pRoom, int maxHp, int damage = 0, int deltaX = 0, int deltaY = 0);
 
     virtual void Draw() override;
     virtual Point Update() override;
-    virtual bool HandleCollision(GameEntity* collidedEntity) override;
+    virtual bool CollideWith(GameEntity* collidedEntity) override;
 
     void ChangeDirection();
 

@@ -9,7 +9,7 @@ class Exit : public GameEntity
 {
 public:
 
-	Exit(int x, int y, char nextRoomFileName);
+	Exit(int x, int y, Room* pRoom, char nextRoomFileName);
 	void Draw() override;
 	std::string GetNextRoomAsString();
 private:

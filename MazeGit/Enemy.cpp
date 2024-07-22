@@ -1,8 +1,8 @@
 #include "Enemy.h"
 #include <iostream>
 
-Enemy::Enemy(int x, int y, int maxHp, int damage, int deltaX, int deltaY)
-	: Character(x, y, maxHp)
+Enemy::Enemy(int x, int y, Room* pRoom, int maxHp, int damage, int deltaX, int deltaY)
+	: Character(x, y, pRoom, maxHp)
 	, currentMovementX(0)
 	, currentMovementY(0)
 	, directionX(0)
@@ -36,7 +36,7 @@ Point Enemy::Update()
 	return Point(directionX, directionY);
 }
 
-bool Enemy::HandleCollision(GameEntity* collidedEntity)
+bool Enemy::CollideWith(GameEntity* collidedEntity)
 {
 	//if(collidedEntity->
 	// TODO: if collidedEntitis->IsFoe() ... why not?

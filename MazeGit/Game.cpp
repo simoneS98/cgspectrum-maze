@@ -1,22 +1,16 @@
 #include "Game.h"
 #include <iostream>
 #include <conio.h>
-#include "Room.h"
-#include "Enemy.h"
-#include "Door.h"
-#include "Money.h"
-#include "Exit.h"
 #include <Windows.h>
 #include "EventManager.h"
 
 
+
 Game::Game(std::string levelName)
     : isGameOver(false)
-    , player(Player())
     , levelName(levelName)
     , roomName("0")
 {
-
 }
 
 Game::~Game()
@@ -28,12 +22,15 @@ bool Game::Load(std::string roomName, char *pRoomBefore)
     if (!level.Load(levelName, roomName))
         return false;
 
-    bool anyWarnings = level.GetCurrentRoom()->Convert(&player, pRoomBefore);
+    this->roomName = roomName;
+    this->player = new Player(level.GetCurrentRoom());
+
+    bool anyWarnings = level.GetCurrentRoom()->Convert(player, pRoomBefore);
 
     if (anyWarnings)
         return false;
 
-    this->roomName = roomName;
+
 
     return true;
 }
@@ -68,8 +65,8 @@ void Game::UpdatePlayerPosition(Point direction)
     if (!PlayerCanMoveInDirection(direction))
         return;
 
-    (*player.GetXPositionPtr()) += direction.x;
-    (*player.GetYPositionPtr()) += direction.y;
+    (*player->GetXPositionPtr()) += direction.x;
+    (*player->GetYPositionPtr()) += direction.y;
 
     //level.GetCurrentRoom()->
 }
@@ -88,23 +85,23 @@ void Game::Draw()
     level.Draw();
 
     // Set cursor position for player
-    COORD actorCursorPosition = { player.GetXPosition(), player.GetYPosition() };
-    SetConsoleCursorPosition(console, actorCursorPosition);
+    //COORD actorCursorPosition = { player->GetXPosition(), player->GetYPosition() };
+    //SetConsoleCursorPosition(console, actorCursorPosition);
     
-    player.Draw();
+    //player->Draw();
 
     // Set the cursor to the end of the level
     COORD currentCursorPosition = { 0, level.GetHeight() + 1 };
     SetConsoleCursorPosition(console, currentCursorPosition);
 
-    player.DisplayInfo();
+    player->DisplayInfo();
 
 }
 
 bool Game::PlayerCanMoveInDirection(Point direction)
 {
-    int x = player.GetXPosition() + direction.x;
-    int y = player.GetYPosition() + direction.y;
+    int x = player->GetXPosition() + direction.x;
+    int y = player->GetYPosition() + direction.y;
 
     //Room* r = level.GetCurrentRoom();
 
@@ -153,7 +150,7 @@ Point Game::GetPlayerInput()
     }
     else if ((char)input == 'Z' || (char)input == 'z')
     {
-        player.DropKey();
+        player->DropKey();
     }
     /*
         //just check ALL COLLISIONS[
@@ -171,9 +168,9 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
     {
         // if player already has key and is on a tile with something in it, prevent 'zZ' key from firing
         // bad way of dealing with it
-        player.BlockKeyDrop();
+        player->BlockKeyDrop();
         // if returned pointer is invalid, collidedEntity is not Enemy and thus collidedEnemy is nullptr
-        collidedEntity->HandleCollision(&player);
+        collidedEntity->CollideWith(player);
         // no...in realtà qualsiasi tipo di collision
         /*
         Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedEntity);
@@ -250,13 +247,13 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
     }
     else if (currentRoom->IsSpace(newPlayerX, newPlayerY)) // no collision
     {
-        player.RestoreKeyDrop();
+        player->RestoreKeyDrop();
         //player.SetPosition(newPlayerX, newPlayerY);
     }
     else if (currentRoom->IsWall(newPlayerX, newPlayerY))
     {
         // wall collision, do nothing
-        player.RestoreKeyDrop();
+        player->RestoreKeyDrop();
     }
 
     return false;

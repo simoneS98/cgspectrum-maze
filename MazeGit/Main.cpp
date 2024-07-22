@@ -19,11 +19,7 @@
 using namespace std;
 
 int main()
-{
-    
-    EventManager::GetInstance()->Add(new PlayerDeathEvent());
-    EventManager::GetInstance()->ActivateEvents();
-
+{   
     cout << "Which level do you want to play? (TODO: print list of levels)";
 
     string levelName;
@@ -34,6 +30,7 @@ int main()
     
     if (game.Load())
     {
+        AudioManager::GetInstance()->PlayStartGameSound();
         while (!game.IsGameOver())
         {
             game.Run();

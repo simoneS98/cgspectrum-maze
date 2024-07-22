@@ -1,8 +1,8 @@
 #include "Money.h"
 #include <iostream>
 
-Money::Money(int x, int y, int worth)
-	: GameEntity(x,y, Color::GREEN_MONEY)
+Money::Money(int x, int y, Room* pRoom, int worth)
+	: GameEntity(x,y, pRoom, Color::GREEN_MONEY)
 	, worth(worth)
 {
 }

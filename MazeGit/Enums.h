@@ -70,3 +70,9 @@ enum class Input
 	KEY = 51,
 	DOOR = 52
 };
+
+enum class EntityType
+{
+	PASSIVE,
+	ACTIVE
+};

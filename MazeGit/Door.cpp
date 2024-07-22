@@ -2,11 +2,12 @@
 #include <iostream>
 #include <Windows.h>
 
-Door::Door(int x, int y,Color openColor) :
-	GameEntity::GameEntity(x,y,openColor)
+Door::Door(int x, int y, Room* pRoom, Color openColor) :
+	GameEntity::GameEntity(x,y,pRoom,openColor)
 	, isLocked(true)
 	, openColor(Color::DOOR_OPEN)
 {
+	type = EntityType::ACTIVE;
 }
 
 /*
@@ -18,7 +19,7 @@ void Door::Unlock()
 */
 Color Door::GetColor() { return Color(color); }
 
-bool Door::HandleCollision(GameEntity* collidedEntity)
+bool Door::CollideWith(GameEntity* collidedEntity)
 {
 	return collidedEntity->TryUseKeyOn(this);
 }

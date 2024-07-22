@@ -1,12 +1,12 @@
 #include "Character.h"
-#include "Door.h"
 
-Character::Character(int x, int y, int maxHp)
-	: GameEntity(x,y)
+Character::Character(int x, int y, Room* pRoom, int maxHp)
+	: GameEntity(x,y,pRoom)
 	, maxHp(maxHp)
 	, pCurrentKey(nullptr)
 {
 	hp = maxHp;
+	type = EntityType::ACTIVE;
 }
 
 int Character::GetMaxHp()

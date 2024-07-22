@@ -9,13 +9,13 @@ class Door : public GameEntity
 {
 public:
 
-	Door(int x, int y, Color closedColor);
+	Door(int x, int y, Room* pRoom, Color closedColor);
 	bool IsLocked() { return isLocked; }
 	void Unlock() { isLocked = false; }
 	void Draw() override;
 	virtual Color GetColor() override;
 
-	virtual bool HandleCollision(GameEntity* collidedEntity) override;
+	virtual bool CollideWith(GameEntity* collidedEntity) override;
 
 private:
 	Room* nextRoom;

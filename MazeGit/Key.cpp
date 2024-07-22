@@ -3,9 +3,10 @@
 
 #include "Key.h"
 
-Key::Key(int x, int y, Color color)
-	: GameEntity(x, y, color)
+Key::Key(int x, int y, Room* pRoom, Color color)
+	: GameEntity(x, y, pRoom, color)
 {
+	type = EntityType::PASSIVE;
 }
 
 void Key::Draw()
@@ -19,7 +20,7 @@ void Key::Draw()
 }
 
 
-bool Key::HandleCollision(GameEntity* collidedEntity)
+bool Key::CollideWith(GameEntity* collidedEntity)
 {
 	return collidedEntity->TryPickupKey(this);
 }

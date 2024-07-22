@@ -8,13 +8,12 @@
 #include "EventManager.h"
 #include "SpawnEvent.h"
 
-Player::Player()
-	: Character(0,0,3)
+Player::Player(Room* pRoom)
+	: Character(0,0,pRoom,3)
 	, money(0)
 	, lives(2)
 	, canDropKey(true)
 {
-	
 }
 
 Player::~Player()
@@ -84,8 +83,11 @@ void Player::DropKey()
 {
 	if (pCurrentKey && canDropKey)
 	{
-		pCurrentKey->Place(pPosition->x, pPosition->y);
-		pCurrentKey = nullptr;
+		//pCurrentKey->Place(pPosition->x, pPosition->y);
+		//pCurrentKey = nullptr;
+        pRoom->PlaceAt(pCurrentKey, Point(pPosition->x, pPosition->y));
+        delete pCurrentKey;
+        pCurrentKey = nullptr;
 	}
 }
 
@@ -107,7 +109,7 @@ Point Player::Update()
     return inputDirection;
 }
 
-bool Player::HandleCollision(GameEntity* collidedEntity)
+bool Player::CollideWith(GameEntity* collidedEntity)
 {
     return true;
 }
@@ -177,8 +179,8 @@ Point Player::GetInput()
     }
     else if ((char)input == 'Z' || (char)input == 'z')
     {
-        EventManager::GetInstance()->Add(new SpawnEvent(pCurrentKey,pPosition));
-        //DropKey();
+        //EventManager::GetInstance()->Add(new SpawnEvent(pCurrentKey,pPosition));
+        DropKey();
     }
     /*
         //just check ALL COLLISIONS[

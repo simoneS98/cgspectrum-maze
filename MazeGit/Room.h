@@ -3,6 +3,8 @@
 #include "Enums.h"
 #include "string"
 #include <vector>
+#include "TileContent.cpp"
+#include "Tile.h"
 
 constexpr char cSpriteEmpty = (char)Sprite::EMPTY;
 constexpr char cSpriteWall = (char)Sprite::WALL;
@@ -12,7 +14,6 @@ class Room
 {
 	public:
 		// Constructors
-		Room();
 		Room(int width, int height, char* pRoomData);
 		~Room();
 
@@ -23,8 +24,10 @@ class Room
 		GameEntity* UpdateEntities();
 		bool IsSpace(int x, int y);
 		bool IsWall(int x, int y);
+		bool IsWall(int index);
 		bool Convert(Player* player, char* pRoomBefore = nullptr);
 		bool PlaceAt(GameEntity* gameEntity, Point p);
+		void MoveEntity(Point startPos, Point endPos);
 
 	private:
 		int width;
@@ -32,10 +35,13 @@ class Room
 		char* pRoomData;
 		// well of course Dictionaries will be better for this...
 		//GameEntity** pRoomEntities;
-		std::vector<GameEntity*> pRoomEntities;
+		std::vector<Tile> pRoomEntities;
 		std::vector<GameEntity*> pEntities;
 
 		int GetIndexFromXY(int x, int y);
+
+		// use CollisionManager?
+		bool HandleCollision(GameEntity* g1, GameEntity* g2);
 		
 		
 		

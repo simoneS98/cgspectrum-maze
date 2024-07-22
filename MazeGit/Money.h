@@ -6,7 +6,7 @@ class Money :
     public GameEntity
 {
 public:
-    Money(int x, int y, int worth);
+    Money(int x, int y, Room* pRoom, int worth);
 
     int GetWorth() const { return worth; }
     void Draw() override;

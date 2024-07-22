@@ -11,7 +11,7 @@ constexpr char cEscape = (char)Input::ESC;
 
 class Game
 {
-	Player player;
+	Player* player;
 	Level level;
 	bool isGameOver;
 	bool userQuit;
@@ -27,8 +27,8 @@ public:
 
 	bool IsGameOver();
 	bool DidUserQuit() { return userQuit; }
-	int GetPlayerHp() { return player.GetCurrentHp(); }
-	int GetPlayerLives() { return player.GetLives(); }
+	int GetPlayerHp() { return player->GetCurrentHp(); }
+	int GetPlayerLives() { return player->GetLives(); }
 
 private:
 	void UpdatePlayerPosition(Point direction);

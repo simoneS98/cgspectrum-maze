@@ -11,7 +11,7 @@ protected:
 
 	virtual void Die();
 public:
-	Character(int x, int y, int maxHp);
+	Character(int x, int y, Room* pRoom, int maxHp);
 	//virtual void MoveTo(int x, int y);
 	int GetMaxHp();
 	int GetCurrentHp();

@@ -14,7 +14,7 @@ class Player : public Character
 
 public:
     // Constructors
-    Player();
+    Player(Room *pRoom);
     ~Player();
 
     bool HasKey();
@@ -41,7 +41,7 @@ public:
 
     virtual Point Update() override;
 
-    virtual bool HandleCollision(GameEntity* collidedEntity) override;
+    virtual bool CollideWith(GameEntity* collidedEntity) override;
 
     virtual bool TryUseKeyOn(GameEntity* lockedEntity) override;
 

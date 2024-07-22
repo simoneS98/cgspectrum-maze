@@ -1,9 +1,10 @@
 #include "Exit.h"
 #include <iostream>
 
-Exit::Exit(int x, int y, char nextRoomFileName) : GameEntity::GameEntity(x, y)
+Exit::Exit(int x, int y, Room* pRoom, char nextRoomFileName)
+	: GameEntity::GameEntity(x, y, pRoom)
+	, nextRoomFileName(nextRoomFileName)
 {
-	this->nextRoomFileName = nextRoomFileName;
 }
 
 void Exit::Draw()

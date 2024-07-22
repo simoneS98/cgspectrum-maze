@@ -1,6 +1,7 @@
 #pragma once
 #include "Enums.h"
 #include "Point.h"
+class Room;
 //#include "Key.h"
 
 constexpr Color cDefaultColor = Color::DEFAULT;
@@ -10,12 +11,13 @@ class GameEntity
 protected:
 	Point* pPosition;
 	bool isActive;
+	Room* pRoom;
 	Color color;
-
+	EntityType type;
 public:
 	// Constructors
 	// default parameter for color
-	GameEntity(int x, int y, Color color = Color::DEFAULT);
+	GameEntity(int x, int y, Room* pRoom, Color color = Color::DEFAULT);
 	virtual ~GameEntity();
 
 	int GetXPosition();
@@ -44,6 +46,8 @@ public:
 		return Point(0,0);
 	}
 
-	virtual bool HandleCollision(GameEntity* collidedEntity);
+	virtual bool CollideWith(GameEntity* collidedEntity);
+
+	EntityType GetType() { return type; }
 };
 

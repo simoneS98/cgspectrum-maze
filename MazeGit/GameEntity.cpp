@@ -1,7 +1,9 @@
 #include "GameEntity.h"
+#include "Room.h"
 
-GameEntity::GameEntity(int x, int y, Color color)
+GameEntity::GameEntity(int x, int y, Room* pRoom, Color color)
 	: pPosition(new Point(x,y))
+	, pRoom(pRoom)
 	, isActive(true)
 	, color(color)
 {
@@ -41,8 +43,9 @@ void GameEntity::SetPosition(int x, int y)
 
 void GameEntity::Place(int x, int y)
 {
-	pPosition->x = x;
-	pPosition->y = y;
+	pRoom->PlaceAt(this, Point(x, y));
+	//pPosition->x = x;
+	//pPosition->y = y;
 	isActive = true;
 }
 
@@ -53,7 +56,7 @@ bool GameEntity::TryPickupKey(int key)
 }
 
 */
-bool GameEntity::HandleCollision(GameEntity* collidedEntity)
+bool GameEntity::CollideWith(GameEntity* collidedEntity)
 {
 	return true;
 }
