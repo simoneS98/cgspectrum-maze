@@ -40,7 +40,7 @@ void Room::Draw()
 {
 	//TODO: what about the  player???
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(console, cDefaultColor);
+	SetConsoleTextAttribute(console, (int)cDefaultColor);
 
 	// Draw the Room
 	for (int y = 0; y < height; y++)
@@ -298,4 +298,13 @@ GameEntity* Room::UpdateEntities()
 int Room::GetIndexFromXY(int x, int y)
 {
 	return y * width + x;
+}
+
+bool Room::PlaceAt(GameEntity* gameEntity, Point p)
+{
+	int index = GetIndexFromXY(p.x, p.y);
+	if (pRoomEntities[index] != nullptr)
+		return false;
+	pRoomEntities[index] = gameEntity;
+	return true;
 }

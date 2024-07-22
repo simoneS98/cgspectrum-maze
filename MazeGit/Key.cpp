@@ -11,11 +11,11 @@ Key::Key(int x, int y, Color color)
 void Key::Draw()
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(console, color);
+	SetConsoleTextAttribute(console, (int)color);
 
 	std::cout << keySprite;
 
-	SetConsoleTextAttribute(console, cDefaultColor);
+	SetConsoleTextAttribute(console, (int)cDefaultColor);
 }
 
 

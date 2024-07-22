@@ -5,7 +5,8 @@
 #include <Windows.h>
 #include <conio.h>
 #include "Door.h"
-
+#include "EventManager.h"
+#include "SpawnEvent.h"
 
 Player::Player()
 	: Character(0,0,3)
@@ -176,7 +177,8 @@ Point Player::GetInput()
     }
     else if ((char)input == 'Z' || (char)input == 'z')
     {
-        DropKey();
+        EventManager::GetInstance()->Add(new SpawnEvent(pCurrentKey,pPosition));
+        //DropKey();
     }
     /*
         //just check ALL COLLISIONS[

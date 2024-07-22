@@ -24,6 +24,7 @@ class Room
 		bool IsSpace(int x, int y);
 		bool IsWall(int x, int y);
 		bool Convert(Player* player, char* pRoomBefore = nullptr);
+		bool PlaceAt(GameEntity* gameEntity, Point p);
 
 	private:
 		int width;
@@ -35,6 +36,7 @@ class Room
 		std::vector<GameEntity*> pEntities;
 
 		int GetIndexFromXY(int x, int y);
+		
 		
 		
 };

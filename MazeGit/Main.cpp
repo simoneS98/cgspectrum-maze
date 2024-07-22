@@ -12,11 +12,18 @@
 #include "Level.h"
 #include "FileUtils.h"
 #include "Game.h"
+#include "AudioManager.h"
+#include "EventManager.h"
+#include "PlayerDeathEvent.h"
 
 using namespace std;
 
 int main()
 {
+    
+    EventManager::GetInstance()->Add(new PlayerDeathEvent());
+    EventManager::GetInstance()->ActivateEvents();
+
     cout << "Which level do you want to play? (TODO: print list of levels)";
 
     string levelName;
@@ -27,7 +34,6 @@ int main()
     
     if (game.Load())
     {
-
         while (!game.IsGameOver())
         {
             game.Run();
@@ -44,4 +50,6 @@ int main()
     {
         std::cout << "Game did not load. Terminating now!" << std::endl;
     }    
+
+    AudioManager::DestroyInstance();
 }

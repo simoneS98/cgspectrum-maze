@@ -3,7 +3,7 @@
 GameEntity::GameEntity(int x, int y, Color color)
 	: pPosition(new Point(x,y))
 	, isActive(true)
-	, color((int)color)
+	, color(color)
 {
 }
 

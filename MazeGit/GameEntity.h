@@ -3,14 +3,14 @@
 #include "Point.h"
 //#include "Key.h"
 
-constexpr int cDefaultColor = (int)Color::DEFAULT;
+constexpr Color cDefaultColor = Color::DEFAULT;
 
 class GameEntity
 {
 protected:
 	Point* pPosition;
 	bool isActive;
-	int color;
+	Color color;
 
 public:
 	// Constructors
@@ -30,7 +30,7 @@ public:
 	void Remove() { isActive = false; }
 	bool IsActive() { return isActive; }
 	void Place(int x, int y);
-	virtual Color GetColor() { return Color(color); }
+	virtual Color GetColor() { return color; }
 
 
 

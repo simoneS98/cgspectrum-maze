@@ -5,7 +5,7 @@
 Door::Door(int x, int y,Color openColor) :
 	GameEntity::GameEntity(x,y,openColor)
 	, isLocked(true)
-	, openColor((int)Color::DOOR_OPEN)
+	, openColor(Color::DOOR_OPEN)
 {
 }
 
@@ -28,10 +28,10 @@ void Door::Draw()
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	if(isLocked)
-		SetConsoleTextAttribute(console, color);
+		SetConsoleTextAttribute(console, (int)color);
 	else
-		SetConsoleTextAttribute(console, openColor);
+		SetConsoleTextAttribute(console, (int)openColor);
 
 	std::cout << cDoorSprite;
-	SetConsoleTextAttribute(console, cDefaultColor);
+	SetConsoleTextAttribute(console, (int)cDefaultColor);
 }

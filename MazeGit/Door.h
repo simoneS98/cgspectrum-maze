@@ -22,6 +22,6 @@ private:
 	// used to load file called <nextRoomFileName>.txt
 	std::string nextRoomFileName;
 	bool isLocked;
-	int openColor;
+	Color openColor;
 };
 

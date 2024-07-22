@@ -7,6 +7,8 @@
 #include "Money.h"
 #include "Exit.h"
 #include <Windows.h>
+#include "EventManager.h"
+
 
 Game::Game(std::string levelName)
     : isGameOver(false)
@@ -46,10 +48,12 @@ void Game::Run()
 
     // Updates Game World
     //isGameOver = UpdateGameWorld();
-
-    
+    // check for events
+  
     UpdateGameWorld();
 	// Generate Outputs
+    EventManager::GetInstance()->ActivateEvents();
+
     Draw();
 }
 
