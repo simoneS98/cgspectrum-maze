@@ -1,26 +1,35 @@
 #include "GameEntity.h"
+#include <vector>
 
 #pragma once
 class Tile
 {
 private:
 	// TODO: use std::vector<GameEntity*>
-	GameEntity* activeEntity;
-	GameEntity* passiveEntity;
-	void SetActive(GameEntity* gameEntity);
-	void SetPassive(GameEntity* gameEntity);
+	//GameEntity* activeEntity;
+	//GameEntity* passiveEntity;
+	std::vector<GameEntity*> entities;
+	//void SetActive(GameEntity* gameEntity);
+	//void SetPassive(GameEntity* gameEntity);
 public:
-	Tile(GameEntity* activeEntity = nullptr, GameEntity* passiveEntity = nullptr);
-	void Add(GameEntity* gameEntity);
-	void RemoveActive();
-	void RemovePassive();
+	//Tile();
+	//Tile(GameEntity* activeEntity = nullptr, GameEntity* passiveEntity = nullptr);
+	Tile* Add(GameEntity* gameEntity);
+	void Remove(GameEntity* gameEntity);
+	GameEntity* GetFirstActive();
+	GameEntity* GetFirst();
+	void RefreshActivations();
+	//void RemoveActive();
+	//void RemovePassive();
 
 
-	GameEntity* GetActive() { return activeEntity; }
-	GameEntity* GetPassive() { return passiveEntity; }
+	//GameEntity* GetActive() { return activeEntity; }
+	//GameEntity* GetPassive() { return passiveEntity; }
 	void Draw();
 
 	//bool HandleCollision(Tile otherTile);
-	bool IsEmpty() { return activeEntity == nullptr && passiveEntity == nullptr; }
+	//bool IsEmpty() { return activeEntity == nullptr && passiveEntity == nullptr; }
+	bool IsEmpty() { return entities.empty(); }
+
 };
 

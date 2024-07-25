@@ -19,7 +19,7 @@ Room::Room(int width, int height, char* pRoomData)
 	, pRoomData(pRoomData)
 {
 	//pRoomEntities = new GameEntity*[width * height];
-	pRoomEntities = std::vector<Tile>(width * height, Tile());
+	pRoomEntities = std::vector<Tile*>(width * height, new Tile());
 }
 
 Room::~Room()
@@ -142,36 +142,36 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case (char)Editor::WALL_V:
 			case (char)Editor::WALL_H:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(new Wall(x,y,this), nullptr);
+				pRoomEntities[index] = Tile().Add(new Wall(x,y,this));
 				break;
 			case (char)Editor::KEY_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(nullptr, new Key(x, y, this, Color::GREEN));
+				pRoomEntities[index] = Tile().Add(new Key(x, y, this, Color::GREEN));
 				//pEntities.push_back(new Key(x, y, Color::GREEN));
 				break;
 			case (char)Editor::KEY_RED:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(nullptr, new Key(x, y, this, Color::RED));
+				pRoomEntities[index] = Tile().Add(new Key(x, y, this, Color::RED));
 				//pEntities.push_back(new Key(x, y, Color::RED));
 				break;
 			case (char)Editor::KEY_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(nullptr, new Key(x, y, this, Color::BLUE));
+				pRoomEntities[index] = Tile().Add(new Key(x, y, this, Color::BLUE));
 				//pEntities.push_back(new Key(x, y, Color::BLUE));
 				break;
 			case (char)Editor::DOOR_RED:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(new Door(x, y, this, Color::RED), nullptr);
+				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::RED));
 				//pEntities.push_back(new Door(x, y, Color::RED));
 				break;
 			case (char)Editor::DOOR_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(new Door(x, y, this, Color::GREEN), nullptr);
+				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::GREEN));
 				//pEntities.push_back(new Door(x, y, Color::GREEN));
 				break;
 			case (char)Editor::DOOR_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile(new Door(x, y, this, Color::BLUE), nullptr);
+				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::BLUE));
 				//pEntities.push_back(new Door(x, y, Color::BLUE));
 				break;
 			case (char)Editor::MONEY:
@@ -190,18 +190,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case '7':
 			case '8':
 			case '9':
-				// if player is coming from another floor, change his coordinates to the relative door
-				// won't work if there is more than one door with same char in a floor
-				/*if (pRoomNameBefore != nullptr)
-				{
-					if (*pRoomNameBefore == tile)
-					{
-						*playerX = x;
-						*playerY = y;
-					}
-
-				}*/
-				pRoomEntities[index] = Tile(new Exit(x, y, this, tile), nullptr);
+				pRoomEntities[index] = Tile().Add(new Exit(x, y, this, tile));
 				//pEntities.push_back(new Exit( x, y, tile));
 				break;
 			case (char)Editor::PLAYER:
@@ -212,24 +201,24 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 					*playerY = y;
 				}*/
 				player->SetPosition(x, y);
-				pRoomEntities[index] = Tile(player, nullptr);
+				pRoomEntities[index] = Tile().Add(player);
 
 				break;
 			case (char)Editor::ENEMY:
 				//pEntities.push_back(new Enemy(x, y, 1+ rand() % 3));
-				pRoomEntities[index] = Tile(new Enemy(x, y, this, 3, 1 + rand() % 3), nullptr);
+				pRoomEntities[index] = Tile().Add(new Enemy(x, y, this, 3, 1 + rand() % 3));
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::ENEMY_H:
 				// delta x
 				//pEntities.push_back(new Enemy(x, y, 1 + rand() % 3, 3, 0));
-				pRoomEntities[index] = Tile(new Enemy(x, y, this, 3, 1 + rand() % 3,3, 0), nullptr);
+				pRoomEntities[index] = Tile().Add(new Enemy(x, y, this, 3, 1 + rand() % 3,3, 0));
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::ENEMY_V:
 				// delta y
 				//pEntities.push_back(new Enemy(x, y, 1 + rand() % 3, 0, 2));
-				pRoomEntities[index] = Tile(new Enemy(x, y, this, 3, 1 + rand() % 3, 0, 2), nullptr);
+				pRoomEntities[index] = Tile().Add(new Enemy(x, y, this, 3, 1 + rand() % 3, 0, 2));
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::EMPTY:
@@ -254,22 +243,17 @@ GameEntity* Room::UpdateEntities()
 
 	for (auto tile = pRoomEntities.begin(); tile != pRoomEntities.end(); ++tile)
 	{
-		GameEntity* entity = (*tile).GetActive();
-
-		if (entity == nullptr)
-			continue;
-
-		entity->RefreshActivation();
+		(*tile)->RefreshActivations();
 	}
 
 	//std::vector<Tile> tmpRoomEntities = pRoomEntities;
 
 	for (auto tile = pRoomEntities.begin(); tile != pRoomEntities.end(); ++tile)
 	{
-		if ((*tile).IsEmpty())
+		if ((*tile)->IsEmpty())
 			continue;
 
-		GameEntity* entity = (*tile).GetActive();
+		GameEntity* entity = (*tile)->GetFirstActive();
 
 		if (entity == nullptr)
 			continue;
@@ -290,9 +274,9 @@ GameEntity* Room::UpdateEntities()
 
 		int newPosIndex = GetIndexFromXY(newPos.x, newPos.y);
 
-		Tile& t2 = pRoomEntities[newPosIndex];
+		Tile* t2 = pRoomEntities[newPosIndex];
 
-		if ( !t2.IsEmpty())
+		if ( !t2->IsEmpty())
 		{
 			bool collisionSuccessful = HandleCollision(entity, t2);
 			if (collisionSuccessful)
@@ -336,16 +320,17 @@ bool Room::HandleCollision(GameEntity* g1, GameEntity* g2)
 	return activeCollision && reactiveCollision;
 }
 
-bool Room::HandleCollision(GameEntity* g1, Tile& destinationTile)
+bool Room::HandleCollision(GameEntity* g1, Tile* destinationTile)
 {
 	bool activeCollision = true;
 	bool reactiveCollision = false;
 
-	if (destinationTile.GetActive() != nullptr)
+	if (destinationTile->GetFirstActive() != nullptr)
 	{
 		activeCollision = g1->CollideWith(destinationTile.GetActive());
 		reactiveCollision = destinationTile.GetActive()->CollideWith(g1);
 	}	
+	/*
 	else if (destinationTile.GetPassive() != nullptr)
 	{
 		activeCollision = g1->CollideWith(destinationTile.GetPassive());
@@ -356,7 +341,7 @@ bool Room::HandleCollision(GameEntity* g1, Tile& destinationTile)
 		}
 			
 	}
-
+	*/
 	return activeCollision && reactiveCollision;
 }
 

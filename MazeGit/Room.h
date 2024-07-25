@@ -34,14 +34,14 @@ class Room
 		char* pRoomData;
 		// well of course Dictionaries will be better for this...
 		//GameEntity** pRoomEntities;
-		std::vector<Tile> pRoomEntities;
+		std::vector<Tile*> pRoomEntities;
 		std::vector<GameEntity*> pEntities;
 
 		int GetIndexFromXY(int x, int y);
 
 		// use CollisionManager?
 		bool HandleCollision(GameEntity* g1, GameEntity* g2);
-		bool HandleCollision(GameEntity* g1, Tile& destinationTile);
+		bool HandleCollision(GameEntity* g1, Tile* destinationTile);
 		
 		
 };
