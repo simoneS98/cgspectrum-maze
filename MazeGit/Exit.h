@@ -12,6 +12,7 @@ public:
 	Exit(int x, int y, Room* pRoom, char nextRoomFileName);
 	void Draw() override;
 	std::string GetNextRoomAsString();
+	bool CollideWith(GameEntity* collidedEntity) override;
 private:
 	//Room* nextRoom;
 	// used to load file called <nextRoomFileName>.txt

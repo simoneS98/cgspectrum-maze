@@ -27,6 +27,7 @@ class Level
 
         // TODO: save level state before loading a new one
         bool Load(std::string levelName, std::string roomName);
+        //static bool Load(std::string levelName, std::string roomName);
         void DisplayLeftBorder();
         void DisplayRightBorder();
         void DisplayHorizontalBorder();

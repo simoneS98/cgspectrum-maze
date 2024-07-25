@@ -164,6 +164,7 @@
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomFactory.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomFactory.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

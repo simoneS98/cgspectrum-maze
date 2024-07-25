@@ -6,6 +6,7 @@ GameEntity::GameEntity(int x, int y, Room* pRoom, Color color)
 	, pRoom(pRoom)
 	, isActive(true)
 	, color(color)
+	, canActivate(true)
 {
 }
 

@@ -7,6 +7,7 @@
 #include "Money.h"
 #include "Exit.h"
 #include "Enemy.h"
+#include "Wall.h"
 #include <assert.h>
 #include "AudioManager.h"
 
@@ -18,7 +19,7 @@ Room::Room(int width, int height, char* pRoomData)
 	, pRoomData(pRoomData)
 {
 	//pRoomEntities = new GameEntity*[width * height];
-	pRoomEntities = std::vector<Tile>(width * height, nullptr);
+	pRoomEntities = std::vector<Tile>(width * height, Tile());
 }
 
 Room::~Room()
@@ -45,7 +46,18 @@ void Room::Draw()
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, (int)cDefaultColor);
 
+	int h = 0;
+	for (auto tile = pRoomEntities.begin(); tile != pRoomEntities.end(); ++tile)
+	{
+		(*tile).Draw();
+		h++;
+		if (h % width == 0)
+			std::cout << std::endl;
+	}
+	std::cout << std::endl;
 	// Draw the Room
+	/*
+	
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
@@ -67,6 +79,8 @@ void Room::Draw()
 		}
 		std::cout << std::endl;
 	}
+	*/
+
 
 	COORD entityCursorPosition;
 
@@ -77,6 +91,7 @@ void Room::Draw()
 		end() returns an iterator to the end
 		begin() returns an iterator to the beginning
 	*/
+	/*
 	for (auto entity = pEntities.begin(); entity != pEntities.end(); ++entity)
 	{
 		if ((*entity)->IsActive())
@@ -87,7 +102,7 @@ void Room::Draw()
 			(*entity)->Draw();
 		}
 	}
-
+	*/
 	SetConsoleCursorPosition(console, COORD{ 0,cMaxRoomHeight });
 }
 
@@ -126,42 +141,43 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case (char)Editor::CORNER:
 			case (char)Editor::WALL_V:
 			case (char)Editor::WALL_H:
-				pRoomData[index] = cSpriteWall;
+				pRoomData[index] = cSpriteEmpty;
+				pRoomEntities[index] = Tile(new Wall(x,y,this), nullptr);
 				break;
 			case (char)Editor::KEY_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Key(x, y, this, Color::GREEN);
+				pRoomEntities[index] = Tile(nullptr, new Key(x, y, this, Color::GREEN));
 				//pEntities.push_back(new Key(x, y, Color::GREEN));
 				break;
 			case (char)Editor::KEY_RED:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Key(x, y, this, Color::RED);
+				pRoomEntities[index] = Tile(nullptr, new Key(x, y, this, Color::RED));
 				//pEntities.push_back(new Key(x, y, Color::RED));
 				break;
 			case (char)Editor::KEY_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Key(x, y, this, Color::BLUE);
+				pRoomEntities[index] = Tile(nullptr, new Key(x, y, this, Color::BLUE));
 				//pEntities.push_back(new Key(x, y, Color::BLUE));
 				break;
 			case (char)Editor::DOOR_RED:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Door(x, y, this, Color::RED);
+				pRoomEntities[index] = Tile(new Door(x, y, this, Color::RED), nullptr);
 				//pEntities.push_back(new Door(x, y, Color::RED));
 				break;
 			case (char)Editor::DOOR_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Door(x, y, this, Color::GREEN);
+				pRoomEntities[index] = Tile(new Door(x, y, this, Color::GREEN), nullptr);
 				//pEntities.push_back(new Door(x, y, Color::GREEN));
 				break;
 			case (char)Editor::DOOR_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Door(x, y, this, Color::BLUE);
+				pRoomEntities[index] = Tile(new Door(x, y, this, Color::BLUE), nullptr);
 				//pEntities.push_back(new Door(x, y, Color::BLUE));
 				break;
 			case (char)Editor::MONEY:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = new Money(x, y, this, 1 + rand() % 5);
-				//pEntities.push_back(new Money(x, y, 1 + rand() % 5));
+				//pRoomEntities[index] = new Money(x, y, this, 1 + rand() % 5);
+				
 				break;
 			case (char)Editor::EXIT:
 			case '0':
@@ -185,7 +201,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 					}
 
 				}*/
-				pRoomEntities[index] = new Exit(x, y, this, tile);
+				pRoomEntities[index] = Tile(new Exit(x, y, this, tile), nullptr);
 				//pEntities.push_back(new Exit( x, y, tile));
 				break;
 			case (char)Editor::PLAYER:
@@ -196,24 +212,24 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 					*playerY = y;
 				}*/
 				player->SetPosition(x, y);
-				pRoomEntities[index] = player;
+				pRoomEntities[index] = Tile(player, nullptr);
 
 				break;
 			case (char)Editor::ENEMY:
 				//pEntities.push_back(new Enemy(x, y, 1+ rand() % 3));
-				pRoomEntities[index] = new Enemy(x, y, this, 3, 1 + rand() % 3);
+				pRoomEntities[index] = Tile(new Enemy(x, y, this, 3, 1 + rand() % 3), nullptr);
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::ENEMY_H:
 				// delta x
 				//pEntities.push_back(new Enemy(x, y, 1 + rand() % 3, 3, 0));
-				pRoomEntities[index] = new Enemy(x, y, this, 3, 1 + rand() % 3,3, 0);
+				pRoomEntities[index] = Tile(new Enemy(x, y, this, 3, 1 + rand() % 3,3, 0), nullptr);
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::ENEMY_V:
 				// delta y
 				//pEntities.push_back(new Enemy(x, y, 1 + rand() % 3, 0, 2));
-				pRoomEntities[index] = new Enemy(x, y, this, 3, 1 + rand() % 3, 0, 2);
+				pRoomEntities[index] = Tile(new Enemy(x, y, this, 3, 1 + rand() % 3, 0, 2), nullptr);
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::EMPTY:
@@ -236,76 +252,73 @@ GameEntity* Room::UpdateEntities()
 {
 	GameEntity* collidedEntity = nullptr;
 
-	int c = 0;
-
-	std::vector<Tile> tmpRoomEntities = pRoomEntities;
-
-	for (auto tile = tmpRoomEntities.begin(); tile != tmpRoomEntities.end(); ++tile)
+	for (auto tile = pRoomEntities.begin(); tile != pRoomEntities.end(); ++tile)
 	{
-		c++;
+		GameEntity* entity = (*tile).GetActive();
+
+		if (entity == nullptr)
+			continue;
+
+		entity->RefreshActivation();
+	}
+
+	//std::vector<Tile> tmpRoomEntities = pRoomEntities;
+
+	for (auto tile = pRoomEntities.begin(); tile != pRoomEntities.end(); ++tile)
+	{
 		if ((*tile).IsEmpty())
 			continue;
 
-		Point direction = (*tile).GetActive()->Update(); 
+		GameEntity* entity = (*tile).GetActive();
+
+		if (entity == nullptr)
+			continue;
+
+		if (!entity->CanActivate())
+			continue;
+		
+		entity->StartActivation();
+
+		Point direction = entity->Update();
 
 		if(direction.x == 0 && direction.y == 0)
 			continue;
 
-		Point newPos = direction + (*tile).GetActive()->GetPosition();
+		Point newPos = direction + entity->GetPosition();
 
-		int currentPosIndex = GetIndexFromXY((*tile).GetActive()->GetXPosition(), (*tile).GetActive()->GetYPosition());
+		int currentPosIndex = GetIndexFromXY(entity->GetXPosition(), entity->GetYPosition());
 
 		int newPosIndex = GetIndexFromXY(newPos.x, newPos.y);
 
-		if ( !tmpRoomEntities[newPosIndex].IsEmpty())
+		Tile& t2 = pRoomEntities[newPosIndex];
+
+		if ( !t2.IsEmpty())
 		{
-			//bool collisionSuccessful = (*entity)->HandleCollision(tmpRoomEntities[newPosIndex]);
-			bool collisionSuccessful = HandleCollision((*tile).GetActive(), tmpRoomEntities[newPosIndex]);
+			bool collisionSuccessful = HandleCollision(entity, t2);
 			if (collisionSuccessful)
 			{
-				(*entity)->SetPosition(newPos.x, newPos.y);
-				pRoomEntities[newPosIndex] = pRoomEntities[currentPosIndex];
-				pRoomEntities[currentPosIndex] = nullptr;
-			}
-			
-			
+				entity->SetPosition(newPos.x, newPos.y);
+				// place current entity above the one in newPosIndex
+				t2.Add(entity);
+				if(pRoomEntities[currentPosIndex].GetActive() != nullptr)
+					pRoomEntities[currentPosIndex].RemoveActive();
+				else
+					pRoomEntities[currentPosIndex].RemovePassive();
+			}	
 		}
 		else
-		{
-			if (IsWall(newPosIndex))
-			{
-				AudioManager::GetInstance()->PlayPathBlockedSound();
-				continue;
-			}
-				
-			(*entity)->SetPosition(newPos.x, newPos.y);
-			pRoomEntities[newPosIndex] = (*entity);
-			pRoomEntities[currentPosIndex] = nullptr;
-			//stop
+		{				
+			entity->SetPosition(newPos.x, newPos.y);
+			pRoomEntities[newPosIndex].Add(entity);
+			if (pRoomEntities[currentPosIndex].GetActive() != nullptr)
+				pRoomEntities[currentPosIndex].RemoveActive();
+			else
+				pRoomEntities[currentPosIndex].RemovePassive();
 		}
-		//delete newPos;
-		//newPos = nullptr;
-		
-		/*Enemy* collidedEnemy = dynamic_cast<Enemy*>(*entity);
-		if (collidedEnemy)
-		{
-			int _x = collidedEnemy->GetXPosition();
-			int _y = collidedEnemy->GetYPosition();
-			if (pRoomData[GetIndexFromXY(_x, _y)] == cSpriteWall)
-			{
-				collidedEnemy->ChangeDirection();
-			}
-		}*/
-
-		/*
-		if (x == (*entity)->GetXPosition() && y == (*entity)->GetYPosition())
-		{
-			// should only be able to collide with one actor
-			assert(collidedEntity == nullptr);
-			collidedEntity = (*entity);
-		}
-		*/
 	}
+
+	
+	//pRoomEntities = tmpRoomEntities;
 
 	return collidedEntity;
 }
@@ -323,12 +336,36 @@ bool Room::HandleCollision(GameEntity* g1, GameEntity* g2)
 	return activeCollision && reactiveCollision;
 }
 
+bool Room::HandleCollision(GameEntity* g1, Tile& destinationTile)
+{
+	bool activeCollision = true;
+	bool reactiveCollision = false;
+
+	if (destinationTile.GetActive() != nullptr)
+	{
+		activeCollision = g1->CollideWith(destinationTile.GetActive());
+		reactiveCollision = destinationTile.GetActive()->CollideWith(g1);
+	}	
+	else if (destinationTile.GetPassive() != nullptr)
+	{
+		activeCollision = g1->CollideWith(destinationTile.GetPassive());
+		reactiveCollision = destinationTile.GetPassive()->CollideWith(g1);
+		if (reactiveCollision)
+		{
+			destinationTile.RemovePassive();
+		}
+			
+	}
+
+	return activeCollision && reactiveCollision;
+}
+
 bool Room::PlaceAt(GameEntity* gameEntity, Point p)
 {
 	int index = GetIndexFromXY(p.x, p.y);
 	/*if (pRoomEntities[index] != nullptr)
 		return false;*/
-	pRoomEntities[index] = gameEntity;
+	pRoomEntities[index].Add(gameEntity);
 	return true;
 }
 

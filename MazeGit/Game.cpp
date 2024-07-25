@@ -30,8 +30,6 @@ bool Game::Load(std::string roomName, char *pRoomBefore)
     if (anyWarnings)
         return false;
 
-
-
     return true;
 }
 

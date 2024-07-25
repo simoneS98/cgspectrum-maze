@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include <iostream>
+#include "Player.h"
+#include "AudioManager.h"
 
 Enemy::Enemy(int x, int y, Room* pRoom, int maxHp, int damage, int deltaX, int deltaY)
 	: Character(x, y, pRoom, maxHp)
@@ -40,17 +42,16 @@ bool Enemy::CollideWith(GameEntity* collidedEntity)
 {
 	//if(collidedEntity->
 	// TODO: if collidedEntitis->IsFoe() ... why not?
-	Character* foe = dynamic_cast<Character*>(collidedEntity);
-
-	// WHY IT DOESNT WORK
+	Player* foe = dynamic_cast<Player*>(collidedEntity);
 
 	// can't be in a place occupied by something not considered foe
-	if (!foe)
+	if (foe)
+	{
+		AudioManager::GetInstance()->PlayPlayerDamagedSound();
 		foe->TakeDamage(damage);
-		//return false;
-
-	return false;
+	}
 		
+	return false;
 }
 
 

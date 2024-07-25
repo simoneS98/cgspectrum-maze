@@ -3,7 +3,6 @@
 #include "Enums.h"
 #include "string"
 #include <vector>
-#include "TileContent.cpp"
 #include "Tile.h"
 
 constexpr char cSpriteEmpty = (char)Sprite::EMPTY;
@@ -42,7 +41,7 @@ class Room
 
 		// use CollisionManager?
 		bool HandleCollision(GameEntity* g1, GameEntity* g2);
-		
+		bool HandleCollision(GameEntity* g1, Tile& destinationTile);
 		
 		
 };

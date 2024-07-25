@@ -7,6 +7,7 @@
 #include "Door.h"
 #include "EventManager.h"
 #include "SpawnEvent.h"
+#include "PlayerDeathEvent.h"
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
@@ -31,7 +32,6 @@ bool Player::HasKey(Color color)
 {
 	return HasKey() && pCurrentKey->GetColor() == color;
 }
-
 
 /*
 int Player::GetNumKeys()
@@ -86,7 +86,7 @@ void Player::DropKey()
 		//pCurrentKey->Place(pPosition->x, pPosition->y);
 		//pCurrentKey = nullptr;
         pRoom->PlaceAt(pCurrentKey, Point(pPosition->x, pPosition->y));
-        delete pCurrentKey;
+        //delete pCurrentKey;
         pCurrentKey = nullptr;
 	}
 }
@@ -94,6 +94,16 @@ void Player::DropKey()
 void Player::Die()
 {
 	lives--;
+
+    if (lives == 0)
+    {
+        EventManager::GetInstance()->Add(new PlayerDeathEvent());
+    }
+    else
+    {
+        hp = maxHp;
+    }
+   
 	//find a way to invoke event
 	//system("cls");
 	//std::cout << "Your HP reached 0! Game over." << std::endl;

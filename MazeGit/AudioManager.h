@@ -41,6 +41,11 @@ public:
 		Beep(1568, 200);
 		Beep(1568, 50);
 	}
+	void PlayPlayerDamagedSound()
+	{
+		Beep(1000, 100);
+		Beep(800, 50);
+	}
 private:
 	static AudioManager* instance;
 	AudioManager() {}

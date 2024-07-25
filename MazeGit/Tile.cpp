@@ -15,16 +15,28 @@ void Tile::Add(GameEntity* gameEntity)
 		SetPassive(gameEntity);
 }
 
+void Tile::RemoveActive()
+{
+	//delete activeEntity;
+	activeEntity = nullptr;
+}
+
+void Tile::RemovePassive()
+{
+	//delete passiveEntity;
+	passiveEntity = nullptr;
+}
+
 void Tile::SetActive(GameEntity* gameEntity)
 {
-	delete activeEntity;
+	//delete activeEntity;
 	activeEntity = gameEntity;
 }
 
 void Tile::SetPassive(GameEntity* gameEntity)
 {
-	delete passiveEntity;
-	activeEntity = gameEntity;
+	//delete passiveEntity;
+	passiveEntity = gameEntity;
 }
 
 void Tile::Draw()
@@ -32,6 +44,8 @@ void Tile::Draw()
 	// active entity always has precedence
 	if (activeEntity != nullptr)
 		activeEntity->Draw();
-	else if (activeEntity != nullptr)
+	else if (passiveEntity != nullptr)
 		passiveEntity->Draw();
+	else
+		std::cout << " ";
 }

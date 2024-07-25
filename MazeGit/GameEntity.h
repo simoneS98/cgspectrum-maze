@@ -14,6 +14,7 @@ protected:
 	Room* pRoom;
 	Color color;
 	EntityType type;
+	bool canActivate;
 public:
 	// Constructors
 	// default parameter for color
@@ -31,6 +32,9 @@ public:
 	//int GetColor() { return color; };
 	void Remove() { isActive = false; }
 	bool IsActive() { return isActive; }
+	void StartActivation() { canActivate = false; }
+	void RefreshActivation() { canActivate = true; }
+	bool CanActivate() { return canActivate; }
 	void Place(int x, int y);
 	virtual Color GetColor() { return color; }
 
