@@ -49,7 +49,7 @@ void Room::Draw()
 	int h = 0;
 	for (auto tile = pRoomEntities.begin(); tile != pRoomEntities.end(); ++tile)
 	{
-		(*tile).Draw();
+		(*tile)->Draw();
 		h++;
 		if (h % width == 0)
 			std::cout << std::endl;
@@ -126,7 +126,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 {
 	bool anyWarnings = false;
 
-
+	Tile* td = Tile().Add(new Door(0,0, this, Color::RED));
 
 	for (int y = 0; y < height; y++)
 	{
@@ -162,6 +162,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case (char)Editor::DOOR_RED:
 				pRoomData[index] = cSpriteEmpty;
 				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::RED));
+				
 				//pEntities.push_back(new Door(x, y, Color::RED));
 				break;
 			case (char)Editor::DOOR_GREEN:
@@ -283,21 +284,16 @@ GameEntity* Room::UpdateEntities()
 			{
 				entity->SetPosition(newPos.x, newPos.y);
 				// place current entity above the one in newPosIndex
-				t2.Add(entity);
-				if(pRoomEntities[currentPosIndex].GetActive() != nullptr)
-					pRoomEntities[currentPosIndex].RemoveActive();
-				else
-					pRoomEntities[currentPosIndex].RemovePassive();
+				t2->Add(entity);
+				if(pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
+					pRoomEntities[currentPosIndex]->Remove(entity);
 			}	
 		}
-		else
+		else // if destination Tile is unoccupied
 		{				
 			entity->SetPosition(newPos.x, newPos.y);
-			pRoomEntities[newPosIndex].Add(entity);
-			if (pRoomEntities[currentPosIndex].GetActive() != nullptr)
-				pRoomEntities[currentPosIndex].RemoveActive();
-			else
-				pRoomEntities[currentPosIndex].RemovePassive();
+			pRoomEntities[newPosIndex]->Add(entity);
+			pRoomEntities[currentPosIndex]->Remove(entity);
 		}
 	}
 
@@ -325,10 +321,10 @@ bool Room::HandleCollision(GameEntity* g1, Tile* destinationTile)
 	bool activeCollision = true;
 	bool reactiveCollision = false;
 
-	if (destinationTile->GetFirstActive() != nullptr)
+	if (destinationTile->GetFirst() != nullptr)
 	{
-		activeCollision = g1->CollideWith(destinationTile.GetActive());
-		reactiveCollision = destinationTile.GetActive()->CollideWith(g1);
+		activeCollision = g1->CollideWith(destinationTile->GetFirst());
+		reactiveCollision = destinationTile->GetFirst()->CollideWith(g1);
 	}	
 	/*
 	else if (destinationTile.GetPassive() != nullptr)
@@ -350,7 +346,7 @@ bool Room::PlaceAt(GameEntity* gameEntity, Point p)
 	int index = GetIndexFromXY(p.x, p.y);
 	/*if (pRoomEntities[index] != nullptr)
 		return false;*/
-	pRoomEntities[index].Add(gameEntity);
+	pRoomEntities[index]->Add(gameEntity);
 	return true;
 }
 
