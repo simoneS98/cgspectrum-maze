@@ -1,13 +1,14 @@
 #include "Player.h"
 #include <stdlib.h>
 #include <iostream>
-#include "Room.h"
+
 #include <Windows.h>
 #include <conio.h>
 #include "Door.h"
 #include "EventManager.h"
 #include "SpawnEvent.h"
 #include "PlayerDeathEvent.h"
+#include "ExitGameEvent.h"
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
@@ -185,6 +186,7 @@ Point Player::GetInput()
     }
     else if (input == cEscape)
     {
+        EventManager::GetInstance()->Add(new ExitGameEvent());
         //userQuit = true;
     }
     else if ((char)input == 'Z' || (char)input == 'z')

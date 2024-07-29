@@ -1,6 +1,5 @@
 #include "PlayerDeathEvent.h"
-#include <stdlib.h>
-#include <iostream>
+
 
 PlayerDeathEvent::PlayerDeathEvent()
 	: Event()

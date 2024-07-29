@@ -19,7 +19,8 @@ Room::Room(int width, int height, char* pRoomData)
 	, pRoomData(pRoomData)
 {
 	//pRoomEntities = new GameEntity*[width * height];
-	pRoomEntities = std::vector<Tile*>(width * height, new Tile());
+	pRoomEntities = std::vector<Tile*>(width * height, nullptr);
+	int a = 1;
 }
 
 Room::~Room()
@@ -36,6 +37,14 @@ Room::~Room()
 		delete pEntities.back();
 		// removes last element from vector
 		pEntities.pop_back();
+	}
+
+	while (!pRoomEntities.empty())
+	{
+		// deletes last element's pointer
+		delete pRoomEntities.back();
+		// removes last element from vector
+		pRoomEntities.pop_back();
 	}
 }
 
@@ -126,8 +135,6 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 {
 	bool anyWarnings = false;
 
-	Tile* td = Tile().Add(new Door(0,0, this, Color::RED));
-
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
@@ -142,37 +149,37 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case (char)Editor::WALL_V:
 			case (char)Editor::WALL_H:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Wall(x,y,this));
+				pRoomEntities[index] = (new Tile())->Add(new Wall(x,y,this));
 				break;
 			case (char)Editor::KEY_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Key(x, y, this, Color::GREEN));
+				pRoomEntities[index] = (new Tile())->Add(new Key(x, y, this, Color::GREEN));
 				//pEntities.push_back(new Key(x, y, Color::GREEN));
 				break;
 			case (char)Editor::KEY_RED:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Key(x, y, this, Color::RED));
+				pRoomEntities[index] = (new Tile())->Add(new Key(x, y, this, Color::RED));
 				//pEntities.push_back(new Key(x, y, Color::RED));
 				break;
 			case (char)Editor::KEY_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Key(x, y, this, Color::BLUE));
+				pRoomEntities[index] = (new Tile())->Add(new Key(x, y, this, Color::BLUE));
 				//pEntities.push_back(new Key(x, y, Color::BLUE));
 				break;
 			case (char)Editor::DOOR_RED:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::RED));
+				pRoomEntities[index] = (new Tile())->Add(new Door(x, y, this, Color::RED));
 				
 				//pEntities.push_back(new Door(x, y, Color::RED));
 				break;
 			case (char)Editor::DOOR_GREEN:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::GREEN));
+				pRoomEntities[index] = (new Tile())->Add(new Door(x, y, this, Color::GREEN));
 				//pEntities.push_back(new Door(x, y, Color::GREEN));
 				break;
 			case (char)Editor::DOOR_BLUE:
 				pRoomData[index] = cSpriteEmpty;
-				pRoomEntities[index] = Tile().Add(new Door(x, y, this, Color::BLUE));
+				pRoomEntities[index] = (new Tile())->Add(new Door(x, y, this, Color::BLUE));
 				//pEntities.push_back(new Door(x, y, Color::BLUE));
 				break;
 			case (char)Editor::MONEY:
@@ -191,7 +198,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case '7':
 			case '8':
 			case '9':
-				pRoomEntities[index] = Tile().Add(new Exit(x, y, this, tile));
+				pRoomEntities[index] = (new Tile())->Add(new Exit(x, y, this, tile));
 				//pEntities.push_back(new Exit( x, y, tile));
 				break;
 			case (char)Editor::PLAYER:
@@ -202,27 +209,28 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 					*playerY = y;
 				}*/
 				player->SetPosition(x, y);
-				pRoomEntities[index] = Tile().Add(player);
+				pRoomEntities[index] = (new Tile())->Add(player);
 
 				break;
 			case (char)Editor::ENEMY:
 				//pEntities.push_back(new Enemy(x, y, 1+ rand() % 3));
-				pRoomEntities[index] = Tile().Add(new Enemy(x, y, this, 3, 1 + rand() % 3));
+				pRoomEntities[index] = (new Tile())->Add(new Enemy(x, y, this, 3, 1 + rand() % 3));
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::ENEMY_H:
 				// delta x
 				//pEntities.push_back(new Enemy(x, y, 1 + rand() % 3, 3, 0));
-				pRoomEntities[index] = Tile().Add(new Enemy(x, y, this, 3, 1 + rand() % 3,3, 0));
+				pRoomEntities[index] = (new Tile())->Add(new Enemy(x, y, this, 3, 1 + rand() % 3,3, 0));
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::ENEMY_V:
 				// delta y
 				//pEntities.push_back(new Enemy(x, y, 1 + rand() % 3, 0, 2));
-				pRoomEntities[index] = Tile().Add(new Enemy(x, y, this, 3, 1 + rand() % 3, 0, 2));
+				pRoomEntities[index] = (new Tile())->Add(new Enemy(x, y, this, 3, 1 + rand() % 3, 0, 2));
 				pRoomData[index] = cSpriteEmpty; // clear the level
 				break;
 			case (char)Editor::EMPTY:
+				pRoomEntities[index] = new Tile();
 				break;
 			default:
 				std::cout << "Invalid character in level file: " << pRoomData[index] << std::endl;
@@ -280,13 +288,19 @@ GameEntity* Room::UpdateEntities()
 		if ( !t2->IsEmpty())
 		{
 			bool collisionSuccessful = HandleCollision(entity, t2);
+			
 			if (collisionSuccessful)
 			{
 				entity->SetPosition(newPos.x, newPos.y);
 				// place current entity above the one in newPosIndex
 				t2->Add(entity);
-				if(pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
+				if (pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
+				{
 					pRoomEntities[currentPosIndex]->Remove(entity);
+					//pRoomEntities[newPosIndex]->Remove(t2->GetFirst());
+					int q = 0;
+				}
+					
 			}	
 		}
 		else // if destination Tile is unoccupied
@@ -319,7 +333,7 @@ bool Room::HandleCollision(GameEntity* g1, GameEntity* g2)
 bool Room::HandleCollision(GameEntity* g1, Tile* destinationTile)
 {
 	bool activeCollision = true;
-	bool reactiveCollision = false;
+	bool reactiveCollision = true;
 
 	if (destinationTile->GetFirst() != nullptr)
 	{
@@ -347,7 +361,15 @@ bool Room::PlaceAt(GameEntity* gameEntity, Point p)
 	/*if (pRoomEntities[index] != nullptr)
 		return false;*/
 	pRoomEntities[index]->Add(gameEntity);
+	gameEntity->SetPosition(p.x, p.y);
 	return true;
+}
+
+void Room::RemoveFrom(GameEntity* gameEntity, Point p)
+{
+	int index = GetIndexFromXY(p.x, p.y);
+	pRoomEntities[index]->Remove(gameEntity);
+	int a = 1;
 }
 
 void Room::MoveEntity(Point startPos, Point endPos)

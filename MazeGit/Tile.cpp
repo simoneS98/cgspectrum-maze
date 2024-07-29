@@ -10,6 +10,28 @@ Tile::Tile(GameEntity* activeEntity, GameEntity* passiveEntity)
 */
 
 
+Tile::~Tile()
+{
+	/*
+		The objects that were in entities are transfered to the empty vector.
+		Then, the empty vector, since it is a nameless temporary object, is destroyed,
+		and its contents, which were previously owned by entities, are destroyed and the memory deallocated.
+	*/
+	std::vector<GameEntity*>().swap(entities);
+
+	// or...
+	/*
+		while (!entities.empty())
+		{
+			// deletes last element's pointer
+			delete entities.back();
+			// removes last element from vector
+			entities.pop_back();
+		}
+	*/
+
+}
+
 Tile* Tile::Add(GameEntity* gameEntity)
 {
 	entities.push_back(gameEntity);
@@ -38,7 +60,7 @@ GameEntity* Tile::GetFirstActive()
 {
 	for (auto entity = entities.begin(); entity != entities.end(); ++entity)
 	{
-		if ((*entity)->CanActivate())
+		if ((*entity)->CanActivate() && (*entity)->GetType() == EntityType::ACTIVE)
 		{
 			return *entity;
 		}
@@ -87,7 +109,10 @@ void Tile::SetPassive(GameEntity* gameEntity)
 */
 void Tile::Draw()
 {
-	entities.back()->Draw();
+	if (entities.empty())
+		std::cout << " ";
+	else
+		entities.back()->Draw();
 	/*
 	// active entity always has precedence
 	if (activeEntity != nullptr)

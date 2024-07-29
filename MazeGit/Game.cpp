@@ -15,6 +15,8 @@ Game::Game(std::string levelName)
 
 Game::~Game()
 {
+    delete player;
+    player = nullptr;
 }
 
 bool Game::Load(std::string roomName, char *pRoomBefore)

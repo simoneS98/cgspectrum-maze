@@ -14,6 +14,8 @@ GameEntity::~GameEntity()
 {
 	delete pPosition;
 	pPosition = nullptr;
+	//delete pRoom;
+
 }
 
 int GameEntity::GetXPosition()

@@ -51,7 +51,7 @@ bool Enemy::CollideWith(GameEntity* collidedEntity)
 		foe->TakeDamage(damage);
 	}
 		
-	return false;
+	return true;
 }
 
 

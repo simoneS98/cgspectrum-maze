@@ -1,5 +1,5 @@
 #include "Character.h"
-
+#include "Room.h"
 Character::Character(int x, int y, Room* pRoom, int maxHp)
 	: GameEntity(x,y,pRoom)
 	, maxHp(maxHp)
@@ -29,10 +29,12 @@ void Character::TakeDamage(int amount)
 
 bool Character::TryPickupKey(GameEntity* key)
 {
-	if (pCurrentKey != nullptr)
-		return false;
+	if (pCurrentKey == nullptr)
+	{
+		pCurrentKey = (Key*)key;
+		pRoom->RemoveFrom(key,key->GetPosition());
+	}
 
-	pCurrentKey = (Key*)key;
 	return true;
 }
 

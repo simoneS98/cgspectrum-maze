@@ -17,6 +17,12 @@ Level::~Level()
 		delete[] map;
 		map = nullptr;
 	}
+
+    if (currentRoom != nullptr)
+    {
+        delete currentRoom;
+        currentRoom = nullptr;
+    }
 }
 
 Level::Level(Room** map, int width, int height)

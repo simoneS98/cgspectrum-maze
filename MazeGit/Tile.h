@@ -14,11 +14,16 @@ private:
 public:
 	//Tile();
 	//Tile(GameEntity* activeEntity = nullptr, GameEntity* passiveEntity = nullptr);
+	~Tile();
 	Tile* Add(GameEntity* gameEntity);
 	void Remove(GameEntity* gameEntity);
 	GameEntity* GetFirstActive();
 	GameEntity* GetFirst();
 	void RefreshActivations();
+	std::string GetC() {
+		if (entities.empty()) { return " "; }
+		else { return "qualcosa"; }
+	};
 	//void RemoveActive();
 	//void RemovePassive();
 

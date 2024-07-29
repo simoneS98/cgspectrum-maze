@@ -26,6 +26,7 @@ class Room
 		bool IsWall(int index);
 		bool Convert(Player* player, char* pRoomBefore = nullptr);
 		bool PlaceAt(GameEntity* gameEntity, Point p);
+		void RemoveFrom(GameEntity* gameEntity, Point p);
 		void MoveEntity(Point startPos, Point endPos);
 
 	private:
