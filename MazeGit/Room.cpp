@@ -13,10 +13,11 @@
 
 
 
-Room::Room(int width, int height, char* pRoomData)
+Room::Room(int width, int height, char* pRoomData, std::string name)
 	: width(width)
 	, height(height)
 	, pRoomData(pRoomData)
+	, name(name)
 {
 	//pRoomEntities = new GameEntity*[width * height];
 	pRoomEntities = std::vector<Tile*>(width * height, nullptr);
@@ -39,6 +40,7 @@ Room::~Room()
 		pEntities.pop_back();
 	}
 
+	
 	while (!pRoomEntities.empty())
 	{
 		// deletes last element's pointer
@@ -64,54 +66,9 @@ void Room::Draw()
 			std::cout << std::endl;
 	}
 	std::cout << std::endl;
-	// Draw the Room
-	/*
-	
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			int indexToPrint = GetIndexFromXY(x,y);
-
-			Tile t = pRoomEntities[indexToPrint];
-
-			if (t.IsEmpty())
-			{
-				// of course is it better to use walls as gameentities...
-				// ...and leave empty spaces as nullptrs
-				std::cout << pRoomData[indexToPrint];
-			}
-			else
-			{
-				t.Draw();
-			}
-		}
-		std::cout << std::endl;
-	}
-	*/
-
 
 	COORD entityCursorPosition;
 
-	// Draw Entities
-	/*
-		front() access the first element
-		back() access the last element
-		end() returns an iterator to the end
-		begin() returns an iterator to the beginning
-	*/
-	/*
-	for (auto entity = pEntities.begin(); entity != pEntities.end(); ++entity)
-	{
-		if ((*entity)->IsActive())
-		{
-			entityCursorPosition.X = (*entity)->GetXPosition();
-			entityCursorPosition.Y = (*entity)->GetYPosition();
-			SetConsoleCursorPosition(console, entityCursorPosition);
-			(*entity)->Draw();
-		}
-	}
-	*/
 	SetConsoleCursorPosition(console, COORD{ 0,cMaxRoomHeight });
 }
 
@@ -131,7 +88,7 @@ bool Room::IsWall(int index)
 }
 
 // TODO: move to Utils class?
-bool Room::Convert(Player *player, char* pRoomNameBefore)
+bool Room::Convert(Player *player, char pRoomNameBefore)
 {
 	bool anyWarnings = false;
 
@@ -142,7 +99,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			int index = GetIndexFromXY(x, y);
 
 			char tile = pRoomData[index];
-
+			//int _height = height;
 			switch (tile)
 			{
 			case (char)Editor::CORNER:
@@ -184,7 +141,7 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 				break;
 			case (char)Editor::MONEY:
 				pRoomData[index] = cSpriteEmpty;
-				//pRoomEntities[index] = new Money(x, y, this, 1 + rand() % 5);
+				pRoomEntities[index] = (new Tile())->Add(new Money(x, y, this, 1 + rand() % 5));
 				
 				break;
 			case (char)Editor::EXIT:
@@ -199,17 +156,27 @@ bool Room::Convert(Player *player, char* pRoomNameBefore)
 			case '8':
 			case '9':
 				pRoomEntities[index] = (new Tile())->Add(new Exit(x, y, this, tile));
+				// Player gets set in the position of the exit leading to previous room
+				if (pRoomNameBefore == tile && player != nullptr)
+				{
+					player->SetPosition(x, y);
+					pRoomEntities[index]->Add(player);
+				}
 				//pEntities.push_back(new Exit( x, y, tile));
 				break;
 			case (char)Editor::PLAYER:
 				pRoomData[index] = cSpriteEmpty;
-				/*if (playerX != nullptr && playerY != nullptr && pRoomNameBefore == nullptr)
+				if (pRoomNameBefore == NULL)
 				{
-					*playerX = x;
-					*playerY = y;
-				}*/
-				player->SetPosition(x, y);
-				pRoomEntities[index] = (new Tile())->Add(player);
+					player->SetPosition(x, y);
+					pRoomEntities[index] = (new Tile())->Add(player);
+
+				}
+				else
+				{
+					pRoomEntities[index] = new Tile();
+				}
+				
 
 				break;
 			case (char)Editor::ENEMY:
@@ -262,7 +229,15 @@ GameEntity* Room::UpdateEntities()
 		if ((*tile)->IsEmpty())
 			continue;
 
-		GameEntity* entity = (*tile)->GetFirstActive();
+		std::vector<GameEntity*> tileEntities = (*tile)->GetEntities();
+
+		for (auto entity = tileEntities.begin() ; entity != tileEntities.end(); ++entity)
+		{
+			if((*entity)->CanActivate())
+				UpdateEntity((*entity));
+		}
+
+		/*GameEntity* entity = (*tile)->GetFirstActive();
 
 		if (entity == nullptr)
 			continue;
@@ -308,13 +283,62 @@ GameEntity* Room::UpdateEntities()
 			entity->SetPosition(newPos.x, newPos.y);
 			pRoomEntities[newPosIndex]->Add(entity);
 			pRoomEntities[currentPosIndex]->Remove(entity);
-		}
+		}*/
 	}
 
 	
 	//pRoomEntities = tmpRoomEntities;
 
 	return collidedEntity;
+}
+
+void Room::UpdateEntity(GameEntity* entity)
+{
+	if (entity == nullptr)
+		return;
+
+	if (!entity->CanActivate())
+		return;
+
+	entity->StartActivation();
+
+	Point direction = entity->Update();
+
+	if (direction.x == 0 && direction.y == 0)
+		return;
+
+	Point newPos = direction + entity->GetPosition();
+
+	int currentPosIndex = GetIndexFromXY(entity->GetXPosition(), entity->GetYPosition());
+
+	int newPosIndex = GetIndexFromXY(newPos.x, newPos.y);
+
+	Tile* t2 = pRoomEntities[newPosIndex];
+
+	if (!t2->IsEmpty())
+	{
+		bool collisionSuccessful = HandleCollision(entity, t2);
+
+		if (collisionSuccessful)
+		{
+			entity->SetPosition(newPos.x, newPos.y);
+			// place current entity above the one in newPosIndex
+			t2->Add(entity);
+			if (pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
+			{
+				pRoomEntities[currentPosIndex]->Remove(entity);
+				//pRoomEntities[newPosIndex]->Remove(t2->GetFirst());
+				int q = 0;
+			}
+
+		}
+	}
+	else // if destination Tile is unoccupied
+	{
+		entity->SetPosition(newPos.x, newPos.y);
+		pRoomEntities[newPosIndex]->Add(entity);
+		pRoomEntities[currentPosIndex]->Remove(entity);
+	}
 }
 
 int Room::GetIndexFromXY(int x, int y)

@@ -1,6 +1,9 @@
 #include "Exit.h"
 #include <iostream>
 #include "Level.h"
+#include "EventManager.h"
+#include "ChangeRoomEvent.h"
+#include "ExitReachedEvent.h"
 
 Exit::Exit(int x, int y, Room* pRoom, char nextRoomFileName)
 	: GameEntity::GameEntity(x, y, pRoom)
@@ -29,6 +32,13 @@ bool Exit::CollideWith(GameEntity* collidedEntity)
 	// only Player Entities can change floors
 	if(!player)
 		return false;
+
+	if(GetNextRoomAsString().empty())
+		EventManager::GetInstance()->Add(new ExitReachedEvent());
+	else
+		EventManager::GetInstance()->Add(new ChangeRoomEvent(GetNextRoomAsString()));
+
+	return true;
 
 	//Level::Load("test", "1");
 }

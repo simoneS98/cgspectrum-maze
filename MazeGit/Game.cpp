@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <Windows.h>
 #include "EventManager.h"
+#include "LevelManager.h"
 
 
 
@@ -11,6 +12,7 @@ Game::Game(std::string levelName)
     , levelName(levelName)
     , roomName("0")
 {
+    LevelManager::GetInstance()->SetLevelName(levelName);
 }
 
 Game::~Game()
@@ -19,15 +21,24 @@ Game::~Game()
     player = nullptr;
 }
 
-bool Game::Load(std::string roomName, char *pRoomBefore)
+bool Game::Load(std::string roomName, char* pRoomBefore)
 {
-    if (!level.Load(levelName, roomName))
+    char roomBefore = NULL;
+    
+    if(pRoomBefore != nullptr)
+        roomBefore = *pRoomBefore;
+
+    if (!LevelManager::GetInstance()->Load(roomName))
         return false;
 
     this->roomName = roomName;
-    this->player = new Player(level.GetCurrentRoom());
 
-    bool anyWarnings = level.GetCurrentRoom()->Convert(player, pRoomBefore);
+    Room* currRoom = LevelManager::GetInstance()->GetCurrentRoom();
+
+    if(pRoomBefore == nullptr)
+        this->player = new Player(currRoom);
+
+    bool anyWarnings = currRoom->Convert(player, roomBefore);
 
     if (anyWarnings)
         return false;
@@ -47,11 +58,14 @@ void Game::Run()
     //isGameOver = UpdateGameWorld();
     // check for events
   
-    UpdateGameWorld();
+   // UpdateGameWorld();
+    LevelManager::GetInstance()->GetCurrentRoom()->UpdateEntities();
+
 	// Generate Outputs
-    EventManager::GetInstance()->ActivateEvents();
+    EventManager::GetInstance()->ActivateEvents(this);
 
     Draw();
+    
 }
 
 bool Game::IsGameOver()
@@ -73,7 +87,8 @@ void Game::UpdatePlayerPosition(Point direction)
 
 bool Game::UpdateGameWorld()
 {
-    level.GetCurrentRoom()->UpdateEntities();
+    LevelManager::GetInstance()->GetCurrentRoom()->UpdateEntities();
+    //level.GetCurrentRoom()->UpdateEntities();
     return false;
 }
 
@@ -82,7 +97,8 @@ void Game::Draw()
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     system("cls");
 
-    level.Draw();
+    //level.Draw();
+    LevelManager::GetInstance()->GetCurrentRoom()->Draw();
 
     // Set cursor position for player
     //COORD actorCursorPosition = { player->GetXPosition(), player->GetYPosition() };
@@ -91,8 +107,8 @@ void Game::Draw()
     //player->Draw();
 
     // Set the cursor to the end of the level
-    COORD currentCursorPosition = { 0, level.GetHeight() + 1 };
-    SetConsoleCursorPosition(console, currentCursorPosition);
+    //COORD currentCursorPosition = { 0, level.GetHeight() + 1 };
+    //SetConsoleCursorPosition(console, currentCursorPosition);
 
     player->DisplayInfo();
 
@@ -106,7 +122,7 @@ bool Game::PlayerCanMoveInDirection(Point direction)
     //Room* r = level.GetCurrentRoom();
 
     // TODO: could be extended with an IsObstacle function
-    return !level.GetCurrentRoom()->IsWall(x, y);
+    return !LevelManager::GetInstance()->GetCurrentRoom()->IsWall(x, y);
 }
 
 Point Game::GetPlayerInput()
@@ -162,7 +178,7 @@ Point Game::GetPlayerInput()
 
 bool Game::HandleCollision(int newPlayerX, int newPlayerY)
 {
-    Room* currentRoom = level.GetCurrentRoom();
+    Room* currentRoom = LevelManager::GetInstance()->GetCurrentRoom();
     GameEntity* collidedEntity = currentRoom->UpdateEntities();
     if (collidedEntity != nullptr && collidedEntity->IsActive())
     {

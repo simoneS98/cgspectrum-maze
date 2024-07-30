@@ -1,12 +1,9 @@
 #pragma once
 #include "Event.h"
-class PlayerDeathEvent :
+class ExitReachedEvent :
     public Event
 {
 public:
-    PlayerDeathEvent();
+    ExitReachedEvent();
     virtual bool Activate(Game* game = nullptr) override;
 };
-
-
-

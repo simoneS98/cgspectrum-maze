@@ -27,6 +27,13 @@ public:
     int GetLives() { return lives; }
     void DecrementLives() { lives--; }
 
+    #ifdef GODMODE
+    void TakeDamage(int amount) override
+    {
+        return Character::TakeDamage(0);
+    }
+    #endif
+
     void BlockKeyDrop() { canDropKey = false; }
     void RestoreKeyDrop() { canDropKey = true; }
     // Generic
@@ -44,6 +51,8 @@ public:
     virtual bool CollideWith(GameEntity* collidedEntity) override;
 
     virtual bool TryUseKeyOn(GameEntity* lockedEntity) override;
+
+    virtual void PickupMoney(GameEntity* lockedEntity) override;
 
 private:
     int money;

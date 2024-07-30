@@ -6,7 +6,7 @@ PlayerDeathEvent::PlayerDeathEvent()
 {
 }
 
-bool PlayerDeathEvent::Activate()
+bool PlayerDeathEvent::Activate(Game* game)
 {
 	system("cls");
 	std::cout << "No more lives left! GAME OVER" << std::endl;

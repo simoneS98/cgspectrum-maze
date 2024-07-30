@@ -22,7 +22,7 @@ public:
 	Game(std::string levelName);
 	~Game();
 
-	bool Load(std::string roomName = "0", char *pRoomBefore = nullptr);
+	bool Load(std::string roomName = "0", char* pRoomBefore = nullptr);
 	void Run();
 
 	bool IsGameOver();

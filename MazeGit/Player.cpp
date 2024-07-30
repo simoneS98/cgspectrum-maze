@@ -6,9 +6,9 @@
 #include <conio.h>
 #include "Door.h"
 #include "EventManager.h"
-#include "SpawnEvent.h"
 #include "PlayerDeathEvent.h"
 #include "ExitGameEvent.h"
+#include "Money.h"
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
@@ -65,7 +65,7 @@ void Player::DisplayInfo()
         std::cout << "*";
     }
 
-	std::cout << std::endl;
+	std::cout << std::endl << std::endl;
 }
 
 void Player::Draw()
@@ -84,8 +84,6 @@ void Player::DropKey()
 {
 	if (pCurrentKey && canDropKey)
 	{
-		//pCurrentKey->Place(pPosition->x, pPosition->y);
-		//pCurrentKey = nullptr;
         pRoom->PlaceAt(pCurrentKey, Point(pPosition->x, pPosition->y));
         //delete pCurrentKey;
         pCurrentKey = nullptr;
@@ -128,6 +126,9 @@ bool Player::CollideWith(GameEntity* collidedEntity)
 // only implemented in Player class
 bool Player::TryUseKeyOn(GameEntity* lockedEntity)
 {
+    #ifdef GODMODE
+    return true;
+    #endif
     if (pCurrentKey == nullptr)
         return false;
 
@@ -140,6 +141,12 @@ bool Player::TryUseKeyOn(GameEntity* lockedEntity)
     }
 
     return false;
+}
+
+void Player::PickupMoney(GameEntity* money)
+{
+    AddMoney(((Money*)money)->GetWorth());
+    pRoom->RemoveFrom(money, money->GetPosition());
 }
 
 Point Player::GetInput()

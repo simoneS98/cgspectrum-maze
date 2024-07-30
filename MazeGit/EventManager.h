@@ -12,7 +12,7 @@ public:
 	static EventManager* GetInstance();
 	static void DestroyInstance();
 	void Add(Event* e);
-	void ActivateEvents();
+	void ActivateEvents(Game* game);
 
 };
 

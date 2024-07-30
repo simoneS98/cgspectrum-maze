@@ -34,7 +34,7 @@ public:
 	bool IsActive() { return isActive; }
 	void StartActivation() { canActivate = false; }
 	void RefreshActivation() { canActivate = true; }
-	bool CanActivate() { return canActivate; }
+	bool CanActivate() const { return type == EntityType::ACTIVE && canActivate; }
 	void Place(int x, int y);
 	virtual Color GetColor() { return color; }
 
@@ -44,6 +44,7 @@ public:
 	virtual void Draw() = 0;
 	virtual bool TryUseKeyOn(GameEntity* lockedEntity) { return false; }
 	virtual bool TryPickupKey(GameEntity* key) { return false; }
+	virtual void PickupMoney(GameEntity* money) { return; }
 
 	virtual Point Update()
 	{

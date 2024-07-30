@@ -68,6 +68,7 @@ int Level::GetIndexFromXY(int x, int y)
 	return x * width + y;
 }
 
+/*
 bool Level::Load(std::string levelName, std::string roomName)
 {
     if (currentRoom != nullptr)
@@ -139,7 +140,7 @@ bool Level::Load(std::string levelName, std::string roomName)
 
     return true;
 }
-
+*/
 void Level::DisplayLeftBorder()
 {
 	DisplayVerticalBorder();

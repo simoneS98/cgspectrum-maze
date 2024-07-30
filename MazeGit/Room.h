@@ -13,10 +13,11 @@ class Room
 {
 	public:
 		// Constructors
-		Room(int width, int height, char* pRoomData);
+		Room(int width, int height, char* pRoomData, std::string name);
 		~Room();
 
 		bool Load(std::string filename, int* playerX, int* playerY);
+		char* GetName() { return &name[0]; }
 
 		// Calls Draw on everything which is inside it
 		void Draw();
@@ -24,7 +25,7 @@ class Room
 		bool IsSpace(int x, int y);
 		bool IsWall(int x, int y);
 		bool IsWall(int index);
-		bool Convert(Player* player, char* pRoomBefore = nullptr);
+		bool Convert(Player* player, char pRoomBefore);
 		bool PlaceAt(GameEntity* gameEntity, Point p);
 		void RemoveFrom(GameEntity* gameEntity, Point p);
 		void MoveEntity(Point startPos, Point endPos);
@@ -33,11 +34,13 @@ class Room
 		int width;
 		int height;
 		char* pRoomData;
+		std::string name;
 		// well of course Dictionaries will be better for this...
 		//GameEntity** pRoomEntities;
 		std::vector<Tile*> pRoomEntities;
 		std::vector<GameEntity*> pEntities;
 
+		void UpdateEntity(GameEntity* entity);
 		int GetIndexFromXY(int x, int y);
 
 		// use CollisionManager?

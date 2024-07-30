@@ -11,3 +11,9 @@ void Money::Draw()
 {
 	std::cout << cMoneySprite;
 }
+
+bool Money::CollideWith(GameEntity* collidedEntity)
+{
+	collidedEntity->PickupMoney(this);
+	return true;
+}

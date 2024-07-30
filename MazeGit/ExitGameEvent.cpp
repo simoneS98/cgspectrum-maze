@@ -4,7 +4,7 @@ ExitGameEvent::ExitGameEvent()
 {
 }
 
-bool ExitGameEvent::Activate()
+bool ExitGameEvent::Activate(Game* game)
 {
 	system("cls");
 	std::cout << "Esc was pressed! Exiting game..." << std::endl;

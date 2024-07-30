@@ -7,7 +7,7 @@ Door::Door(int x, int y, Room* pRoom, Color openColor) :
 	, isLocked(true)
 	, openColor(Color::DOOR_OPEN)
 {
-	type = EntityType::ACTIVE;
+	type = EntityType::PASSIVE;
 }
 
 /*
@@ -21,6 +21,8 @@ Color Door::GetColor() { return Color(color); }
 
 bool Door::CollideWith(GameEntity* collidedEntity)
 {
+	if (!isLocked)
+		return true;
 	return collidedEntity->TryUseKeyOn(this);
 }
 

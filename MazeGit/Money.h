@@ -10,6 +10,7 @@ public:
 
     int GetWorth() const { return worth; }
     void Draw() override;
+    virtual bool CollideWith(GameEntity* collidedEntity) override;
 private:
     int worth;
 };

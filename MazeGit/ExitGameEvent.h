@@ -5,6 +5,6 @@ class ExitGameEvent :
 {
 public:
     ExitGameEvent();
-    virtual bool Activate() override;
+    virtual bool Activate(Game* game = nullptr) override;
 };
 

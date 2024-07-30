@@ -15,6 +15,7 @@ public:
 	//Tile();
 	//Tile(GameEntity* activeEntity = nullptr, GameEntity* passiveEntity = nullptr);
 	~Tile();
+	std::vector < GameEntity*> GetEntities() { return entities; }
 	Tile* Add(GameEntity* gameEntity);
 	void Remove(GameEntity* gameEntity);
 	GameEntity* GetFirstActive();
