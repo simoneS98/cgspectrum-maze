@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cassert>
 #include "Room.h"
+#include <Constants.h>
 
 
 LevelManager* LevelManager::instance = nullptr;
@@ -26,6 +27,51 @@ void LevelManager::DestroyInstance()
 
 void LevelManager::Save()
 {
+    int h = 0;
+
+    char* map = currentRoom->RevertToCharMap();
+
+    std::string basePath = "levels/" + levelName + "/saves/";// +currentRoom->GetName() + ".room";
+
+    // this is working directory for the current level
+    basePath.insert(0, "../");
+
+    std::string cmd = "mkdir \"" + basePath + "\"";
+
+    //cmd.append(levelName).append("\"");
+
+    system(cmd.c_str());
+
+    std::string fileName = basePath + currentRoom->GetName() + ".room";
+
+    // TODO: fix save dir
+
+    std::cout << "Trying to open file " << fileName << std::endl;
+
+    std::ofstream levelFile;
+    levelFile.open(fileName);
+
+    if (!levelFile)
+    {
+        std::cout << "Saving room state failed!" << std::endl;
+    }
+    else
+    {
+        levelFile << cMaxRoomWidth << std::endl;
+        levelFile << cMaxRoomHeight << std::endl;
+        //levelFile << "level=";
+        for (int i = 0; i < cMaxRoomWidth * cMaxRoomHeight; i++)
+        {
+            levelFile << map[i];
+        }
+        levelFile << std::endl;
+        //levelFile.write(level->map, level->width * level->height); //width * height : streamsize
+        if (!levelFile)
+        {
+            std::cout << "Write failed!" << std::endl;
+        }
+        levelFile.close();
+    }
 }
 
 bool LevelManager::Load(std::string roomName)

@@ -50,10 +50,14 @@ Room::~Room()
 	}
 }
 
+bool Room::Save()
+{
+	return false;
+}
+
 
 void Room::Draw()
 {
-	//TODO: what about the  player???
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, (int)cDefaultColor);
 
@@ -210,6 +214,65 @@ bool Room::Convert(Player *player, char pRoomNameBefore)
 	}
 
 	return anyWarnings;
+}
+
+char* Room::RevertToCharMap()
+{
+	char* currentStateMap = pRoomData;
+
+	bool anyWarnings = false;
+
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			int index = GetIndexFromXY(x, y);
+
+			// agh...I can't actually save tiles with more than one GameEntity in it
+			GameEntity* entity = pRoomEntities[index]->GetFirst();
+			char tile = (char)Editor::EMPTY;
+
+			if (dynamic_cast<Wall*>(entity))
+				tile = (char)Editor::WALL_H;
+			else if (dynamic_cast<Key*>(entity))
+			{
+				Color color = entity->GetColor();
+
+				if (color == Color::BLUE)
+					tile = (char)Editor::KEY_BLUE;
+				else if (color == Color::RED)
+					tile = (char)Editor::KEY_RED;
+				else if (color == Color::GREEN)
+					tile = (char)Editor::KEY_GREEN;
+			}
+			else if (dynamic_cast<Money*>(entity))
+				tile = (char)Editor::MONEY;
+			else if (dynamic_cast<Door*>(entity))
+			{
+				Color color = entity->GetColor();
+
+				if (color == Color::BLUE)
+					tile = (char)Editor::DOOR_BLUE;
+				else if (color == Color::RED)
+					tile = (char)Editor::DOOR_RED;
+				else if (color == Color::GREEN)
+					tile = (char)Editor::DOOR_GREEN;
+			}
+			else if (dynamic_cast<Enemy*>(entity))
+			{
+				//entity->Get
+				tile = (char)Editor::ENEMY;
+			}
+			else if (dynamic_cast<Exit*>(entity))
+				tile = ((Exit*)entity)->GetNextRoomAsString()[0];
+
+			currentStateMap[index] = tile;
+			//int _height = height;
+		
+		}
+	}
+
+	return currentStateMap;
 }
 
 // Updates all entities and returns a colliding entity if there is one

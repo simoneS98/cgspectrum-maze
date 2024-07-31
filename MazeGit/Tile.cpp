@@ -71,6 +71,8 @@ GameEntity* Tile::GetFirstActive()
 
 GameEntity* Tile::GetFirst()
 {
+	if (entities.empty())
+		return nullptr;
 	return entities[0];
 }
 

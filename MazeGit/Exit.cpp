@@ -19,9 +19,9 @@ void Exit::Draw()
 std::string Exit::GetNextRoomAsString()
 {
 	char res = nextRoomFileName;
-	if(res == (char)Editor::EXIT)
+	/*if (res == (char)Editor::EXIT)
 		return "";
-
+	*/
 	return std::string(1,res);
 }
 
@@ -33,7 +33,8 @@ bool Exit::CollideWith(GameEntity* collidedEntity)
 	if(!player)
 		return false;
 
-	if(GetNextRoomAsString().empty())
+	//if(GetNextRoomAsString().empty())
+	if (GetNextRoomAsString() == std::string() + (char)Editor::EXIT)
 		EventManager::GetInstance()->Add(new ExitReachedEvent());
 	else
 		EventManager::GetInstance()->Add(new ChangeRoomEvent(GetNextRoomAsString()));

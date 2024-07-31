@@ -21,6 +21,12 @@ Game::~Game()
     player = nullptr;
 }
 
+bool Game::Save()
+{
+    LevelManager::GetInstance()->Save();
+    return true;
+}
+
 bool Game::Load(std::string roomName, char* pRoomBefore)
 {
     char roomBefore = NULL;

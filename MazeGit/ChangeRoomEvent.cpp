@@ -8,6 +8,7 @@ ChangeRoomEvent::ChangeRoomEvent(std::string nextRoom)
 }
 bool ChangeRoomEvent::Activate(Game* game)
 {
+    game->Save();
     game->Load(nextRoom, LevelManager::GetInstance()->GetCurrentRoom()->GetName());
     isDone = true;
     //LevelManager::GetInstance()->Load(nextRoom);
