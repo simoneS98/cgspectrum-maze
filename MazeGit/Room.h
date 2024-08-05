@@ -31,6 +31,7 @@ class Room
 		bool PlaceAt(GameEntity* gameEntity, Point p);
 		void RemoveFrom(GameEntity* gameEntity, Point p);
 		void MoveEntity(Point startPos, Point endPos);
+		bool operator==(const Room* otherRoom);
 
 	private:
 		int width;
@@ -40,7 +41,7 @@ class Room
 		// well of course Dictionaries will be better for this...
 		//GameEntity** pRoomEntities;
 		std::vector<Tile*> pRoomEntities;
-		std::vector<GameEntity*> pEntities;
+		//std::vector<GameEntity*> pEntities;
 
 		void UpdateEntity(GameEntity* entity);
 		int GetIndexFromXY(int x, int y);

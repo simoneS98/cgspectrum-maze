@@ -51,3 +51,27 @@ void EventManager::ActivateEvents(Game* game)
 		eventsQueue.end()
 	);
 }
+/*
+void EventManager::ActivateEvents(GameStateMachine* gameStateMachine)
+{
+	if (eventsQueue.empty())
+		return;
+	for (auto event = eventsQueue.begin(); event != eventsQueue.end(); ++event)
+	{
+		// brrr
+		if (!(*event)->IsDone())
+			(*event)->Activate(gameStateMachine);
+
+	}
+
+	eventsQueue.erase(
+		std::remove_if(
+			eventsQueue.begin(),
+			eventsQueue.end(),
+			[](Event* e) { return e->IsDone(); }
+		),
+		eventsQueue.end()
+	);
+}
+*/
+

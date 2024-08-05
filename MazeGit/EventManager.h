@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 #include "Event.h"
+
+class GameStateMachine;
+
 class EventManager
 {
 private:
@@ -13,6 +16,7 @@ public:
 	static void DestroyInstance();
 	void Add(Event* e);
 	void ActivateEvents(Game* game);
+	void ActivateEvents(GameStateMachine* gameState);
 
 };
 

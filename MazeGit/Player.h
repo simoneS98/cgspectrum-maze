@@ -54,6 +54,8 @@ public:
 
     virtual void PickupMoney(GameEntity* lockedEntity) override;
 
+    virtual bool CanBeDeleted() override { return false; }
+
 private:
     int money;
     int lives;

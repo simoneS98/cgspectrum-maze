@@ -9,6 +9,7 @@
 #include "PlayerDeathEvent.h"
 #include "ExitGameEvent.h"
 #include "Money.h"
+#include <thread>
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
@@ -33,15 +34,6 @@ bool Player::HasKey(Color color)
 {
 	return HasKey() && pCurrentKey->GetColor() == color;
 }
-
-/*
-int Player::GetNumKeys()
-{
-	return numKeys;
-}
-*/
-
-
 
 void Player::DisplayInfo()
 {
@@ -100,17 +92,14 @@ void Player::Die()
     }
     else
     {
+        // TODO: reset position
         hp = maxHp;
     }
-   
-	//find a way to invoke event
-	//system("cls");
-	//std::cout << "Your HP reached 0! Game over." << std::endl;
-	//exit(1);
 }
 
 Point Player::Update()
 {
+    // TODO: use thread to add input to EventManager
     Point inputDirection = GetInput();
 
     //inputDirection += GetPosition();
@@ -123,11 +112,22 @@ bool Player::CollideWith(GameEntity* collidedEntity)
     return true;
 }
 
+/*
+DebugCommand[] debugcommands = {...}
+
+DebugCommand{
+    GODMODE = 0, TRAVERSE_EVERYTHING = 1
+}
+
+debugcommands[TRAVERSE_EVERYTHING]
+*/
+
 // only implemented in Player class
 bool Player::TryUseKeyOn(GameEntity* lockedEntity)
 {
-    #ifdef GODMODE
-    return true;
+    #ifdef _DEBUG
+    //if(DebugManager::GetInstance()->IsPlayerInvicible())
+    //    return true;
     #endif
     if (pCurrentKey == nullptr)
         return false;

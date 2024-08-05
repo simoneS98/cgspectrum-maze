@@ -1,7 +1,7 @@
 // Main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-//#include "vld.h"
+#include "vld.h"
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
@@ -15,6 +15,7 @@
 #include "AudioManager.h"
 #include "EventManager.h"
 #include "PlayerDeathEvent.h"
+#include "StateMachineExampleGame.h"
 
 using namespace std;
 
@@ -26,8 +27,21 @@ int main()
 
     cin >> levelName;
 
-    Game game = Game(levelName);
+    Game* pGame = new Game(levelName);
+
+    StateMachineExampleGame stateMachine = StateMachineExampleGame(pGame);
     
+    stateMachine.Init();
+
+    while (true)
+    {
+        // decouple menuOption selection by using events
+        EventManager::GetInstance()->ActivateEvents(pGame);
+        stateMachine.DrawCurrentState();
+        stateMachine.UpdateCurrentState();
+    }
+
+    /*
     if (game.Load())
     {
         AudioManager::GetInstance()->PlayStartGameSound();
@@ -46,7 +60,7 @@ int main()
     else
     {
         std::cout << "Game did not load. Terminating now!" << std::endl;
-    }    
+    }*/
 
     AudioManager::DestroyInstance();
 }

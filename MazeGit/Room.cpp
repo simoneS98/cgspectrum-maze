@@ -10,7 +10,7 @@
 #include "Wall.h"
 #include <assert.h>
 #include "AudioManager.h"
-
+#include <thread>
 
 
 Room::Room(int width, int height, char* pRoomData, std::string name)
@@ -21,7 +21,6 @@ Room::Room(int width, int height, char* pRoomData, std::string name)
 {
 	//pRoomEntities = new GameEntity*[width * height];
 	pRoomEntities = std::vector<Tile*>(width * height, nullptr);
-	int a = 1;
 }
 
 Room::~Room()
@@ -32,6 +31,7 @@ Room::~Room()
 		pRoomData = nullptr;
 	}
 
+	/*
 	while (!pEntities.empty())
 	{
 		// deletes last element's pointer
@@ -39,8 +39,8 @@ Room::~Room()
 		// removes last element from vector
 		pEntities.pop_back();
 	}
+	*/
 
-	
 	while (!pRoomEntities.empty())
 	{
 		// deletes last element's pointer
@@ -296,57 +296,15 @@ GameEntity* Room::UpdateEntities()
 
 		for (auto entity = tileEntities.begin() ; entity != tileEntities.end(); ++entity)
 		{
-			if((*entity)->CanActivate())
-				UpdateEntity((*entity));
-		}
-
-		/*GameEntity* entity = (*tile)->GetFirstActive();
-
-		if (entity == nullptr)
-			continue;
-
-		if (!entity->CanActivate())
-			continue;
-		
-		entity->StartActivation();
-
-		Point direction = entity->Update();
-
-		if(direction.x == 0 && direction.y == 0)
-			continue;
-
-		Point newPos = direction + entity->GetPosition();
-
-		int currentPosIndex = GetIndexFromXY(entity->GetXPosition(), entity->GetYPosition());
-
-		int newPosIndex = GetIndexFromXY(newPos.x, newPos.y);
-
-		Tile* t2 = pRoomEntities[newPosIndex];
-
-		if ( !t2->IsEmpty())
-		{
-			bool collisionSuccessful = HandleCollision(entity, t2);
-			
-			if (collisionSuccessful)
+			if ((*entity)->CanActivate())
 			{
-				entity->SetPosition(newPos.x, newPos.y);
-				// place current entity above the one in newPosIndex
-				t2->Add(entity);
-				if (pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
-				{
-					pRoomEntities[currentPosIndex]->Remove(entity);
-					//pRoomEntities[newPosIndex]->Remove(t2->GetFirst());
-					int q = 0;
-				}
-					
-			}	
+				//std::thread t(&Room::UpdateEntity, this, *entity);
+				//t.detach();
+				UpdateEntity((*entity));
+			}
+				
 		}
-		else // if destination Tile is unoccupied
-		{				
-			entity->SetPosition(newPos.x, newPos.y);
-			pRoomEntities[newPosIndex]->Add(entity);
-			pRoomEntities[currentPosIndex]->Remove(entity);
-		}*/
+
 	}
 
 	
@@ -357,6 +315,8 @@ GameEntity* Room::UpdateEntities()
 
 void Room::UpdateEntity(GameEntity* entity)
 {
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
 	if (entity == nullptr)
 		return;
 
@@ -466,4 +426,9 @@ void Room::MoveEntity(Point startPos, Point endPos)
 
 	pRoomEntities[endPosIndex] = pRoomEntities[startPosIndex];
 	pRoomEntities[startPosIndex] = nullptr;
+}
+
+bool Room::operator==(const Room* otherRoom)
+{
+	return false;
 }
