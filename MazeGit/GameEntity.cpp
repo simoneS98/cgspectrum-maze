@@ -1,5 +1,6 @@
 #include "GameEntity.h"
 #include "Room.h"
+#include "LevelManager.h"
 
 GameEntity::GameEntity(int x, int y, Room* pRoom, Color color)
 	: pPosition(new Point(x,y))

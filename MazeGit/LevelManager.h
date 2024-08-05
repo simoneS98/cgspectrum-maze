@@ -9,6 +9,7 @@ private:
 	LevelManager() {}
 	static LevelManager* instance;
 	std::string levelName;
+	Room* m_pRoomBefore;
 	Room* currentRoom;
 	void Remove();
 public:

@@ -35,6 +35,7 @@ bool StateMachineExampleGame::DrawCurrentState()
 {
     if (m_pCurrentState)
         m_pCurrentState->Draw();
+
     return false;
 }
 
@@ -72,6 +73,11 @@ void StateMachineExampleGame::LoadScene(SceneName scene)
     default:
         break;
     }
+}
+
+void StateMachineExampleGame::LoadGame(Player* pPlayer)
+{
+    m_pOwner->Load(pPlayer);
 }
     
         

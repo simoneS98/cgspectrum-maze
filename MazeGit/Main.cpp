@@ -1,7 +1,10 @@
 // Main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#if __has_include("vld.h")
 #include "vld.h"
+#endif
+
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
@@ -21,13 +24,8 @@ using namespace std;
 
 int main()
 {   
-    cout << "Which level do you want to play? (TODO: print list of levels)";
-
-    string levelName;
-
-    cin >> levelName;
-
-    Game* pGame = new Game(levelName);
+  
+    Game* pGame = new Game();
 
     StateMachineExampleGame stateMachine = StateMachineExampleGame(pGame);
     

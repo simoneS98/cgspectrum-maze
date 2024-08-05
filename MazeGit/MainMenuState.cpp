@@ -15,6 +15,7 @@ MainMenuState::MainMenuState(StateMachineExampleGame* pOwner)
 
 void MainMenuState::Enter()
 {
+    Draw();
 }
 
 void MainMenuState::Exit()
@@ -62,6 +63,7 @@ void MainMenuState::DisplayOptions()
         std::cout << (*menuOption);
     }
     */
+    std::cout << m_SelectedIndex << std::endl;
     
     for (int i = 0; i < m_MenuOptions.size(); i++)
     {

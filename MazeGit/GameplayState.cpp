@@ -4,7 +4,7 @@
 
 GameplayState::GameplayState(StateMachineExampleGame* pOwner)
     : m_pOwner(pOwner)
-    , m_player(Player(nullptr))
+    //, m_pPlayer(new Player(nullptr))
     , m_level(Level())
     , m_beatGame(false)
 {
@@ -29,10 +29,24 @@ bool GameplayState::Update(bool processInput)
 
 void GameplayState::Draw()
 {
+    LevelManager::GetInstance()->GetCurrentRoom()->Draw();
+    m_pPlayer->DisplayInfo();
 }
 
 bool GameplayState::Load()
 {
-    LevelManager::GetInstance()->Load("0");
+    if (LevelManager::GetInstance()->GetCurrentRoom() == nullptr)
+    {
+        std::cout << "Which level do you want to play? (TODO: print list of levels)";
+        std::string levelName;
+        std::cin >> levelName;
+        LevelManager::GetInstance()->SetLevelName(levelName);
+
+    }
+    
+    if(m_pPlayer == nullptr)
+        m_pPlayer = new Player(LevelManager::GetInstance()->GetCurrentRoom());
+    m_pOwner->LoadGame(m_pPlayer);
+    //LevelManager::GetInstance()->Load("0");
     return false;
 }

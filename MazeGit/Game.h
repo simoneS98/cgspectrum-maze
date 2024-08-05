@@ -19,11 +19,13 @@ class Game
 	std::string roomName;
 
 public:
+	Game();
 	Game(std::string levelName);
 	~Game();
 
 	bool Save();
 	bool Load(std::string roomName = "0", char* pRoomBefore = nullptr);
+	bool Load(Player* player, std::string roomName = "0", char* pRoomBefore = nullptr);
 	void Run();
 
 	bool IsGameOver();

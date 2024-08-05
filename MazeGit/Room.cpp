@@ -58,6 +58,8 @@ bool Room::Save()
 
 void Room::Draw()
 {
+	system("cls");
+
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, (int)cDefaultColor);
 
@@ -387,18 +389,6 @@ bool Room::HandleCollision(GameEntity* g1, Tile* destinationTile)
 		activeCollision = g1->CollideWith(destinationTile->GetFirst());
 		reactiveCollision = destinationTile->GetFirst()->CollideWith(g1);
 	}	
-	/*
-	else if (destinationTile.GetPassive() != nullptr)
-	{
-		activeCollision = g1->CollideWith(destinationTile.GetPassive());
-		reactiveCollision = destinationTile.GetPassive()->CollideWith(g1);
-		if (reactiveCollision)
-		{
-			destinationTile.RemovePassive();
-		}
-			
-	}
-	*/
 	return activeCollision && reactiveCollision;
 }
 

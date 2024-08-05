@@ -1,7 +1,9 @@
 #pragma once
 #include "GameStateMachine.h"
+
 class Game;
 class GameStates;
+class Player;
 
 class StateMachineExampleGame :
     public GameStateMachine
@@ -34,6 +36,8 @@ public:
     virtual bool Cleanup() override;
 
     void LoadScene(SceneName scene);
+
+    void LoadGame(Player* pPlayer);
 
 };
 

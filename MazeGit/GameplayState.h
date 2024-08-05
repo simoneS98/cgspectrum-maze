@@ -1,4 +1,5 @@
 #pragma once
+
 #include "GameState.h"
 #include "Player.h"
 #include "Level.h"
@@ -22,7 +23,7 @@ public:
 private:
     StateMachineExampleGame* m_pOwner;
 
-    Player m_player;
+    Player* m_pPlayer;
     Level m_level;
 
     bool m_beatGame;

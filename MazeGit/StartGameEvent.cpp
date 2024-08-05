@@ -1,5 +1,6 @@
 #include "StartGameEvent.h"
 #include "StateMachineExampleGame.h"
+#include "LevelManager.h"
 
 StartGameEvent::StartGameEvent(GameStateMachine* gsm)
     : m_pGsm(gsm)
@@ -8,7 +9,11 @@ StartGameEvent::StartGameEvent(GameStateMachine* gsm)
 
 bool StartGameEvent::Activate(Game* game)
 {
-    ((StateMachineExampleGame*)m_pGsm)->LoadScene(StateMachineExampleGame::SceneName::MAIN_MENU);
+    
     //game->Load();
+
+    ((StateMachineExampleGame*)m_pGsm)->LoadScene(StateMachineExampleGame::SceneName::GAMEPLAY);
+    //game->Load();
+    isDone = true;
     return false;
 }

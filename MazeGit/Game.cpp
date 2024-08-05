@@ -5,7 +5,11 @@
 #include "EventManager.h"
 #include "LevelManager.h"
 
-
+Game::Game()
+    : isGameOver(false)
+    , roomName("0")
+{
+}
 
 Game::Game(std::string levelName)
     : isGameOver(false)
@@ -30,6 +34,28 @@ bool Game::Save()
 bool Game::Load(std::string roomName, char* pRoomBefore)
 {
     char roomBefore = NULL;
+
+    if (pRoomBefore != nullptr)
+        roomBefore = *pRoomBefore;
+
+    if (!LevelManager::GetInstance()->Load(roomName))
+        return false;
+
+    this->roomName = roomName;
+
+    Room* currRoom = LevelManager::GetInstance()->GetCurrentRoom();
+
+    bool anyWarnings = currRoom->Convert(this->player, roomBefore);
+
+    if (anyWarnings)
+        return false;
+
+    return true;
+}
+
+bool Game::Load(Player* player, std::string roomName, char* pRoomBefore)
+{
+    char roomBefore = NULL;
     
     if(pRoomBefore != nullptr)
         roomBefore = *pRoomBefore;
@@ -41,8 +67,8 @@ bool Game::Load(std::string roomName, char* pRoomBefore)
 
     Room* currRoom = LevelManager::GetInstance()->GetCurrentRoom();
 
-    if(pRoomBefore == nullptr)
-        this->player = new Player(currRoom);
+    //if (player == nullptr)
+        this->player = player;//new Player(currRoom);
 
     bool anyWarnings = currRoom->Convert(player, roomBefore);
 
