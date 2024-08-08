@@ -1,5 +1,6 @@
 #pragma once
 #include "GameStateMachine.h"
+#include <string>
 
 class Game;
 class GameStates;
@@ -13,19 +14,28 @@ public:
     {
         NONE,
         MAIN_MENU,
+        SCORE_MENU,
         GAMEPLAY
     };
 
 private:
+    StateMachineExampleGame();
+    static StateMachineExampleGame* instance;
     Game* m_pOwner;
     GameState* m_pCurrentState;
     GameState* m_pNextState;
 
-public:
-    StateMachineExampleGame(Game* pOwner);
+    void LoadScene(SceneName scene);
 
+public:
+    
+    static StateMachineExampleGame* GetInstance() { 
+        if (instance == nullptr)
+            instance = new StateMachineExampleGame();
+        return instance; 
+    }
     // Inherited via GameStateMachine
-    virtual bool Init() override;
+    virtual bool Init(Game* pOwner) override;
 
     virtual bool UpdateCurrentState(bool processInput = true) override;
 
@@ -35,9 +45,18 @@ public:
 
     virtual bool Cleanup() override;
 
-    void LoadScene(SceneName scene);
+    void LoadGame(Player*& pPlayer);
 
-    void LoadGame(Player* pPlayer);
+    void ChangeRoom(std::string roomName, char* levelName);
 
+    void StartNewGame();
+
+    void PauseGame();
+
+    void EndGame();
+
+    void ShowScores();
+
+    void Quit(std::string message);
 };
 

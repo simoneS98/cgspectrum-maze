@@ -2,7 +2,7 @@
 //
 
 #if __has_include("vld.h")
-#include "vld.h"
+//#include "vld.h"
 #endif
 
 #include <iostream>
@@ -27,38 +27,19 @@ int main()
   
     Game* pGame = new Game();
 
-    StateMachineExampleGame stateMachine = StateMachineExampleGame(pGame);
-    
-    stateMachine.Init();
+    StateMachineExampleGame* stateMachineInstance = StateMachineExampleGame::GetInstance();
+
+    stateMachineInstance->Init(pGame);
 
     while (true)
     {
         // decouple menuOption selection by using events
-        EventManager::GetInstance()->ActivateEvents(pGame);
-        stateMachine.DrawCurrentState();
-        stateMachine.UpdateCurrentState();
+        //EventManager::GetInstance()->ActivateEvents(pGame);
+        //stateMachineInstance->DrawCurrentState();
+        stateMachineInstance->UpdateCurrentState();
     }
 
-    /*
-    if (game.Load())
-    {
-        AudioManager::GetInstance()->PlayStartGameSound();
-        while (!game.IsGameOver())
-        {
-            game.Run();
-        }
-
-        if (game.DidUserQuit())
-            cout << "Thanks for playing!" << endl;
-        else if (game.GetPlayerLives() < 0)
-            cout << "YOU LOSE!!!!" << endl;
-        else
-            cout << "YOU WIN!!!" << endl;
-    }
-    else
-    {
-        std::cout << "Game did not load. Terminating now!" << std::endl;
-    }*/
-
+    EventManager::DestroyInstance();
     AudioManager::DestroyInstance();
+    
 }

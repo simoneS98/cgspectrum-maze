@@ -2,8 +2,12 @@
 #include <iostream>
 #include <conio.h>
 #include <Windows.h>
+#include <thread>
 #include "EventManager.h"
 #include "LevelManager.h"
+#include <fstream>
+#include "StateMachineExampleGame.h"
+#include "ExitGameEvent.h"
 
 Game::Game()
     : isGameOver(false)
@@ -53,7 +57,7 @@ bool Game::Load(std::string roomName, char* pRoomBefore)
     return true;
 }
 
-bool Game::Load(Player* player, std::string roomName, char* pRoomBefore)
+bool Game::Load(Player*& pPlayer, std::string roomName, char* pRoomBefore)
 {
     char roomBefore = NULL;
     
@@ -63,12 +67,14 @@ bool Game::Load(Player* player, std::string roomName, char* pRoomBefore)
     if (!LevelManager::GetInstance()->Load(roomName))
         return false;
 
+        pPlayer = new Player(LevelManager::GetInstance()->GetCurrentRoom());
+
     this->roomName = roomName;
 
     Room* currRoom = LevelManager::GetInstance()->GetCurrentRoom();
 
     //if (player == nullptr)
-        this->player = player;//new Player(currRoom);
+        player = pPlayer;//new Player(currRoom);
 
     bool anyWarnings = currRoom->Convert(player, roomBefore);
 
@@ -94,7 +100,7 @@ void Game::Run()
     LevelManager::GetInstance()->GetCurrentRoom()->UpdateEntities();
 
 	// Generate Outputs
-    EventManager::GetInstance()->ActivateEvents(this);
+    //EventManager::GetInstance()->ActivateEvents(this);
 
     Draw();
     
@@ -307,44 +313,88 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
     return false;
 }
 
-/*void Game::LoadRoom(char roomName)
+void Game::DisplayAndSaveStats(std::string fileName, std::string playerName, int stepsTaken, int enemiesKilled, int livesLeft, int money)
 {
-    // save status of current Room
+    std::cout << "Here is your stats : " << std::endl;
+    std::cout << "Amount of steps taken: " << stepsTaken << std::endl;
+    std::cout << "Amount of enemies killed: " << enemiesKilled << std::endl;
+    std::cout << "Remaining lives: " << livesLeft << std::endl;
+    std::cout << "Money collected: " << money << std::endl;
 
-    Load()
+    std::cout << std::endl;
+
+    std::cout << "Saving progress on leaderboard..." << std::endl;
+
+    std::ofstream levelFile;
+
+    levelFile.open(fileName, std::ios_base::app);
+
+    if (!levelFile)
+    {
+        std::cout << "[LeaderBoard] Opening file failed!" << std::endl;
+    }
+    else
+    {
+        // TODO: use class to read/write data
+        levelFile << "name=" << playerName << std::endl;
+        levelFile << "steps=" << stepsTaken << std::endl;
+        levelFile << "enemies_killed=" << enemiesKilled << std::endl;
+        levelFile << "lives_left=" << livesLeft << std::endl;
+        levelFile << "money=" << money << std::endl;
+        levelFile << ";" << std::endl;
+
+        if (!levelFile)
+        {
+            std::cout << "[LeaderBoard] Write failed!" << std::endl;
+        }
+
+        std::cout << "Leaderboard updated!" << std::endl;
+
+        levelFile.close();
+    }
+}
+
+void Game::SaveScore()
+{
+    std::string levelName = LevelManager::GetInstance()->GetLevelName();
+    std::string basePath = "levels/" + levelName + "/";
+
+    // this is working directory for the current level
+    basePath.insert(0, "../");
+
+    system("cls");
+
+    std::cout << "Congrats for finishing the game! Please enter your name: " << std::endl;
+
+    std::string playerName;
+
+    std::cin >> playerName;
+
+    std::string fileName = basePath + "leaderboard.txt";
+
+    DisplayAndSaveStats(fileName, playerName, player->GetStepsTaken(), player->GetEnemiesKilled(), player->GetLives(), player->GetMoney());
+
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     
-    // load new room
-}*/
+    auto waitBeforeExitingToMainMenu = [console](int countDown) {
 
+        while (countDown > 0)
+        {
+            std::cout << "Exiting to main menu in ";
+            SetConsoleTextAttribute(console, (int)Color::RED);
+            std::cout << countDown;
+            SetConsoleTextAttribute(console, (int)Color::DEFAULT); 
+            std::cout << "..." << "\r";
+            countDown--;
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
 
-/*
+        EventManager::GetInstance()->Add(new ExitGameEvent("Score added to leaderboard"));
+    
+        //StateMachineExampleGame::GetInstance()->LoadScene(StateMachineExampleGame::SceneName::MAIN_MENU);
+    };
 
-void PlayDoorClosedSound()
-{
-    Beep(500, 75);
-    Beep(500, 75);
+    std::thread waitThread(waitBeforeExitingToMainMenu, 5);
+    waitThread.join();
+
 }
-
-void PlayDoorOpenSound()
-{
-    Beep(1397, 200);
-}
-
-void PlayKeyPickupSound()
-{
-    Beep(1568, 200);
-}
-
-void PlayWinSound()
-{
-    Beep(1568, 200);
-    Beep(1568, 200);
-    Beep(1568, 200);
-    Beep(1245, 1000);
-    Beep(1397, 200);
-    Beep(1397, 200);
-    Beep(1397, 200);
-    Beep(1397, 200);
-    Beep(1157, 1000);
-}
-*/

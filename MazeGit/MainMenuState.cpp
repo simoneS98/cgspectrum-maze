@@ -6,10 +6,10 @@ MainMenuState::MainMenuState(StateMachineExampleGame* pOwner)
     : m_pOwner(pOwner)
 {
     m_MenuOptions = {
-        MenuOption("Start New Game", new StartGameEvent(pOwner)),
-        MenuOption("Load Game", nullptr),
-        MenuOption("Leaderboard", nullptr),
-        MenuOption("Exit", new ExitGameEvent())
+        MenuOption("Start New Game", new StartGameEvent()),
+        MenuOption("Resume Game", nullptr),
+        MenuOption("Leaderboard", new ShowLeaderboardEvent()),
+        MenuOption("Exit", new ExitGameEvent("Esc was pressed! Exiting game..."))
     };
 }
 
@@ -55,16 +55,6 @@ bool MainMenuState::Load()
 
 void MainMenuState::DisplayOptions()
 {
-    /*
-    for (auto menuOption = m_MenuOptions.begin(); menuOption != m_MenuOptions.end(); ++menuOption)
-    {
-        if (menuOption->IsSelected())
-            std::cout << "→";
-        std::cout << (*menuOption);
-    }
-    */
-    std::cout << m_SelectedIndex << std::endl;
-    
     for (int i = 0; i < m_MenuOptions.size(); i++)
     {
         if(m_SelectedIndex==i)

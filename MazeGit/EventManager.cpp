@@ -1,5 +1,4 @@
 #include "EventManager.h"
-#include "Game.h"
 
 EventManager* EventManager::instance = nullptr;
 
@@ -21,41 +20,11 @@ void EventManager::Add(Event* e)
 	eventsQueue.push_back(e);
 }
 
-void EventManager::ActivateEvents(Game* game)
+void EventManager::ActivateEvents(StateMachineExampleGame* gameStateMachine)
 {
 	if (eventsQueue.empty())
 		return;
-	for (auto event = eventsQueue.begin(); event != eventsQueue.end(); ++event)
-	{
-		// brrr
-		if(!(*event)->IsDone())
-			(*event)->Activate(game);
-		/*
-				if ((*event)->IsDone())
-		{
-			//eventsQueue.erase(event);
-			delete (*event);
-			//(*event) = nullptr;
-		}
-		*/
 
-			
-	}
-
-	eventsQueue.erase(
-		std::remove_if(
-			eventsQueue.begin(),
-			eventsQueue.end(),
-			[](Event* e) { return e->IsDone(); }
-		),
-		eventsQueue.end()
-	);
-}
-/*
-void EventManager::ActivateEvents(GameStateMachine* gameStateMachine)
-{
-	if (eventsQueue.empty())
-		return;
 	for (auto event = eventsQueue.begin(); event != eventsQueue.end(); ++event)
 	{
 		// brrr
@@ -64,14 +33,17 @@ void EventManager::ActivateEvents(GameStateMachine* gameStateMachine)
 
 	}
 
+	
 	eventsQueue.erase(
-		std::remove_if(
-			eventsQueue.begin(),
-			eventsQueue.end(),
-			[](Event* e) { return e->IsDone(); }
-		),
-		eventsQueue.end()
+	std::remove_if(
+		eventsQueue.begin(),
+		eventsQueue.end(),
+		[](Event* e) { return e->IsDone(); }
+	),
+	eventsQueue.end()
 	);
+	
+
 }
-*/
+
 

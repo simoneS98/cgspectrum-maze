@@ -1,13 +1,15 @@
 #include "ExitGameEvent.h"
 
-ExitGameEvent::ExitGameEvent()
+ExitGameEvent::ExitGameEvent(const std::string exitCause)
+	: m_message(exitCause)
 {
+	isDone = true;
 }
 
-bool ExitGameEvent::Activate(Game* game)
+void ExitGameEvent::Activate(StateMachineExampleGame* gsm)
 {
-	system("cls");
-	std::cout << "Esc was pressed! Exiting game..." << std::endl;
-	exit(0);
-	return true;
+	std::cout << "ATTIVO EVENT CON MSG " << m_message << std::endl;
+	
+	gsm->Quit(m_message);
+	
 }

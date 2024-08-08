@@ -41,11 +41,8 @@ bool GameplayState::Load()
         std::string levelName;
         std::cin >> levelName;
         LevelManager::GetInstance()->SetLevelName(levelName);
-
     }
     
-    if(m_pPlayer == nullptr)
-        m_pPlayer = new Player(LevelManager::GetInstance()->GetCurrentRoom());
     m_pOwner->LoadGame(m_pPlayer);
     //LevelManager::GetInstance()->Load("0");
     return false;

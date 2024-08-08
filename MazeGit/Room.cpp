@@ -352,8 +352,7 @@ void Room::UpdateEntity(GameEntity* entity)
 			if (pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
 			{
 				pRoomEntities[currentPosIndex]->Remove(entity);
-				//pRoomEntities[newPosIndex]->Remove(t2->GetFirst());
-				int q = 0;
+
 			}
 
 		}
@@ -406,7 +405,6 @@ void Room::RemoveFrom(GameEntity* gameEntity, Point p)
 {
 	int index = GetIndexFromXY(p.x, p.y);
 	pRoomEntities[index]->Remove(gameEntity);
-	int a = 1;
 }
 
 void Room::MoveEntity(Point startPos, Point endPos)

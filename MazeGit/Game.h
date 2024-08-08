@@ -25,13 +25,14 @@ public:
 
 	bool Save();
 	bool Load(std::string roomName = "0", char* pRoomBefore = nullptr);
-	bool Load(Player* player, std::string roomName = "0", char* pRoomBefore = nullptr);
+	bool Load(Player*& pPlayer, std::string roomName = "0", char* pRoomBefore = nullptr);
 	void Run();
 
 	bool IsGameOver();
 	bool DidUserQuit() { return userQuit; }
-	int GetPlayerHp() { return player->GetCurrentHp(); }
-	int GetPlayerLives() { return player->GetLives(); }
+	void SaveScore();
+	//int GetPlayerHp() { return player->GetCurrentHp(); }
+	//int GetPlayerLives() { return player->GetLives(); }
 
 private:
 	void UpdatePlayerPosition(Point direction);
@@ -43,7 +44,14 @@ private:
 
 	bool HandleCollision(int newPlayerX, int newPlayerY);
 	void LoadRoom(Room* room);
-
 	void SetLevelName(std::string levelName) { this->levelName = levelName; }
+	void DisplayAndSaveStats(
+		std::string fileName,
+		std::string playerName,
+		int stepsTaken,
+		int enemiesKilled,
+		int livesLeft,
+		int money
+	);
 };
 

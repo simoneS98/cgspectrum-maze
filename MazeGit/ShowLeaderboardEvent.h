@@ -1,12 +1,10 @@
 #pragma once
 #include "Event.h"
-class PlayerDeathEvent :
+class ShowLeaderboardEvent :
     public Event
 {
 public:
-    PlayerDeathEvent();
+    ShowLeaderboardEvent();
     virtual void Activate(StateMachineExampleGame* gsm) override;
 };
-
-
 

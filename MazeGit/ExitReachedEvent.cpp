@@ -4,10 +4,8 @@ ExitReachedEvent::ExitReachedEvent()
 {
 }
 
-bool ExitReachedEvent::Activate(Game* game)
+void ExitReachedEvent::Activate(StateMachineExampleGame* gsm)
 {
-    system("cls");
-    std::cout << "Congrats! You exited the maze!" << std::endl;
-    exit(0);
-    return true;
+    gsm->EndGame();
+    isDone = true;
 }

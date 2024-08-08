@@ -5,9 +5,10 @@ class DebugManager
 {
 
 private:
-	DebugManager* instance;
+	static DebugManager* instance;
 public:
-
+	static DebugManager* GetInstance();
+	bool IsPlayerInvicible();
 };
 
 

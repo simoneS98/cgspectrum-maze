@@ -1,16 +1,20 @@
 #include "StateMachineExampleGame.h"
+
 #include "MainMenuState.h";
 #include "GameplayState.h";
+#include "ScoreMenuState.h";
 
-StateMachineExampleGame::StateMachineExampleGame(Game* pOwner)
-    : m_pOwner(pOwner)
-    , m_pCurrentState(nullptr)
+StateMachineExampleGame* StateMachineExampleGame::instance  = nullptr;
+
+StateMachineExampleGame::StateMachineExampleGame()
+    : m_pCurrentState(nullptr)
     , m_pNextState(nullptr)
 {
 }
 
-bool StateMachineExampleGame::Init()
+bool StateMachineExampleGame::Init(Game* pOwner)
 {
+    m_pOwner = pOwner;
     // default scene
     LoadScene(SceneName::MAIN_MENU);
     return true;
@@ -19,6 +23,12 @@ bool StateMachineExampleGame::Init()
 bool StateMachineExampleGame::UpdateCurrentState(bool processInput)
 {
     bool done = false;
+
+    // perchè con evento doppio si rompe??
+    EventManager::GetInstance()->ActivateEvents(this);
+
+    DrawCurrentState();
+
     if (m_pNextState != nullptr)
     {
         ChangeState(m_pNextState);
@@ -70,14 +80,60 @@ void StateMachineExampleGame::LoadScene(SceneName scene)
     case SceneName::GAMEPLAY:
         m_pNextState = new GameplayState(this);
         break;
+    case SceneName::SCORE_MENU:
+        m_pNextState = new ScoreMenuState(this);
+        break;
     default:
         break;
     }
 }
 
-void StateMachineExampleGame::LoadGame(Player* pPlayer)
+void StateMachineExampleGame::LoadGame(Player*& pPlayer)
 {
     m_pOwner->Load(pPlayer);
+    return;
+}
+
+void StateMachineExampleGame::ChangeRoom(std::string roomName, char* levelName)
+{
+    m_pOwner->Save();
+    m_pOwner->Load(roomName, levelName);
+}
+
+void StateMachineExampleGame::StartNewGame()
+{
+    if (dynamic_cast<MainMenuState*>(m_pCurrentState))
+        LoadScene(StateMachineExampleGame::SceneName::GAMEPLAY);
 }
     
-        
+void StateMachineExampleGame::PauseGame()
+{
+    // Only works during gameplay
+    if (dynamic_cast<GameplayState*>(m_pCurrentState))
+        LoadScene(SceneName::MAIN_MENU);
+
+}
+
+void StateMachineExampleGame::EndGame()
+{
+    m_pOwner->SaveScore();
+}
+
+void StateMachineExampleGame::ShowScores()
+{
+    LoadScene(SceneName::SCORE_MENU);
+}
+
+void StateMachineExampleGame::Quit(std::string message)
+{
+    system("cls");
+    std::cout << message << std::endl;
+    // wait seconds?
+    
+    // if on main menu, exit game
+    if (dynamic_cast<MainMenuState*>(m_pCurrentState))
+        exit(0);
+    // else, go to main menu
+    else
+        LoadScene(SceneName::MAIN_MENU);
+}

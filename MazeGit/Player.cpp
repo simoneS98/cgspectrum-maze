@@ -7,15 +7,18 @@
 #include "Door.h"
 #include "EventManager.h"
 #include "PlayerDeathEvent.h"
-#include "ExitGameEvent.h"
+#include "PauseGameEvent.h"
 #include "Money.h"
 #include <thread>
+#include "DebugManager.h"
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
 	, money(0)
 	, lives(2)
 	, canDropKey(true)
+    , m_enemiesKilled(0)
+    , m_stepsTaken(0)
 {
 }
 
@@ -126,8 +129,8 @@ debugcommands[TRAVERSE_EVERYTHING]
 bool Player::TryUseKeyOn(GameEntity* lockedEntity)
 {
     #ifdef _DEBUG
-    //if(DebugManager::GetInstance()->IsPlayerInvicible())
-    //    return true;
+    if(DebugManager::GetInstance()->IsPlayerInvicible())
+        return true;
     #endif
     if (pCurrentKey == nullptr)
         return false;
@@ -193,7 +196,7 @@ Point Player::GetInput()
     }
     else if (input == cEscape)
     {
-        EventManager::GetInstance()->Add(new ExitGameEvent());
+        EventManager::GetInstance()->Add(new PauseGameEvent());
         //userQuit = true;
     }
     else if ((char)input == 'Z' || (char)input == 'z')

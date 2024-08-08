@@ -15,8 +15,7 @@ public:
 	static EventManager* GetInstance();
 	static void DestroyInstance();
 	void Add(Event* e);
-	void ActivateEvents(Game* game);
-	void ActivateEvents(GameStateMachine* gameState);
+	void ActivateEvents(StateMachineExampleGame* gameState);
 
 };
 

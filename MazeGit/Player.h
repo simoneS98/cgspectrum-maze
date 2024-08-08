@@ -39,6 +39,8 @@ public:
     // Generic
     
     //TODO: pickup <T>
+    int GetStepsTaken() { return m_stepsTaken; };
+    int GetEnemiesKilled() { return m_enemiesKilled; };
 
     void DisplayInfo();
 
@@ -60,6 +62,8 @@ private:
     int money;
     int lives;
     bool canDropKey;
+    int m_stepsTaken;
+    int m_enemiesKilled;
     Point GetInput();
 
     void UseKey();

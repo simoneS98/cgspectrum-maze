@@ -7,6 +7,7 @@
 #include "EventManager.h"
 #include "ExitGameEvent.h"
 #include "StartGameEvent.h"
+#include "ShowLeaderboardEvent.h"
 
 class MenuOption
 {

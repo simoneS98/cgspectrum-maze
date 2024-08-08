@@ -19,6 +19,11 @@ public:
 	bool Load(std::string roomName);
 	//static void SetLevelName(std::string levelName) { instance->SetLevelName(levelName);}
 	void SetLevelName(std::string levelName) { this->levelName = levelName; }
+	std::string GetLevelName() { 
+		if (currentRoom)
+			return "";
+		return this->levelName; 
+	}
 	Room* GetCurrentRoom(){	return currentRoom;	}
 	/*
 	Room** GetMap()
