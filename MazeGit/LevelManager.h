@@ -20,7 +20,7 @@ public:
 	//static void SetLevelName(std::string levelName) { instance->SetLevelName(levelName);}
 	void SetLevelName(std::string levelName) { this->levelName = levelName; }
 	std::string GetLevelName() { 
-		if (currentRoom)
+		if (currentRoom == nullptr)
 			return "";
 		return this->levelName; 
 	}

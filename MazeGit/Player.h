@@ -58,6 +58,9 @@ public:
 
     virtual bool CanBeDeleted() override { return false; }
 
+    // actually i should also call getcurrentroom, ALWAYS
+    void ChangeRoom(Room* pNewRoom) { pRoom = pNewRoom; };
+
 private:
     int money;
     int lives;

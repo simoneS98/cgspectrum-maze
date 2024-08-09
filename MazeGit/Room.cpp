@@ -166,6 +166,7 @@ bool Room::Convert(Player *player, char pRoomNameBefore)
 				if (pRoomNameBefore == tile && player != nullptr)
 				{
 					player->SetPosition(x, y);
+					player->ChangeRoom(this);
 					pRoomEntities[index]->Add(player);
 				}
 				//pEntities.push_back(new Exit( x, y, tile));

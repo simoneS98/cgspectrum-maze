@@ -8,6 +8,6 @@ ChangeRoomEvent::ChangeRoomEvent(std::string nextRoom)
 }
 void ChangeRoomEvent::Activate(StateMachineExampleGame* gsm)
 {
-    gsm->ChangeRoom(nextRoom, LevelManager::GetInstance()->GetCurrentRoom()->GetName());
+    gsm->ChangeRoom(nextRoom, LevelManager::GetInstance()->GetLevelName());
     isDone = true;
 }

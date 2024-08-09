@@ -2,6 +2,11 @@
 
 EventManager* EventManager::instance = nullptr;
 
+EventManager::EventManager()
+	: m_isLocked(false)
+{
+}
+
 EventManager* EventManager::GetInstance()
 {
 	if (instance == nullptr)
@@ -22,19 +27,27 @@ void EventManager::Add(Event* e)
 
 void EventManager::ActivateEvents(StateMachineExampleGame* gameStateMachine)
 {
+	if (m_isLocked)
+		return;
+
+	// place debug here, check contents of eventsQueue and eventsQueue.begin()
+	// should I use a copy of eventsQueue?
 	if (eventsQueue.empty())
 		return;
 
+	m_isLocked = true;
+
 	for (auto event = eventsQueue.begin(); event != eventsQueue.end(); ++event)
 	{
-		// brrr
 		if (!(*event)->IsDone())
+		{
 			(*event)->Activate(gameStateMachine);
-
+		}
 	}
 
-	
-	eventsQueue.erase(
+	// removed to avoid nullptrs...for now
+	/*
+		eventsQueue.erase(
 	std::remove_if(
 		eventsQueue.begin(),
 		eventsQueue.end(),
@@ -42,7 +55,10 @@ void EventManager::ActivateEvents(StateMachineExampleGame* gameStateMachine)
 	),
 	eventsQueue.end()
 	);
+	*/
+
 	
+	m_isLocked = false;
 
 }
 

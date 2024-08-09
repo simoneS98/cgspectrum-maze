@@ -47,7 +47,7 @@ public:
 
     void LoadGame(Player*& pPlayer);
 
-    void ChangeRoom(std::string roomName, char* levelName);
+    void ChangeRoom(std::string roomName, std::string levelName);
 
     void StartNewGame();
 

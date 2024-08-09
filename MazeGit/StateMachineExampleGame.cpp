@@ -3,6 +3,7 @@
 #include "MainMenuState.h";
 #include "GameplayState.h";
 #include "ScoreMenuState.h";
+#include "LevelManager.h"
 
 StateMachineExampleGame* StateMachineExampleGame::instance  = nullptr;
 
@@ -24,10 +25,10 @@ bool StateMachineExampleGame::UpdateCurrentState(bool processInput)
 {
     bool done = false;
 
-    // perchè con evento doppio si rompe??
-    EventManager::GetInstance()->ActivateEvents(this);
-
     DrawCurrentState();
+
+    // somewhere here lies the problem
+    EventManager::GetInstance()->ActivateEvents(this);
 
     if (m_pNextState != nullptr)
     {
@@ -36,7 +37,12 @@ bool StateMachineExampleGame::UpdateCurrentState(bool processInput)
     }
 
     if (m_pCurrentState != nullptr)
+    {
         done = m_pCurrentState->Update(processInput);
+    }
+
+
+  
 
     return done;
 }
@@ -94,10 +100,10 @@ void StateMachineExampleGame::LoadGame(Player*& pPlayer)
     return;
 }
 
-void StateMachineExampleGame::ChangeRoom(std::string roomName, char* levelName)
+void StateMachineExampleGame::ChangeRoom(std::string roomName, std::string levelName)
 {
     m_pOwner->Save();
-    m_pOwner->Load(roomName, levelName);
+    m_pOwner->Load(roomName, LevelManager::GetInstance()->GetCurrentRoom()->GetName()/*&levelName[0]*/);
 }
 
 void StateMachineExampleGame::StartNewGame()

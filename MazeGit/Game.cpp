@@ -40,7 +40,9 @@ bool Game::Load(std::string roomName, char* pRoomBefore)
     char roomBefore = NULL;
 
     if (pRoomBefore != nullptr)
-        roomBefore = *pRoomBefore;
+        roomBefore = pRoomBefore[0];// *pRoomBefore;
+
+    //roomBefore = (LevelManager::GetInstance()->GetCurrentRoom()->GetName())[0];
 
     if (!LevelManager::GetInstance()->Load(roomName))
         return false;
@@ -375,7 +377,7 @@ void Game::SaveScore()
     DisplayAndSaveStats(fileName, playerName, player->GetStepsTaken(), player->GetEnemiesKilled(), player->GetLives(), player->GetMoney());
 
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    
+
     auto waitBeforeExitingToMainMenu = [console](int countDown) {
 
         while (countDown > 0)
@@ -390,8 +392,6 @@ void Game::SaveScore()
         }
 
         EventManager::GetInstance()->Add(new ExitGameEvent("Score added to leaderboard"));
-    
-        //StateMachineExampleGame::GetInstance()->LoadScene(StateMachineExampleGame::SceneName::MAIN_MENU);
     };
 
     std::thread waitThread(waitBeforeExitingToMainMenu, 5);
