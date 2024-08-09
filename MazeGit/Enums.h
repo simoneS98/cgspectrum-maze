@@ -54,6 +54,8 @@ enum class Color
 
 enum class Input
 {
+	NONE = 0,
+
 	ARROW_IN = 0xE0, //or 224
 
 	//key scan codes https://learn.microsoft.com/it-it/previous-versions/visualstudio/visual-studio-6.0/aa299374(v=vs.60)
@@ -64,6 +66,7 @@ enum class Input
 
 	ESC = 27,
 	BACK = 8,
+	ENTER = 13,
 
 	WALL = 49,
 	SPIKES = 50,

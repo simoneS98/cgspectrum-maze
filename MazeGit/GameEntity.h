@@ -54,5 +54,7 @@ public:
 	virtual bool CollideWith(GameEntity* collidedEntity);
 
 	EntityType GetType() { return type; }
+
+	virtual bool CanBeDeleted() { return true; }
 };
 

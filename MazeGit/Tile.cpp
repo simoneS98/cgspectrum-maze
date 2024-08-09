@@ -1,6 +1,6 @@
 #include "Tile.h"
 #include <iostream>
-
+#include <vector>
 /*
 Tile::Tile(GameEntity* activeEntity, GameEntity* passiveEntity)
 	: activeEntity(activeEntity)
@@ -17,18 +17,19 @@ Tile::~Tile()
 		Then, the empty vector, since it is a nameless temporary object, is destroyed,
 		and its contents, which were previously owned by entities, are destroyed and the memory deallocated.
 	*/
-	std::vector<GameEntity*>().swap(entities);
+	//std::vector<GameEntity*>().swap(entities);
 
 	// or...
-	/*
+	
 		while (!entities.empty())
 		{
 			// deletes last element's pointer
-			delete entities.back();
+			if(entities.back()->CanBeDeleted())
+				delete entities.back();
 			// removes last element from vector
 			entities.pop_back();
 		}
-	*/
+	
 
 }
 
@@ -46,14 +47,8 @@ Tile* Tile::Add(GameEntity* gameEntity)
 
 void Tile::Remove(GameEntity* gameEntity)
 {
-	for (auto entity = entities.begin() ; entity != entities.end() ; ++entity)
-	{
-		if (gameEntity == (*entity))
-		{ 
-			entities.erase(entity);
-			return;
-		}
-	}
+	entities.erase(std::find(entities.begin(), entities.end(), gameEntity));
+	//std::erase(entities, gameEntity);
 }
 
 GameEntity* Tile::GetFirstActive()
@@ -71,6 +66,8 @@ GameEntity* Tile::GetFirstActive()
 
 GameEntity* Tile::GetFirst()
 {
+	if (entities.empty())
+		return nullptr;
 	return entities[0];
 }
 

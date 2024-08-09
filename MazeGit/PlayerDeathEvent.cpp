@@ -6,10 +6,8 @@ PlayerDeathEvent::PlayerDeathEvent()
 {
 }
 
-bool PlayerDeathEvent::Activate(Game* game)
+void PlayerDeathEvent::Activate(StateMachineExampleGame* gsm)
 {
-	system("cls");
-	std::cout << "No more lives left! GAME OVER" << std::endl;
-	exit(0);
-	return true;
+	gsm->Quit("No more lives left! GAME OVER");
+	isDone = true;
 }

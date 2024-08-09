@@ -7,14 +7,18 @@
 #include "Door.h"
 #include "EventManager.h"
 #include "PlayerDeathEvent.h"
-#include "ExitGameEvent.h"
+#include "PauseGameEvent.h"
 #include "Money.h"
+#include <thread>
+#include "DebugManager.h"
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
 	, money(0)
 	, lives(2)
 	, canDropKey(true)
+    , m_enemiesKilled(0)
+    , m_stepsTaken(0)
 {
 }
 
@@ -33,15 +37,6 @@ bool Player::HasKey(Color color)
 {
 	return HasKey() && pCurrentKey->GetColor() == color;
 }
-
-/*
-int Player::GetNumKeys()
-{
-	return numKeys;
-}
-*/
-
-
 
 void Player::DisplayInfo()
 {
@@ -100,17 +95,14 @@ void Player::Die()
     }
     else
     {
+        // TODO: reset position
         hp = maxHp;
     }
-   
-	//find a way to invoke event
-	//system("cls");
-	//std::cout << "Your HP reached 0! Game over." << std::endl;
-	//exit(1);
 }
 
 Point Player::Update()
 {
+    // TODO: use thread to add input to EventManager
     Point inputDirection = GetInput();
 
     //inputDirection += GetPosition();
@@ -123,11 +115,22 @@ bool Player::CollideWith(GameEntity* collidedEntity)
     return true;
 }
 
+/*
+DebugCommand[] debugcommands = {...}
+
+DebugCommand{
+    GODMODE = 0, TRAVERSE_EVERYTHING = 1
+}
+
+debugcommands[TRAVERSE_EVERYTHING]
+*/
+
 // only implemented in Player class
 bool Player::TryUseKeyOn(GameEntity* lockedEntity)
 {
-    #ifdef GODMODE
-    return true;
+    #ifdef _DEBUG
+    if(DebugManager::GetInstance()->IsPlayerInvicible())
+        return true;
     #endif
     if (pCurrentKey == nullptr)
         return false;
@@ -193,7 +196,7 @@ Point Player::GetInput()
     }
     else if (input == cEscape)
     {
-        EventManager::GetInstance()->Add(new ExitGameEvent());
+        EventManager::GetInstance()->Add(new PauseGameEvent());
         //userQuit = true;
     }
     else if ((char)input == 'Z' || (char)input == 'z')

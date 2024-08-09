@@ -8,6 +8,6 @@ private:
 public:
     ChangeRoomEvent(std::string nextRoom);
     // Inherited via Event
-    virtual bool Activate(Game* game) override;
+    virtual void Activate(StateMachineExampleGame* gsm) override;
 };
 

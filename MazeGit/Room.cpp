@@ -10,7 +10,7 @@
 #include "Wall.h"
 #include <assert.h>
 #include "AudioManager.h"
-
+#include <thread>
 
 
 Room::Room(int width, int height, char* pRoomData, std::string name)
@@ -21,7 +21,6 @@ Room::Room(int width, int height, char* pRoomData, std::string name)
 {
 	//pRoomEntities = new GameEntity*[width * height];
 	pRoomEntities = std::vector<Tile*>(width * height, nullptr);
-	int a = 1;
 }
 
 Room::~Room()
@@ -32,6 +31,7 @@ Room::~Room()
 		pRoomData = nullptr;
 	}
 
+	/*
 	while (!pEntities.empty())
 	{
 		// deletes last element's pointer
@@ -39,8 +39,8 @@ Room::~Room()
 		// removes last element from vector
 		pEntities.pop_back();
 	}
+	*/
 
-	
 	while (!pRoomEntities.empty())
 	{
 		// deletes last element's pointer
@@ -50,10 +50,16 @@ Room::~Room()
 	}
 }
 
+bool Room::Save()
+{
+	return false;
+}
+
 
 void Room::Draw()
 {
-	//TODO: what about the  player???
+	system("cls");
+
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, (int)cDefaultColor);
 
@@ -160,6 +166,7 @@ bool Room::Convert(Player *player, char pRoomNameBefore)
 				if (pRoomNameBefore == tile && player != nullptr)
 				{
 					player->SetPosition(x, y);
+					player->ChangeRoom(this);
 					pRoomEntities[index]->Add(player);
 				}
 				//pEntities.push_back(new Exit( x, y, tile));
@@ -212,6 +219,65 @@ bool Room::Convert(Player *player, char pRoomNameBefore)
 	return anyWarnings;
 }
 
+char* Room::RevertToCharMap()
+{
+	char* currentStateMap = pRoomData;
+
+	bool anyWarnings = false;
+
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			int index = GetIndexFromXY(x, y);
+
+			// agh...I can't actually save tiles with more than one GameEntity in it
+			GameEntity* entity = pRoomEntities[index]->GetFirst();
+			char tile = (char)Editor::EMPTY;
+
+			if (dynamic_cast<Wall*>(entity))
+				tile = (char)Editor::WALL_H;
+			else if (dynamic_cast<Key*>(entity))
+			{
+				Color color = entity->GetColor();
+
+				if (color == Color::BLUE)
+					tile = (char)Editor::KEY_BLUE;
+				else if (color == Color::RED)
+					tile = (char)Editor::KEY_RED;
+				else if (color == Color::GREEN)
+					tile = (char)Editor::KEY_GREEN;
+			}
+			else if (dynamic_cast<Money*>(entity))
+				tile = (char)Editor::MONEY;
+			else if (dynamic_cast<Door*>(entity))
+			{
+				Color color = entity->GetColor();
+
+				if (color == Color::BLUE)
+					tile = (char)Editor::DOOR_BLUE;
+				else if (color == Color::RED)
+					tile = (char)Editor::DOOR_RED;
+				else if (color == Color::GREEN)
+					tile = (char)Editor::DOOR_GREEN;
+			}
+			else if (dynamic_cast<Enemy*>(entity))
+			{
+				//entity->Get
+				tile = (char)Editor::ENEMY;
+			}
+			else if (dynamic_cast<Exit*>(entity))
+				tile = ((Exit*)entity)->GetNextRoomAsString()[0];
+
+			currentStateMap[index] = tile;
+			//int _height = height;
+		
+		}
+	}
+
+	return currentStateMap;
+}
+
 // Updates all entities and returns a colliding entity if there is one
 GameEntity* Room::UpdateEntities()
 {
@@ -233,57 +299,15 @@ GameEntity* Room::UpdateEntities()
 
 		for (auto entity = tileEntities.begin() ; entity != tileEntities.end(); ++entity)
 		{
-			if((*entity)->CanActivate())
-				UpdateEntity((*entity));
-		}
-
-		/*GameEntity* entity = (*tile)->GetFirstActive();
-
-		if (entity == nullptr)
-			continue;
-
-		if (!entity->CanActivate())
-			continue;
-		
-		entity->StartActivation();
-
-		Point direction = entity->Update();
-
-		if(direction.x == 0 && direction.y == 0)
-			continue;
-
-		Point newPos = direction + entity->GetPosition();
-
-		int currentPosIndex = GetIndexFromXY(entity->GetXPosition(), entity->GetYPosition());
-
-		int newPosIndex = GetIndexFromXY(newPos.x, newPos.y);
-
-		Tile* t2 = pRoomEntities[newPosIndex];
-
-		if ( !t2->IsEmpty())
-		{
-			bool collisionSuccessful = HandleCollision(entity, t2);
-			
-			if (collisionSuccessful)
+			if ((*entity)->CanActivate())
 			{
-				entity->SetPosition(newPos.x, newPos.y);
-				// place current entity above the one in newPosIndex
-				t2->Add(entity);
-				if (pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
-				{
-					pRoomEntities[currentPosIndex]->Remove(entity);
-					//pRoomEntities[newPosIndex]->Remove(t2->GetFirst());
-					int q = 0;
-				}
-					
-			}	
+				//std::thread t(&Room::UpdateEntity, this, *entity);
+				//t.detach();
+				UpdateEntity((*entity));
+			}
+				
 		}
-		else // if destination Tile is unoccupied
-		{				
-			entity->SetPosition(newPos.x, newPos.y);
-			pRoomEntities[newPosIndex]->Add(entity);
-			pRoomEntities[currentPosIndex]->Remove(entity);
-		}*/
+
 	}
 
 	
@@ -294,6 +318,8 @@ GameEntity* Room::UpdateEntities()
 
 void Room::UpdateEntity(GameEntity* entity)
 {
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
 	if (entity == nullptr)
 		return;
 
@@ -327,8 +353,7 @@ void Room::UpdateEntity(GameEntity* entity)
 			if (pRoomEntities[currentPosIndex]->GetFirst() != nullptr)
 			{
 				pRoomEntities[currentPosIndex]->Remove(entity);
-				//pRoomEntities[newPosIndex]->Remove(t2->GetFirst());
-				int q = 0;
+
 			}
 
 		}
@@ -364,18 +389,6 @@ bool Room::HandleCollision(GameEntity* g1, Tile* destinationTile)
 		activeCollision = g1->CollideWith(destinationTile->GetFirst());
 		reactiveCollision = destinationTile->GetFirst()->CollideWith(g1);
 	}	
-	/*
-	else if (destinationTile.GetPassive() != nullptr)
-	{
-		activeCollision = g1->CollideWith(destinationTile.GetPassive());
-		reactiveCollision = destinationTile.GetPassive()->CollideWith(g1);
-		if (reactiveCollision)
-		{
-			destinationTile.RemovePassive();
-		}
-			
-	}
-	*/
 	return activeCollision && reactiveCollision;
 }
 
@@ -393,7 +406,6 @@ void Room::RemoveFrom(GameEntity* gameEntity, Point p)
 {
 	int index = GetIndexFromXY(p.x, p.y);
 	pRoomEntities[index]->Remove(gameEntity);
-	int a = 1;
 }
 
 void Room::MoveEntity(Point startPos, Point endPos)
@@ -403,4 +415,9 @@ void Room::MoveEntity(Point startPos, Point endPos)
 
 	pRoomEntities[endPosIndex] = pRoomEntities[startPosIndex];
 	pRoomEntities[startPosIndex] = nullptr;
+}
+
+bool Room::operator==(const Room* otherRoom)
+{
+	return false;
 }

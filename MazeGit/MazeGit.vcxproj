@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -147,9 +147,11 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="ChangeRoomEvent.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="ExitGameEvent.cpp" />
     <ClCompile Include="ExitReachedEvent.cpp" />
+    <ClCompile Include="GameplayState.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -161,12 +163,18 @@
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Money.cpp" />
+    <ClCompile Include="PauseGameEvent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerDeathEvent.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomFactory.cpp" />
+    <ClCompile Include="ScoreMenuState.cpp" />
+    <ClCompile Include="ShowLeaderboardEvent.cpp" />
+    <ClCompile Include="StartGameEvent.cpp" />
+    <ClCompile Include="StateMachineExampleGame.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
@@ -174,9 +182,13 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="ChangeRoomEvent.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="ExitGameEvent.h" />
     <ClInclude Include="ExitReachedEvent.h" />
+    <ClInclude Include="GameplayState.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateMachine.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enums.h" />
@@ -188,12 +200,18 @@
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Money.h" />
+    <ClInclude Include="PauseGameEvent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerDeathEvent.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomFactory.h" />
+    <ClInclude Include="ScoreMenuState.h" />
+    <ClInclude Include="ShowLeaderboardEvent.h" />
+    <ClInclude Include="StartGameEvent.h" />
+    <ClInclude Include="StateMachineExampleGame.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>

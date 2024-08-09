@@ -5,5 +5,5 @@ class ExitReachedEvent :
 {
 public:
     ExitReachedEvent();
-    virtual bool Activate(Game* game = nullptr) override;
+    virtual void Activate(StateMachineExampleGame* gsm) override;
 };

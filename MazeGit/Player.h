@@ -39,6 +39,8 @@ public:
     // Generic
     
     //TODO: pickup <T>
+    int GetStepsTaken() { return m_stepsTaken; };
+    int GetEnemiesKilled() { return m_enemiesKilled; };
 
     void DisplayInfo();
 
@@ -54,10 +56,17 @@ public:
 
     virtual void PickupMoney(GameEntity* lockedEntity) override;
 
+    virtual bool CanBeDeleted() override { return false; }
+
+    // actually i should also call getcurrentroom, ALWAYS
+    void ChangeRoom(Room* pNewRoom) { pRoom = pNewRoom; };
+
 private:
     int money;
     int lives;
     bool canDropKey;
+    int m_stepsTaken;
+    int m_enemiesKilled;
     Point GetInput();
 
     void UseKey();

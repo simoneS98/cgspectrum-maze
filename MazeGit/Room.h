@@ -16,6 +16,7 @@ class Room
 		Room(int width, int height, char* pRoomData, std::string name);
 		~Room();
 
+		bool Save();
 		bool Load(std::string filename, int* playerX, int* playerY);
 		char* GetName() { return &name[0]; }
 
@@ -26,9 +27,11 @@ class Room
 		bool IsWall(int x, int y);
 		bool IsWall(int index);
 		bool Convert(Player* player, char pRoomBefore);
+		char* RevertToCharMap();
 		bool PlaceAt(GameEntity* gameEntity, Point p);
 		void RemoveFrom(GameEntity* gameEntity, Point p);
 		void MoveEntity(Point startPos, Point endPos);
+		bool operator==(const Room* otherRoom);
 
 	private:
 		int width;
@@ -38,7 +41,7 @@ class Room
 		// well of course Dictionaries will be better for this...
 		//GameEntity** pRoomEntities;
 		std::vector<Tile*> pRoomEntities;
-		std::vector<GameEntity*> pEntities;
+		//std::vector<GameEntity*> pEntities;
 
 		void UpdateEntity(GameEntity* entity);
 		int GetIndexFromXY(int x, int y);

@@ -3,8 +3,10 @@
 class ExitGameEvent :
     public Event
 {
+private:
+    std::string m_message;
 public:
-    ExitGameEvent();
-    virtual bool Activate(Game* game = nullptr) override;
+    ExitGameEvent(const std::string exitCause);
+    virtual void Activate(StateMachineExampleGame* gsm) override;
 };
 
