@@ -34,3 +34,9 @@ enemies_killed=0
 lives_left=2
 money=11
 ;
+name=giovanni
+steps=0
+enemies_killed=0
+lives_left=2
+money=34
+;

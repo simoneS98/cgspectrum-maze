@@ -3,13 +3,14 @@
 #include "StateMachineExampleGame.h"
 #include <fstream>
 #include <vector>
+#include <filesystem>
+#include "MainMenuState.h"
+
 class ScoreMenuState :
     public GameState
 {
 public:
     ScoreMenuState(StateMachineExampleGame* pOwner);
-
-    bool LoadScoresForLevel(std::string levelName);
     virtual void Enter() override;
     virtual void Exit() override;
     virtual bool Update(bool processInput = true) override;
@@ -19,19 +20,7 @@ public:
 
 private:
     StateMachineExampleGame* m_pOwner;
-
-    std::string ReadFile(const std::string& fileName)
-    {
-        std::ifstream ifs(fileName.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
-
-        std::ifstream::pos_type fileSize = ifs.tellg();
-        ifs.seekg(0, std::ios::beg);
-
-        std::vector<char> bytes(fileSize);
-        ifs.read(bytes.data(), fileSize);
-
-        return std::string(bytes.data(), fileSize);
-    }
+    Options m_savedGames;
 };
 
 class Score

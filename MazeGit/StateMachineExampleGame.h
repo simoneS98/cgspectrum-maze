@@ -15,6 +15,7 @@ public:
         NONE,
         MAIN_MENU,
         SCORE_MENU,
+        SCORE_LEVEL_DETAIL,
         GAMEPLAY
     };
 
@@ -26,6 +27,7 @@ private:
     GameState* m_pNextState;
 
     void LoadScene(SceneName scene);
+    void LoadScene(SceneName scene, const char* levelName);
 
 public:
     
@@ -45,7 +47,7 @@ public:
 
     virtual bool Cleanup() override;
 
-    void LoadGame(Player*& pPlayer);
+    bool LoadGame(Player*& pPlayer);
 
     void ChangeRoom(std::string roomName, std::string levelName);
 
@@ -55,8 +57,8 @@ public:
 
     void EndGame();
 
-    void ShowScores();
+    void ShowScores(const char* levelName = nullptr);
 
-    void Quit(std::string message);
+    void Quit(std::string message = "");
 };
 

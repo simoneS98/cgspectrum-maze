@@ -3,7 +3,7 @@
 #include "GameState.h"
 #include "Player.h"
 #include "Level.h"
-#include "StateMachineExampleGame.h";
+#include "StateMachineExampleGame.h"
 
 class GameplayState :
     public GameState
@@ -29,7 +29,9 @@ private:
     bool m_beatGame;
 
     bool Load();
+    bool Resume();
     bool HandleCollision(int newPlayerPosX, int newPlayerPosY);
+    const void ShowLegend();
 
 };
 

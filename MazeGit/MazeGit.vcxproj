@@ -119,6 +119,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GODMODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\sbard\source\repos\cgspectrum-maze\Utils;%(AdditionalIncludeDirectories);C:\Program Files (x86)\Visual Leak Detector\include;C:\CG_SPECTRUM\source\varie\MazeGit\Utils</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,9 +163,12 @@
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelScoresState.cpp" />
+    <ClCompile Include="LoadLevelScoresEvent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Money.cpp" />
+    <ClCompile Include="Options.cpp" />
     <ClCompile Include="PauseGameEvent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerDeathEvent.cpp" />
@@ -200,8 +204,11 @@
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelScoresState.h" />
+    <ClInclude Include="LoadLevelScoresEvent.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Money.h" />
+    <ClInclude Include="Options.h" />
     <ClInclude Include="PauseGameEvent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerDeathEvent.h" />

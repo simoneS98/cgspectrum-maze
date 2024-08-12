@@ -13,6 +13,7 @@ public:
 	void Draw() override;
 	std::string GetNextRoomAsString();
 	bool CollideWith(GameEntity* collidedEntity) override;
+	virtual std::string AsLegend() override { return "Exit : " + std::string(1,sprite); }
 private:
 	//Room* nextRoom;
 	// used to load file called <nextRoomFileName>.txt

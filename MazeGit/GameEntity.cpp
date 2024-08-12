@@ -2,6 +2,15 @@
 #include "Room.h"
 #include "LevelManager.h"
 
+GameEntity::GameEntity()
+	: pPosition(nullptr)
+	, pRoom(nullptr)
+	, isActive(false)
+	, color(Color::DEFAULT)
+	, canActivate(false)
+{
+}
+
 GameEntity::GameEntity(int x, int y, Room* pRoom, Color color)
 	: pPosition(new Point(x,y))
 	, pRoom(pRoom)

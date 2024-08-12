@@ -17,5 +17,6 @@ public:
 	int GetCurrentHp();
 	virtual void TakeDamage(int amount);
 	virtual bool TryPickupKey(GameEntity* key) override;
+	virtual std::string AsLegend() = 0;
 };
 

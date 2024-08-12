@@ -61,6 +61,8 @@ public:
     // actually i should also call getcurrentroom, ALWAYS
     void ChangeRoom(Room* pNewRoom) { pRoom = pNewRoom; };
 
+    virtual std::string AsLegend() override { return "Player : " + std::string(1,playerSprite); }
+
 private:
     int money;
     int lives;

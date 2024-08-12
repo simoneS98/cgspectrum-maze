@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include <stdlib.h>
 #include <iostream>
 
@@ -11,6 +11,7 @@
 #include "Money.h"
 #include <thread>
 #include "DebugManager.h"
+#include <functional>
 
 Player::Player(Room* pRoom)
 	: Character(0,0,pRoom,3)
@@ -40,27 +41,64 @@ bool Player::HasKey(Color color)
 
 void Player::DisplayInfo()
 {
-	std::cout << "PLAYER INFO" << std::endl;
+    std::string border = std::string(1, (char)Sprite::PERIMETER);
+    std::string label = border + " PLAYER INFO " + border;
 
-	std::cout << "Current key: ";
+    size_t labelSize = label.size();
+
+    for (int i = 0; i < labelSize ; i++)
+        std::cout << border;
+
+    std::cout << std::endl << label << std::endl;
+
+    int wrapOffset = 24;
+
+    for (int i = 0; i < labelSize + wrapOffset; i++)
+        std::cout << border;
+
+    std::cout << std::endl;
+	//std::cout << "PLAYER INFO" << std::endl;
+
+	std::cout << border << " Current key: ";
 
 	if (pCurrentKey == nullptr)
-		std::cout << "none";
+		std::cout << " ";
 	else
 		pCurrentKey->Draw();
 
-	std::cout << "\t" << "Money: " << GetMoney();
+    std::cout << " " << border << " Money: " << GetMoney() << " " << border;
 
-    std::cout << "\t" << "HP: " << hp << "/" << maxHp << std::endl;
+    std::cout << " HP: " << hp << "/" << maxHp << " " << border << std::endl;
+    
+    for (int i = 0; i < labelSize + wrapOffset; i++)
+        std::cout << border;
 
-    std::cout << "Lives left: ";
+    std::cout << std::endl;
 
-    for (int i = 0; i < lives; i++)
-    {
-        std::cout << "*";
-    }
+    // TODO: generic concat n times
+    auto lives_str = [](int n, auto& print_message, std::string s = std::string())
+        {
+            if (n == 0)
+                return s;
+            
+            return print_message(n - 1, print_message, s += std::string(1,(char)Sprite::LIFE));
+            
+        };
 
-	std::cout << std::endl << std::endl;
+    //std::string livesLeft = border + " Lives left: " + sum(lives) + " ";
+
+    std::string livesLeft = border + " Lives left: " + lives_str(lives, lives_str) + " ";
+
+    std::cout << livesLeft;
+
+    for(int i = 0; i < (labelSize + wrapOffset) - (livesLeft.size()+1)  ; i++)
+        std::cout << " ";
+    std::cout << border << std::endl;
+    
+    for (int i = 0; i < labelSize + wrapOffset; i++)
+        std::cout << border;
+    
+    std::cout << std::endl;
 }
 
 void Player::Draw()

@@ -228,77 +228,7 @@ bool Game::HandleCollision(int newPlayerX, int newPlayerY)
         // if returned pointer is invalid, collidedEntity is not Enemy and thus collidedEnemy is nullptr
         collidedEntity->CollideWith(player);
         // no...in realtà qualsiasi tipo di collision
-        /*
-        Enemy* collidedEnemy = dynamic_cast<Enemy*>(collidedEntity);
-        if (collidedEnemy)
-        {
-            collidedEnemy->Remove(); // TODO: why? let's implement combat (with multithreading)
-
-            player.SetPosition(newPlayerX, newPlayerY);
-
-            player.TakeDamage(collidedEnemy->GetDamage());
-            // gnnneh
-            if (player.GetLives() < 0)
-            {
-                return true;
-            }
-        }
-
-        Money* collidedMoney = dynamic_cast<Money*>(collidedEntity);
-        if (collidedMoney)
-        {
-            collidedMoney->Remove();
-            player.AddMoney(collidedMoney->GetWorth());
-            player.SetPosition(newPlayerX, newPlayerY);
-
-        }
-
-        Key* collidedKey = dynamic_cast<Key*>(collidedEntity);
-        if (collidedKey)
-        {
-            // just to avoid checking if something is in (x,y) so to not to drop key on non-empty tile
-            // if player successfully picks up key, remove it from game
-            if (player.TryPickupKey(collidedKey))
-                collidedKey->Remove();
-
-            player.SetPosition(newPlayerX, newPlayerY);
-        }
-
-        Door* collidedDoor = dynamic_cast<Door*>(collidedEntity);
-        if (collidedDoor)
-        {
-            if (collidedDoor->IsLocked()) {
-                if (player.HasKey(collidedDoor->GetColor()))
-                {
-                    collidedDoor->Unlock();
-                    player.UseKey();
-                    collidedDoor->Remove();
-                    player.SetPosition(newPlayerX, newPlayerY);
-                }
-            }
-            else {
-                player.SetPosition(newPlayerX, newPlayerY);
-            }
-            
-        }
-
-        Exit* collidedExit = dynamic_cast<Exit*>(collidedEntity);
-        if (collidedExit)
-        {
-            collidedExit->Remove();
-            player.SetPosition(newPlayerX, newPlayerY);
-
-            std::string nextRoom = collidedExit->GetNextRoomAsString();
-
-            if (nextRoom.empty())
-                return true;
-            else
-            {
-                Load(nextRoom, roomName.empty() ? nullptr : &roomName[0]);
-            }
-                
-        }
-        */
+       
         
     }
     else if (currentRoom->IsSpace(newPlayerX, newPlayerY)) // no collision
@@ -338,6 +268,7 @@ void Game::DisplayAndSaveStats(std::string fileName, std::string playerName, int
     else
     {
         // TODO: use class to read/write data
+        // class created (LevelScoresState::ScoreData)
         levelFile << "name=" << playerName << std::endl;
         levelFile << "steps=" << stepsTaken << std::endl;
         levelFile << "enemies_killed=" << enemiesKilled << std::endl;

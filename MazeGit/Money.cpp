@@ -17,3 +17,8 @@ bool Money::CollideWith(GameEntity* collidedEntity)
 	collidedEntity->PickupMoney(this);
 	return true;
 }
+
+Money::Money()
+	: worth(0)
+{
+}

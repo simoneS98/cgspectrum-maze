@@ -26,6 +26,7 @@ public:
 	bool Save();
 	bool Load(std::string roomName = "0", char* pRoomBefore = nullptr);
 	bool Load(Player*& pPlayer, std::string roomName = "0", char* pRoomBefore = nullptr);
+	bool Resume();
 	void Run();
 
 	bool IsGameOver();
@@ -38,12 +39,10 @@ private:
 	void UpdatePlayerPosition(Point direction);
 	bool UpdateGameWorld();
 	void Draw();
-	bool CheckIfGameEnded();
 	bool PlayerCanMoveInDirection(Point direction);
 	Point GetPlayerInput();
 
 	bool HandleCollision(int newPlayerX, int newPlayerY);
-	void LoadRoom(Room* room);
 	void SetLevelName(std::string levelName) { this->levelName = levelName; }
 	void DisplayAndSaveStats(
 		std::string fileName,

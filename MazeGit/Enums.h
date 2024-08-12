@@ -20,6 +20,7 @@ enum class Editor : char
 };
 enum class Sprite
 {
+	LIFE = 254,
 	PLAYER = 64,
 
 	WALL = 219,
@@ -67,6 +68,7 @@ enum class Input
 	ESC = 27,
 	BACK = 8,
 	ENTER = 13,
+	LIST_END = 101, // 'e'
 
 	WALL = 49,
 	SPIKES = 50,

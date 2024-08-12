@@ -32,6 +32,7 @@ class Room
 		void RemoveFrom(GameEntity* gameEntity, Point p);
 		void MoveEntity(Point startPos, Point endPos);
 		bool operator==(const Room* otherRoom);
+		int GetWidth() { return width; }
 
 	private:
 		int width;

@@ -2,8 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
-#include "Room.h"
 #include <Constants.h>
+#include <filesystem>
 
 
 LevelManager* LevelManager::instance = nullptr;
@@ -29,9 +29,9 @@ void LevelManager::Save()
 {
     int h = 0;
 
-    char* map = currentRoom->RevertToCharMap();
+    char* map = m_pCurrentRoom->RevertToCharMap();
 
-    std::string basePath = "levels/" + levelName + "/saves/";// +currentRoom->GetName() + ".room";
+    std::string basePath = "levels/" + m_levelName + "/saves/";// +currentRoom->GetName() + ".room";
 
     // this is working directory for the current level
     basePath.insert(0, "../");
@@ -42,11 +42,9 @@ void LevelManager::Save()
 
     system(cmd.c_str());
 
-    std::string fileName = basePath + currentRoom->GetName() + ".room";
+    std::string fileName = basePath + m_pCurrentRoom->GetName() + ".room";
 
     // TODO: fix save dir
-
-    std::cout << "Trying to open file " << fileName << std::endl;
 
     std::ofstream levelFile;
     levelFile.open(fileName);
@@ -81,14 +79,16 @@ bool LevelManager::Load(std::string roomName)
     Room** map;
     std::ifstream levelFile;
 
-    std::string fileName = levelName + "/" + roomName + ".room";//levelName.append("/").append(roomName).append(".room");
+    std::string fileName = "../levels/" + m_levelName + "/saves/"  + roomName + ".room";
 
     char* mapAsCharArray = nullptr;
 
-    // this is working directory for the current level
-    fileName.insert(0, "../levels/");
-
-    std::cout << "Trying to open file " << fileName << std::endl;
+    // saves dir not found
+    if (!std::filesystem::exists(fileName))
+    {
+        // load the base level file
+        fileName = "../levels/" + m_levelName + "/" + roomName + ".room";
+    }
 
     levelFile.open(fileName);
 
@@ -133,18 +133,18 @@ bool LevelManager::Load(std::string roomName)
         }
 
         levelFile.close();
-    }
+     }
 
     if (mapAsCharArray == nullptr)
         return false;
 
-    if (currentRoom != nullptr)
+    /*if (currentRoom != nullptr)
     {
         delete currentRoom;
         currentRoom = nullptr;
-    }
+    }*/
 
-    currentRoom = new Room(width, height, mapAsCharArray, roomName);
+    m_pCurrentRoom = new Room(width, height, mapAsCharArray, roomName);
 
     return true;
 }

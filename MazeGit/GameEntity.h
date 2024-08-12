@@ -9,6 +9,9 @@ constexpr Color cDefaultColor = Color::DEFAULT;
 class GameEntity
 {
 protected:
+	// Constructor used only to instantiate Entities used in places different than Room
+	GameEntity();
+
 	Point* pPosition;
 	bool isActive;
 	Room* pRoom;
@@ -20,6 +23,9 @@ public:
 	// default parameter for color
 	GameEntity(int x, int y, Room* pRoom, Color color = Color::DEFAULT);
 	virtual ~GameEntity();
+
+	template <class T>
+	static T Fake();
 
 	int GetXPosition();
 	int GetYPosition();
@@ -38,8 +44,6 @@ public:
 	void Place(int x, int y);
 	virtual Color GetColor() { return color; }
 
-
-
 	// HAS to be overridden
 	virtual void Draw() = 0;
 	virtual bool TryUseKeyOn(GameEntity* lockedEntity) { return false; }
@@ -56,5 +60,13 @@ public:
 	EntityType GetType() { return type; }
 
 	virtual bool CanBeDeleted() { return true; }
+
+	virtual std::string AsLegend() = 0;
+
 };
 
+template<class T>
+inline T GameEntity::Fake()
+{
+	return T();
+}

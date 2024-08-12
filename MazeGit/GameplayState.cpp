@@ -1,6 +1,13 @@
 #include "GameplayState.h"
 #include "LevelManager.h"
 #include "EventManager.h"
+#include <thread>
+#include "Wall.h"
+#include "Enemy.h"
+#include "Door.h"
+#include "Money.h"
+#include <filesystem>
+
 
 GameplayState::GameplayState(StateMachineExampleGame* pOwner)
     : m_pOwner(pOwner)
@@ -12,7 +19,13 @@ GameplayState::GameplayState(StateMachineExampleGame* pOwner)
 
 void GameplayState::Enter()
 {
-    Load();
+    // check if should resume or start new game
+    if (LevelManager::GetInstance()->GetCurrentRoom() == nullptr)
+    {
+        Load();
+    }
+    else
+        Resume();
 }
 
 void GameplayState::Exit()
@@ -31,19 +44,74 @@ void GameplayState::Draw()
 {
     LevelManager::GetInstance()->GetCurrentRoom()->Draw();
     m_pPlayer->DisplayInfo();
+    std::cout << std::endl;
+    ShowLegend();
 }
 
 bool GameplayState::Load()
 {
-    if (LevelManager::GetInstance()->GetCurrentRoom() == nullptr)
+    if (LevelManager::GetInstance()->GetCurrentRoom() != nullptr)
     {
-        std::cout << "Which level do you want to play? (TODO: print list of levels)";
-        std::string levelName;
-        std::cin >> levelName;
-        LevelManager::GetInstance()->SetLevelName(levelName);
+        //throw error
+        return false;
     }
     
-    m_pOwner->LoadGame(m_pPlayer);
-    //LevelManager::GetInstance()->Load("0");
+    // TODO: print list of levels
+    std::cout << "Which level do you want to play? ";
+    std::string levelName;
+    std::cin >> levelName;
+    LevelManager::GetInstance()->SetLevelName(levelName);
+    //remove saves
+    std::filesystem::remove_all("../levels/"+levelName+"/saves");
+
+    return m_pOwner->LoadGame(m_pPlayer);
+
+}
+
+bool GameplayState::Resume()
+{
+    Room* room = LevelManager::GetInstance()->GetCurrentRoom();
+
+    if (LevelManager::GetInstance()->GetCurrentRoom() == nullptr)
+    {
+        //throw error
+        return false;
+    }
+
+    //LevelManager::GetInstance()->LoadSave();
+
     return false;
+}
+
+const void GameplayState::ShowLegend()
+{
+    std::string border = std::string(1,(char)Sprite::PERIMETER);
+    Wall wall = GameEntity::Fake<Wall>();
+    Enemy enemy = GameEntity::Fake<Enemy>();
+    Door door = GameEntity::Fake<Door>();
+    Key key = GameEntity::Fake<Key>();
+    Money money = GameEntity::Fake<Money>();
+
+    std::string legend =
+        border +
+        " " + wall.AsLegend() + " " +
+        border +
+        " " + enemy.AsLegend() + " " +
+        border +
+        " " + door.AsLegend() + " " +
+        border +
+        " " + key.AsLegend() + " " +
+        border +
+        " " + money.AsLegend() + " " +
+        border;
+
+    int width = legend.size();
+
+    for (int i = 0; i < width; i++)
+        std::cout << border;
+    
+    std::cout << std::endl << legend << std::endl;
+
+    for (int i = 0; i < width; i++)
+        std::cout << border;
 }

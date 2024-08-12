@@ -19,12 +19,13 @@
 #include "EventManager.h"
 #include "PlayerDeathEvent.h"
 #include "StateMachineExampleGame.h"
+#include "Enemy.h"
+#include "Wall.h"
 
 using namespace std;
 
 int main()
-{   
-  
+{     
     Game* pGame = new Game();
 
     StateMachineExampleGame* stateMachineInstance = StateMachineExampleGame::GetInstance();
@@ -40,6 +41,5 @@ int main()
     }
 
     EventManager::DestroyInstance();
-    AudioManager::DestroyInstance();
-    
+    AudioManager::DestroyInstance(); 
 }

@@ -3,6 +3,12 @@
 #include "Player.h"
 #include "AudioManager.h"
 
+Enemy::Enemy()
+	: Character(0, 0, nullptr, 0)
+{
+
+}
+
 Enemy::Enemy(int x, int y, Room* pRoom, int maxHp, int damage, int deltaX, int deltaY)
 	: Character(x, y, pRoom, maxHp)
 	, currentMovementX(0)

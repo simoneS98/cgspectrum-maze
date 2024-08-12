@@ -106,3 +106,9 @@ enemies_killed=0
 lives_left=2
 money=5
 ;
+name=marco
+steps=0
+enemies_killed=0
+lives_left=2
+money=5
+;

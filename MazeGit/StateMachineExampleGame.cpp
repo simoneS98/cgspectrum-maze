@@ -1,9 +1,12 @@
 #include "StateMachineExampleGame.h"
-
-#include "MainMenuState.h";
-#include "GameplayState.h";
-#include "ScoreMenuState.h";
+#include "MainMenuState.h"
+#include "GameplayState.h"
+#include "ScoreMenuState.h"
 #include "LevelManager.h"
+#include "LevelScoresState.h"
+#include "EventManager.h"
+#include "ExitGameEvent.h"
+#include "LoadLevelScoresEvent.h"
 
 StateMachineExampleGame* StateMachineExampleGame::instance  = nullptr;
 
@@ -27,7 +30,6 @@ bool StateMachineExampleGame::UpdateCurrentState(bool processInput)
 
     DrawCurrentState();
 
-    // somewhere here lies the problem
     EventManager::GetInstance()->ActivateEvents(this);
 
     if (m_pNextState != nullptr)
@@ -40,10 +42,6 @@ bool StateMachineExampleGame::UpdateCurrentState(bool processInput)
     {
         done = m_pCurrentState->Update(processInput);
     }
-
-
-  
-
     return done;
 }
 
@@ -89,15 +87,38 @@ void StateMachineExampleGame::LoadScene(SceneName scene)
     case SceneName::SCORE_MENU:
         m_pNextState = new ScoreMenuState(this);
         break;
+    case SceneName::SCORE_LEVEL_DETAIL:
+        //if(dynamic_cast<ScoreMenuState*>(m_pCurrentState))
+        //    m_pNextState = new LevelScoresState(m_pCurrentState);
+        break;
     default:
         break;
     }
 }
 
-void StateMachineExampleGame::LoadGame(Player*& pPlayer)
+void StateMachineExampleGame::LoadScene(SceneName scene, const char* levelName)
 {
-    m_pOwner->Load(pPlayer);
-    return;
+    switch (scene)
+    {
+    case SceneName::MAIN_MENU:
+        m_pNextState = new MainMenuState(this);
+        break;
+    case SceneName::GAMEPLAY:
+        m_pNextState = new GameplayState(this);
+        break;
+    case SceneName::SCORE_MENU:
+        m_pNextState = new ScoreMenuState(this);
+        break;
+    case SceneName::SCORE_LEVEL_DETAIL:
+        m_pNextState = new LevelScoresState(this,levelName);
+        break;
+    default:
+        break;
+    }
+}
+bool StateMachineExampleGame::LoadGame(Player*& pPlayer)
+{
+    return m_pOwner->Load(pPlayer);
 }
 
 void StateMachineExampleGame::ChangeRoom(std::string roomName, std::string levelName)
@@ -125,9 +146,12 @@ void StateMachineExampleGame::EndGame()
     m_pOwner->SaveScore();
 }
 
-void StateMachineExampleGame::ShowScores()
+void StateMachineExampleGame::ShowScores(const char* levelName)
 {
-    LoadScene(SceneName::SCORE_MENU);
+    if (levelName == nullptr)
+        LoadScene(SceneName::SCORE_MENU);
+    else
+        LoadScene(SceneName::SCORE_LEVEL_DETAIL, levelName);
 }
 
 void StateMachineExampleGame::Quit(std::string message)
@@ -140,6 +164,8 @@ void StateMachineExampleGame::Quit(std::string message)
     if (dynamic_cast<MainMenuState*>(m_pCurrentState))
         exit(0);
     // else, go to main menu
+    else if(dynamic_cast<LevelScoresState*>(m_pCurrentState))
+        LoadScene(SceneName::SCORE_MENU);
     else
         LoadScene(SceneName::MAIN_MENU);
 }

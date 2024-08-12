@@ -6,6 +6,8 @@ constexpr char cEnemySprite = (char)Sprite::ENEMY;
 class Enemy :
     public Character
 {
+friend class GameEntity;
+
 public:
     Enemy(int x, int y, Room* pRoom, int maxHp, int damage = 0, int deltaX = 0, int deltaY = 0);
 
@@ -16,8 +18,10 @@ public:
     void ChangeDirection();
 
     int GetDamage() { return damage; }
+    virtual std::string AsLegend() override { return "Enemy : " + std::string(1,cEnemySprite); }
 
 private:
+    Enemy();
     // how many tiles the Enemy moves before switching direction
     int movementInX;
     int movementInY;
