@@ -3,13 +3,12 @@
 #include "LevelManager.h"
 #include <thread>
 #include <fstream>
-#include "LoadLevelScoresEvent.h"
+#include "LevelChosenEvent.h"
 
 using Option = Options::MenuOption;
 
 ScoreMenuState::ScoreMenuState(StateMachineExampleGame* pOwner)
     : m_pOwner(pOwner)
-    , m_savedGames({})
 {
 }
 
@@ -27,32 +26,13 @@ void ScoreMenuState::Enter()
             m_savedGames.Add(
                 Option(
                     levelName,
-                    new LoadLevelScoresEvent(levelName/*levelName.c_str()*/)
+                    new LevelChosenEvent(levelName)//LoadLevelScoresEvent(levelName/*levelName.c_str()*/)
                 )
             );
         } 
     }
 
-    /*
-    bool loadSuccessful = true;
-
-    loadSuccessful = LoadScoresForLevel(LevelManager::GetInstance()->GetLevelName());
-
-    auto waitBeforeExitingToMainMenu = [&](int seconds) {
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(seconds * 1000));
-
-        EventManager::GetInstance()->Add(new ExitGameEvent("Load completed???"));
-    };
-
-    if (!loadSuccessful)
-    {
-        std::cout << "Exiting to main menu..." << std::endl;
-        std::thread waitThread(waitBeforeExitingToMainMenu, 3);
-        waitThread.join();
-    }
-    */
-    
+    Draw();
 }
 
 void ScoreMenuState::Exit()
@@ -68,13 +48,6 @@ bool ScoreMenuState::Update(bool processInput)
 void ScoreMenuState::Draw()
 {
     system("cls");
+    std::cout << "Choose a level to show its leaderboard: " << std::endl << std::endl;
     m_savedGames.Draw();
 }
-
-/*
-void ScoreMenuState::Quit()
-{
-    m_pOwner->Quit();
-}
-
-*/

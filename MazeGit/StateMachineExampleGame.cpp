@@ -7,6 +7,7 @@
 #include "EventManager.h"
 #include "ExitGameEvent.h"
 #include "LoadLevelScoresEvent.h"
+#include "GameplayMenuState.h"
 
 StateMachineExampleGame* StateMachineExampleGame::instance  = nullptr;
 
@@ -20,7 +21,7 @@ bool StateMachineExampleGame::Init(Game* pOwner)
 {
     m_pOwner = pOwner;
     // default scene
-    LoadScene(SceneName::MAIN_MENU);
+    LoadScene(SceneName::MENU_MAIN);
     return true;
 }
 
@@ -74,42 +75,59 @@ bool StateMachineExampleGame::Cleanup()
     return true;
 }
 
+void StateMachineExampleGame::ChooseLevel(std::string levelName)
+{
+    if (dynamic_cast<GameplayMenuState*>(m_pCurrentState))
+    {
+        LevelManager::GetInstance()->SetLevelName(levelName);
+        //remove saves
+        std::filesystem::remove_all("../levels/" + levelName + "/saves");
+        LoadScene(SceneName::GAMEPLAY, levelName.c_str());
+    }
+    else if (dynamic_cast<ScoreMenuState*>(m_pCurrentState))
+        LoadScene(SceneName::SCORES, levelName.c_str());
+}
+
 void StateMachineExampleGame::LoadScene(SceneName scene)
 {
-    switch (scene)
+    LoadScene(scene, nullptr);
+    /*switch (scene)
     {
-    case SceneName::MAIN_MENU:
+    case SceneName::MENU_MAIN:
         m_pNextState = new MainMenuState(this);
         break;
     case SceneName::GAMEPLAY:
         m_pNextState = new GameplayState(this);
         break;
-    case SceneName::SCORE_MENU:
+    case SceneName::MENU_SCORES:
         m_pNextState = new ScoreMenuState(this);
         break;
-    case SceneName::SCORE_LEVEL_DETAIL:
+    case SceneName::SCORES:
         //if(dynamic_cast<ScoreMenuState*>(m_pCurrentState))
         //    m_pNextState = new LevelScoresState(m_pCurrentState);
         break;
     default:
         break;
-    }
+    }*/
 }
 
 void StateMachineExampleGame::LoadScene(SceneName scene, const char* levelName)
 {
     switch (scene)
     {
-    case SceneName::MAIN_MENU:
+    case SceneName::MENU_MAIN:
         m_pNextState = new MainMenuState(this);
+        break;
+    case SceneName::MENU_GAMEPLAY:
+        m_pNextState = new GameplayMenuState(this);
         break;
     case SceneName::GAMEPLAY:
         m_pNextState = new GameplayState(this);
         break;
-    case SceneName::SCORE_MENU:
+    case SceneName::MENU_SCORES:
         m_pNextState = new ScoreMenuState(this);
         break;
-    case SceneName::SCORE_LEVEL_DETAIL:
+    case SceneName::SCORES:
         m_pNextState = new LevelScoresState(this,levelName);
         break;
     default:
@@ -130,14 +148,14 @@ void StateMachineExampleGame::ChangeRoom(std::string roomName, std::string level
 void StateMachineExampleGame::StartNewGame()
 {
     if (dynamic_cast<MainMenuState*>(m_pCurrentState))
-        LoadScene(StateMachineExampleGame::SceneName::GAMEPLAY);
+        LoadScene(StateMachineExampleGame::SceneName::MENU_GAMEPLAY);
 }
     
 void StateMachineExampleGame::PauseGame()
 {
     // Only works during gameplay
     if (dynamic_cast<GameplayState*>(m_pCurrentState))
-        LoadScene(SceneName::MAIN_MENU);
+        LoadScene(SceneName::MENU_MAIN);
 
 }
 
@@ -149,13 +167,14 @@ void StateMachineExampleGame::EndGame()
 void StateMachineExampleGame::ShowScores(const char* levelName)
 {
     if (levelName == nullptr)
-        LoadScene(SceneName::SCORE_MENU);
+        LoadScene(SceneName::MENU_SCORES);
     else
-        LoadScene(SceneName::SCORE_LEVEL_DETAIL, levelName);
+        LoadScene(SceneName::SCORES, levelName);
 }
 
 void StateMachineExampleGame::Quit(std::string message)
 {
+    LevelManager::GetInstance()->Clear();
     system("cls");
     std::cout << message << std::endl;
     // wait seconds?
@@ -165,7 +184,7 @@ void StateMachineExampleGame::Quit(std::string message)
         exit(0);
     // else, go to main menu
     else if(dynamic_cast<LevelScoresState*>(m_pCurrentState))
-        LoadScene(SceneName::SCORE_MENU);
+        LoadScene(SceneName::MENU_SCORES);
     else
-        LoadScene(SceneName::MAIN_MENU);
+        LoadScene(SceneName::MENU_MAIN);
 }

@@ -33,6 +33,7 @@ public:
         Event* m_pEvent;
     };
 
+    Options();
     Options(std::vector<MenuOption> options);
     void Update();
     void Draw();

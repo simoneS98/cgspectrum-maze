@@ -13,9 +13,10 @@ public:
     enum class SceneName
     {
         NONE,
-        MAIN_MENU,
-        SCORE_MENU,
-        SCORE_LEVEL_DETAIL,
+        MENU_MAIN,
+        MENU_GAMEPLAY,
+        MENU_SCORES,
+        SCORES,
         GAMEPLAY
     };
 
@@ -46,6 +47,8 @@ public:
     virtual void ChangeState(GameState* pNextState) override;
 
     virtual bool Cleanup() override;
+
+    void ChooseLevel(std::string levelName);
 
     bool LoadGame(Player*& pPlayer);
 

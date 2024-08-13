@@ -1,5 +1,6 @@
 #include "LevelScoresState.h"
 #include <conio.h>
+#include "InputSystem.h"
 
 LevelScoresState::LevelScoresState(StateMachineExampleGame* pOwner,const char* levelName)
     : m_pOwner(pOwner)
@@ -29,7 +30,7 @@ bool LevelScoresState::Update(bool processInput)
 {
     Draw();
     ShowLegend();
-    Input userInput = GetInput();
+    Input userInput = InputSystem::GetInput();
     if (userInput == Input::ARROW_DOWN && m_currentPage < (m_scores.size() / m_pageSize))
         m_currentPage++;
     else if (userInput == Input::ARROW_UP && m_currentPage > 0)
@@ -126,7 +127,9 @@ bool LevelScoresState::LoadScores()
 
 void LevelScoresState::ShowLegend()
 {
-    std::string legend = " UP/LEFT to go back | DOWN/RIGHT to go forward | 'e' to go to last page | 'q'|ESC to quit ";
+    // TODO: use PageCount() function
+    std::string legend = " UP/LEFT to go back | DOWN/RIGHT to go forward | 'e' to go to last page | 'q'/ESC to quit | page "
+        + std::to_string(m_currentPage+1) + " of " + std::to_string(m_scores.size() / m_pageSize) + " ";
 
     for (int i = 0; i < legend.size() + 2; i++)
         std::cout << (char)Sprite::PERIMETER;
@@ -141,6 +144,7 @@ void LevelScoresState::ShowLegend()
     std::cout << std::endl;
 }
 
+/*
 Input LevelScoresState::GetInput()
 {
     int intInput = _getch();
@@ -178,7 +182,7 @@ Input LevelScoresState::GetInput()
 
     return input;
 }
-
+*/
 std::string LevelScoresState::ScoreData::Print()
 {
     std::string res;

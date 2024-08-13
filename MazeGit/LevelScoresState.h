@@ -54,7 +54,7 @@ private:
 
 	bool LoadScores();
 	void ShowLegend();
-	Input GetInput();
+	//Input GetInput();
 	//bool Sort(ScoreData i, ScoreData j) { return (i.CalculateTotalScore() < j.CalculateTotalScore()); }
 public:
 	LevelScoresState(StateMachineExampleGame* pOwner, const char* levelName);

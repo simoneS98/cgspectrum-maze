@@ -148,6 +148,9 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="ChangeRoomEvent.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="GameplayMenuState.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="LevelChosenEvent.cpp" />
     <ClCompile Include="DebugManager.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="ExitGameEvent.cpp" />
@@ -186,6 +189,9 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="ChangeRoomEvent.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="GameplayMenuState.h" />
+    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="LevelChosenEvent.h" />
     <ClInclude Include="DebugManager.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="ExitGameEvent.h" />

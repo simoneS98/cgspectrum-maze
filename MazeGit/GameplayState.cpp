@@ -7,7 +7,9 @@
 #include "Door.h"
 #include "Money.h"
 #include <filesystem>
+#include "LevelChosenEvent.h"
 
+using Option = Options::MenuOption;
 
 GameplayState::GameplayState(StateMachineExampleGame* pOwner)
     : m_pOwner(pOwner)
@@ -26,6 +28,8 @@ void GameplayState::Enter()
     }
     else
         Resume();
+
+    Draw();
 }
 
 void GameplayState::Exit()
@@ -35,8 +39,6 @@ void GameplayState::Exit()
 bool GameplayState::Update(bool processInput)
 {
     LevelManager::GetInstance()->GetCurrentRoom()->UpdateEntities();
-    // Generate Outputs
-    //EventManager::GetInstance()->ActivateEvents(m_pOwner);
     return false;
 }
 
@@ -50,20 +52,13 @@ void GameplayState::Draw()
 
 bool GameplayState::Load()
 {
+    
     if (LevelManager::GetInstance()->GetCurrentRoom() != nullptr)
     {
         //throw error
         return false;
     }
-    
-    // TODO: print list of levels
-    std::cout << "Which level do you want to play? ";
-    std::string levelName;
-    std::cin >> levelName;
-    LevelManager::GetInstance()->SetLevelName(levelName);
-    //remove saves
-    std::filesystem::remove_all("../levels/"+levelName+"/saves");
-
+   
     return m_pOwner->LoadGame(m_pPlayer);
 
 }

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Level.h"
 #include "StateMachineExampleGame.h"
+#include "Options.h"
 
 class GameplayState :
     public GameState
@@ -23,11 +24,14 @@ public:
 private:
     StateMachineExampleGame* m_pOwner;
 
+    Options m_levels;
+
     Player* m_pPlayer;
     Level m_level;
 
     bool m_beatGame;
 
+    void ChooseLevel();
     bool Load();
     bool Resume();
     bool HandleCollision(int newPlayerPosX, int newPlayerPosY);
