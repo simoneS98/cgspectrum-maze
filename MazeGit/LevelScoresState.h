@@ -53,7 +53,8 @@ private:
 	std::vector<ScoreData> m_scores;
 
 	bool LoadScores();
-	Input AskForInput();
+	void ShowLegend();
+	Input GetInput();
 	//bool Sort(ScoreData i, ScoreData j) { return (i.CalculateTotalScore() < j.CalculateTotalScore()); }
 public:
 	LevelScoresState(StateMachineExampleGame* pOwner, const char* levelName);

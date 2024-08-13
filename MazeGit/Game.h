@@ -12,7 +12,7 @@ constexpr char cEscape = (char)Input::ESC;
 class Game
 {
 	Player* player;
-	Level level;
+
 	bool isGameOver;
 	bool userQuit;
 	std::string levelName;

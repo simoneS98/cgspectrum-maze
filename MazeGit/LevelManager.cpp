@@ -97,53 +97,49 @@ bool LevelManager::Load(std::string roomName)
         std::cout << "Opening level file failed!" << std::endl;
         return false;
     }
-    else
+
+    if (levelFile.is_open())
     {
-        if (levelFile.is_open())
-        {
-            std::string line;
+        std::string line;
 
-            getline(levelFile, line);
+        getline(levelFile, line);
 
-            width = stoi(line);
+        width = stoi(line);
 
-            getline(levelFile, line);
+        getline(levelFile, line);
 
-            height = stoi(line);
+        height = stoi(line);
 
-            getline(levelFile, line);
+        getline(levelFile, line);
 
-            //TODO: fix file parsing
-            int size = width * height + 1;
+        //TODO: fix file parsing
+        int size = width * height + 1;
 
-            // declaring character array (+1 for null terminator) 
-            mapAsCharArray = new char[size];
-            map = new Room * [size];
+        // declaring character array (+1 for null terminator) 
+        mapAsCharArray = new char[size];
+        //char mapAsCharArray[size]
+        map = new Room * [size];
 
-            // copying the contents of the 
-            // string to char array
-            strcpy_s(mapAsCharArray, size, line.c_str());
+        // copying the contents of the 
+        // string to char array
+        strcpy_s(mapAsCharArray, size, line.c_str());
 
-
-
-            //delete[] mapAsCharArray;
-            //mapAsCharArray = nullptr;
-
-            levelFile.close();
-        }
+        //delete[] mapAsCharArray;
+        //mapAsCharArray = nullptr;
 
         levelFile.close();
-     }
+    }
 
     if (mapAsCharArray == nullptr)
         return false;
 
-    /*if (currentRoom != nullptr)
+    
+     if (m_pCurrentRoom != nullptr)
     {
-        delete currentRoom;
-        currentRoom = nullptr;
-    }*/
-
+        delete m_pCurrentRoom;
+        m_pCurrentRoom = nullptr;
+    }
+    
     m_pCurrentRoom = new Room(width, height, mapAsCharArray, roomName);
 
     return true;

@@ -36,9 +36,12 @@ void EventManager::ActivateEvents(StateMachineExampleGame* gameStateMachine)
 		return;
 
 	m_isLocked = true;
+	int i = 0;
 
-	for (auto event = eventsQueue.begin(); event != eventsQueue.end(); ++event)
+	std::vector<Event*> tmp{ eventsQueue };
+	for (auto event = tmp.begin(); event != tmp.end(); ++event)
 	{
+		i++;
 		if (!(*event)->IsDone())
 		{
 			(*event)->Activate(gameStateMachine);
@@ -46,8 +49,8 @@ void EventManager::ActivateEvents(StateMachineExampleGame* gameStateMachine)
 	}
 
 	// removed to avoid nullptrs...for now
-	/*
-		eventsQueue.erase(
+	
+	eventsQueue.erase(
 	std::remove_if(
 		eventsQueue.begin(),
 		eventsQueue.end(),
@@ -55,7 +58,9 @@ void EventManager::ActivateEvents(StateMachineExampleGame* gameStateMachine)
 	),
 	eventsQueue.end()
 	);
-	*/
+	
+
+	
 
 	
 	m_isLocked = false;

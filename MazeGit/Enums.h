@@ -69,6 +69,7 @@ enum class Input
 	BACK = 8,
 	ENTER = 13,
 	LIST_END = 101, // 'e'
+	QUIT = 113, // 'q'
 
 	WALL = 49,
 	SPIKES = 50,

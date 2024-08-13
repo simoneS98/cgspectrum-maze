@@ -27,16 +27,34 @@ void LevelScoresState::Enter()
 
 bool LevelScoresState::Update(bool processInput)
 {
-    Input userInput = AskForInput();
+    Draw();
+    ShowLegend();
+    Input userInput = GetInput();
+    if (userInput == Input::ARROW_DOWN && m_currentPage < (m_scores.size() / m_pageSize))
+        m_currentPage++;
+    else if (userInput == Input::ARROW_UP && m_currentPage > 0)
+        m_currentPage--;
+    else if (userInput == Input::LIST_END)
+        m_currentPage = (m_scores.size() / m_pageSize);
+    else if (userInput == Input::ESC)
+        m_pOwner->Quit();
     return false;
 }
 
 void LevelScoresState::Draw()
 {
-    for (int i = 0; i < m_scores.size(); i++)// auto& const score : m_scores)
+    system("cls");
+
+    int startIndex = (m_currentPage * m_pageSize);
+    int maxIndex = startIndex + m_pageSize;
+
+    if (maxIndex > m_scores.size())
+        maxIndex = m_scores.size();
+
+    for (int i = startIndex; i < maxIndex; i++)// auto& const score : m_scores)
     {
         std::cout << "Rank " << (i + 1) << ": " << std::endl << std::endl;
-        std::cout << m_scores[i];
+        std::cout << m_scores[i] << std::endl;
     }
     /*
     * for (auto const& dir_entry : std::filesystem::directory_iterator{sandbox})
@@ -106,7 +124,24 @@ bool LevelScoresState::LoadScores()
     return true;
 }
 
-Input LevelScoresState::AskForInput()
+void LevelScoresState::ShowLegend()
+{
+    std::string legend = " UP/LEFT to go back | DOWN/RIGHT to go forward | 'e' to go to last page | 'q'|ESC to quit ";
+
+    for (int i = 0; i < legend.size() + 2; i++)
+        std::cout << (char)Sprite::PERIMETER;
+
+    std::cout << std::endl;
+
+    std::cout << (char)Sprite::PERIMETER << legend << (char)Sprite::PERIMETER << std::endl;
+
+    for (int i = 0; i < legend.size() + 2; i++)
+        std::cout << (char)Sprite::PERIMETER;
+
+    std::cout << std::endl;
+}
+
+Input LevelScoresState::GetInput()
 {
     int intInput = _getch();
     Input input = Input::NONE;
@@ -127,15 +162,18 @@ Input LevelScoresState::AskForInput()
         case (int)Input::ARROW_LEFT:
             input = Input::ARROW_UP;
             break;
-        case (int)Input::LIST_END:
-            input = Input::LIST_END;
         default:
             break;
         }
     }
-    else if (intInput == (int)Input::ENTER)
+    else if (intInput == (int)Input::LIST_END)
     {
-        input = Input::ENTER;
+        input = Input::LIST_END;
+    }
+    // TODO: add quit() to scoremenustate
+    else if (intInput == (int)Input::ESC || intInput == (int)Input::QUIT)
+    {
+        input = Input::ESC;
     }
 
     return input;

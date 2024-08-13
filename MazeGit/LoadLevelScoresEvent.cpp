@@ -7,4 +7,5 @@ LoadLevelScoresEvent::LoadLevelScoresEvent(std::string levelName)
 void LoadLevelScoresEvent::Activate(StateMachineExampleGame* gsm)
 {
 	gsm->ShowScores(m_levelName.c_str());
+	isDone = true;
 }
