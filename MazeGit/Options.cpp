@@ -1,5 +1,6 @@
 #include "Options.h"
 #include <conio.h>
+#include "ExitGameEvent.h"
 
 Input Options::GetUserInput()
 {
@@ -29,6 +30,10 @@ Input Options::GetUserInput()
     {
         input = Input::ENTER;
     }
+    else if (intInput == (int)Input::ESC)
+    {
+        input = Input::ESC;
+    }
 
     return input;
 }
@@ -53,6 +58,9 @@ void Options::Update()
         m_selectedIndex = (currIndex == 0 ? m_options.size() - 1 : currIndex - 1);
     else if (userInput == Input::ENTER)
         m_options[currIndex].Select();
+    else if (userInput == Input::ESC)
+        // pass owner to function?
+        EventManager::GetInstance()->Add(new ExitGameEvent("ESC was pressed!"));
 
     return;
 }

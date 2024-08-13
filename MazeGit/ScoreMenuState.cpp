@@ -70,3 +70,11 @@ void ScoreMenuState::Draw()
     system("cls");
     m_savedGames.Draw();
 }
+
+/*
+void ScoreMenuState::Quit()
+{
+    m_pOwner->Quit();
+}
+
+*/

@@ -17,7 +17,7 @@ public:
 
     // Inherited via GameState
     virtual void Draw() override;
-    void Quit();
+    //void Quit();
 
 private:
     StateMachineExampleGame* m_pOwner;

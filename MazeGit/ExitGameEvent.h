@@ -6,7 +6,7 @@ class ExitGameEvent :
 private:
     std::string m_message;
 public:
-    ExitGameEvent(const std::string exitCause);
+    ExitGameEvent(const std::string exitCause = "");
     virtual void Activate(StateMachineExampleGame* gsm) override;
 };
 
