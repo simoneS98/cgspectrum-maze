@@ -176,6 +176,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerDeathEvent.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="ResumeGameEvent.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomFactory.cpp" />
     <ClCompile Include="ScoreMenuState.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerDeathEvent.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="ResumeGameEvent.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomFactory.h" />
     <ClInclude Include="ScoreMenuState.h" />

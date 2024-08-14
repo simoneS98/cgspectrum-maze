@@ -23,10 +23,10 @@ public:
 	Game(std::string levelName);
 	~Game();
 
-	bool Save();
+	bool Save(bool createTmpFile = false);
 	bool Load(std::string roomName = "0", char* pRoomBefore = nullptr);
 	bool Load(Player*& pPlayer, std::string roomName = "0", char* pRoomBefore = nullptr);
-	bool Resume();
+	bool SetPlayerData(Player*& pPlayer);
 	void Run();
 
 	bool IsGameOver();

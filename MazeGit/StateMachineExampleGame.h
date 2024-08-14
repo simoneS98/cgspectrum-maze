@@ -52,9 +52,13 @@ public:
 
     bool LoadGame(Player*& pPlayer);
 
-    void ChangeRoom(std::string roomName, std::string levelName);
+    void ChangeRoom(std::string roomName);
 
     void StartNewGame();
+
+    bool ResumeGame();
+
+    void InvalidatePlayerData(Player*& pPlayer);
 
     void PauseGame();
 

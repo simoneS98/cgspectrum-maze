@@ -9,7 +9,7 @@ MainMenuState::MainMenuState(StateMachineExampleGame* pOwner)
     // uniform init for Options constructor 
     , m_options({
         Option("Start New Game", new StartGameEvent()),
-        Option("Resume Game", nullptr),
+        Option("Resume Game", new ResumeGameEvent()),
         Option("Leaderboard", new ShowLeaderboardEvent()),
         Option("Exit", new ExitGameEvent("Esc was pressed! Exiting game..."))
         })

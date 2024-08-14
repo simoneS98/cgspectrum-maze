@@ -19,7 +19,7 @@ void LevelScoresState::Enter()
     
     // this shouldn't happen
     if(m_scores.empty())
-        m_pOwner->Quit("No scores found for the selectd level");
+        m_pOwner->Quit("No scores found for the selected level");
 
     // sort scores from top-ranking to lowest
     std::sort(m_scores.begin(), m_scores.end());

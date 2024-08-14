@@ -29,9 +29,9 @@ Game::~Game()
     player = nullptr;
 }
 
-bool Game::Save()
+bool Game::Save(bool createTmpFile)
 {
-    LevelManager::GetInstance()->Save();
+    LevelManager::GetInstance()->SaveRoomState(createTmpFile);
     return true;
 }
 
@@ -51,7 +51,7 @@ bool Game::Load(std::string roomName, char* pRoomBefore)
 
     Room* currRoom = LevelManager::GetInstance()->GetCurrentRoom();
 
-    bool anyWarnings = currRoom->Convert(this->player, roomBefore);
+    bool anyWarnings = currRoom->Convert(player, roomBefore);
 
     if (anyWarnings)
         return false;
@@ -69,14 +69,14 @@ bool Game::Load(Player*& pPlayer, std::string roomName, char* pRoomBefore)
     if (!LevelManager::GetInstance()->Load(roomName))
         return false;
 
-        pPlayer = new Player(LevelManager::GetInstance()->GetCurrentRoom());
+    pPlayer = new Player(LevelManager::GetInstance()->GetCurrentRoom());
 
     this->roomName = roomName;
 
     Room* currRoom = LevelManager::GetInstance()->GetCurrentRoom();
 
     //if (player == nullptr)
-        player = pPlayer;//new Player(currRoom);
+    player = pPlayer;//new Player(currRoom);
 
     bool anyWarnings = currRoom->Convert(player, roomBefore);
 
@@ -86,26 +86,17 @@ bool Game::Load(Player*& pPlayer, std::string roomName, char* pRoomBefore)
     return true;
 }
 
+bool Game::SetPlayerData(Player*& pPlayer)
+{
+    pPlayer = this->player;
+    return true;
+}
+
 void Game::Run()
 {
-    // Process Inputs
-
-    //Point playerRequestedDirection = GetPlayerInput();
-        
-    //UpdatePlayerPosition(playerRequestedDirection);
-
-    // Updates Game World
-    //isGameOver = UpdateGameWorld();
-    // check for events
-  
-   // UpdateGameWorld();
     LevelManager::GetInstance()->GetCurrentRoom()->UpdateEntities();
 
-	// Generate Outputs
-    //EventManager::GetInstance()->ActivateEvents(this);
-
-    Draw();
-    
+    Draw();    
 }
 
 bool Game::IsGameOver()

@@ -14,7 +14,7 @@ private:
 public:
 	static LevelManager* GetInstance();
 	static void DestroyInstance();
-	void Save();
+	void SaveRoomState(bool createTmpFile);
 	bool Load(std::string roomName);
 	void Clear()
 	{
@@ -23,6 +23,8 @@ public:
 
 		delete m_pCurrentRoom;
 		m_pCurrentRoom = nullptr;
+
+		// place file deletion here?
 	}
 	//static void SetLevelName(std::string levelName) { instance->SetLevelName(levelName);}
 	void SetLevelName(std::string levelName) { this->m_levelName = levelName; }

@@ -23,9 +23,7 @@ void GameplayState::Enter()
 {
     // check if should resume or start new game
     if (LevelManager::GetInstance()->GetCurrentRoom() == nullptr)
-    {
         Load();
-    }
     else
         Resume();
 
@@ -75,7 +73,9 @@ bool GameplayState::Resume()
 
     //LevelManager::GetInstance()->LoadSave();
 
-    return false;
+    m_pOwner->InvalidatePlayerData(m_pPlayer);
+
+    return true; 
 }
 
 const void GameplayState::ShowLegend()

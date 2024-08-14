@@ -305,9 +305,7 @@ GameEntity* Room::UpdateEntities()
 				//t.detach();
 				UpdateEntity((*entity));
 			}
-				
 		}
-
 	}
 
 	

@@ -3,6 +3,7 @@
 #include "Options.h"
 #include "LevelChosenEvent.h"
 #include "InputSystem.h"
+#include "LevelManager.h"
 
 using Option = Options::MenuOption;
 

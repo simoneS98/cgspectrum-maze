@@ -81,6 +81,7 @@ void StateMachineExampleGame::ChooseLevel(std::string levelName)
     {
         LevelManager::GetInstance()->SetLevelName(levelName);
         //remove saves
+        std::filesystem::remove("../levels/" + levelName + "/.tmp.room");
         std::filesystem::remove_all("../levels/" + levelName + "/saves");
         LoadScene(SceneName::GAMEPLAY, levelName.c_str());
     }
@@ -91,24 +92,6 @@ void StateMachineExampleGame::ChooseLevel(std::string levelName)
 void StateMachineExampleGame::LoadScene(SceneName scene)
 {
     LoadScene(scene, nullptr);
-    /*switch (scene)
-    {
-    case SceneName::MENU_MAIN:
-        m_pNextState = new MainMenuState(this);
-        break;
-    case SceneName::GAMEPLAY:
-        m_pNextState = new GameplayState(this);
-        break;
-    case SceneName::MENU_SCORES:
-        m_pNextState = new ScoreMenuState(this);
-        break;
-    case SceneName::SCORES:
-        //if(dynamic_cast<ScoreMenuState*>(m_pCurrentState))
-        //    m_pNextState = new LevelScoresState(m_pCurrentState);
-        break;
-    default:
-        break;
-    }*/
 }
 
 void StateMachineExampleGame::LoadScene(SceneName scene, const char* levelName)
@@ -139,23 +122,54 @@ bool StateMachineExampleGame::LoadGame(Player*& pPlayer)
     return m_pOwner->Load(pPlayer);
 }
 
-void StateMachineExampleGame::ChangeRoom(std::string roomName, std::string levelName)
+void StateMachineExampleGame::ChangeRoom(std::string roomName)
 {
+
+    // clear tmp file
+    std::filesystem::remove("../levels/" + LevelManager::GetInstance()->GetLevelName() + "/.tmp.room");
     m_pOwner->Save();
-    m_pOwner->Load(roomName, LevelManager::GetInstance()->GetCurrentRoom()->GetName()/*&levelName[0]*/);
+    m_pOwner->Load(roomName, LevelManager::GetInstance()->GetCurrentRoom()->GetName());
 }
 
 void StateMachineExampleGame::StartNewGame()
 {
     if (dynamic_cast<MainMenuState*>(m_pCurrentState))
+    {
+        // clear game progress and saves
+        LevelManager::GetInstance()->Clear();
         LoadScene(StateMachineExampleGame::SceneName::MENU_GAMEPLAY);
+    }
+}
+
+// reference to player to assign it to the state calling this function
+bool StateMachineExampleGame::ResumeGame()
+{
+    if (dynamic_cast<MainMenuState*>(m_pCurrentState)
+        &&
+        LevelManager::GetInstance()->GetCurrentRoom() != nullptr
+        )
+    {
+        LoadScene(StateMachineExampleGame::SceneName::GAMEPLAY);
+        return true;
+    }
+
+    return false;
+}
+
+void StateMachineExampleGame::InvalidatePlayerData(Player*& pPlayer)
+{
+    m_pOwner->SetPlayerData(pPlayer);
 }
     
 void StateMachineExampleGame::PauseGame()
 {
     // Only works during gameplay
+    // Should just move it to Quit()
     if (dynamic_cast<GameplayState*>(m_pCurrentState))
+    {
+        m_pOwner->Save(true);
         LoadScene(SceneName::MENU_MAIN);
+    }
 
 }
 
@@ -174,6 +188,8 @@ void StateMachineExampleGame::ShowScores(const char* levelName)
 
 void StateMachineExampleGame::Quit(std::string message)
 {
+    //if (dynamic_cast<GameplayState*>(m_pCurrentState))
+    //    m_pOwner->Save();
     LevelManager::GetInstance()->Clear();
     system("cls");
     std::cout << message << std::endl;

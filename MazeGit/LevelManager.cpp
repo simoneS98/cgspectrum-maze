@@ -25,26 +25,25 @@ void LevelManager::DestroyInstance()
 	instance = nullptr;
 }
 
-void LevelManager::Save()
+void LevelManager::SaveRoomState(bool createTmpFile)
 {
     int h = 0;
 
     char* map = m_pCurrentRoom->RevertToCharMap();
 
-    std::string basePath = "levels/" + m_levelName + "/saves/";// +currentRoom->GetName() + ".room";
+    std::string fileName;
 
-    // this is working directory for the current level
-    basePath.insert(0, "../");
-
-    std::string cmd = "mkdir \"" + basePath + "\"";
-
-    //cmd.append(levelName).append("\"");
-
-    system(cmd.c_str());
-
-    std::string fileName = basePath + m_pCurrentRoom->GetName() + ".room";
-
-    // TODO: fix save dir
+    if (createTmpFile)
+    {
+        fileName = "../levels/" + m_levelName + "/.tmp.room";
+    }
+    else
+    {
+        std::string basePath = "../levels/" + m_levelName + "/saves/";
+        std::string cmd = "mkdir \"" + basePath + "\"";
+        system(cmd.c_str());
+        fileName = basePath + m_pCurrentRoom->GetName() + ".room";
+    }
 
     std::ofstream levelFile;
     levelFile.open(fileName);
@@ -63,7 +62,7 @@ void LevelManager::Save()
             levelFile << map[i];
         }
         levelFile << std::endl;
-        //levelFile.write(level->map, level->width * level->height); //width * height : streamsize
+
         if (!levelFile)
         {
             std::cout << "Write failed!" << std::endl;
@@ -79,17 +78,26 @@ bool LevelManager::Load(std::string roomName)
     Room** map;
     std::ifstream levelFile;
 
-    std::string fileName = "../levels/" + m_levelName + "/saves/"  + roomName + ".room";
+    std::string fileName;
+
+    std::string fileNameResumeGame = "../levels/" + m_levelName + "/.tmp.room";
+    std::string fileNameSavedGame = "../levels/" + m_levelName + "/saves/" + roomName + ".room";
+    std::string fileNameBaseGame = "../levels/" + m_levelName + "/" + roomName + ".room";
 
     char* mapAsCharArray = nullptr;
 
-    // saves dir not found
-    if (!std::filesystem::exists(fileName))
-    {
-        // load the base level file
-        fileName = "../levels/" + m_levelName + "/" + roomName + ".room";
-    }
-
+    // check .tmp file
+    if (std::filesystem::exists(fileNameResumeGame))
+        fileName = fileNameResumeGame;
+    // check saves dir
+    else if (std::filesystem::exists(fileNameSavedGame))
+        fileName = fileNameSavedGame;
+    // check base dir
+    else if (std::filesystem::exists(fileNameBaseGame))
+        fileName = fileNameBaseGame;
+    else // no useful files found
+        return false;
+    
     levelFile.open(fileName);
 
     if (!levelFile)

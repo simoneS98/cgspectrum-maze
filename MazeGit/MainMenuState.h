@@ -7,6 +7,7 @@
 #include "EventManager.h"
 #include "ExitGameEvent.h"
 #include "StartGameEvent.h"
+#include "ResumeGameEvent.h"
 #include "ShowLeaderboardEvent.h"
 #include "Options.h"
 
